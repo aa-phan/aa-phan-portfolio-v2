@@ -68,7 +68,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Documentation (gates all code)
 
-- [ ] **DOC-01**: Design brief with the 10-second test and the user's references
+- [x] **DOC-01**: Design brief with the 10-second test and the user's references
 - [ ] **DOC-02**: Content inventory
 - [ ] **DOC-03**: Information architecture and wireframes at 375, 768 and 1280
 - [ ] **DOC-04**: Design tokens doc with palette exploration and contrast matrix
@@ -150,7 +150,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | QA-03 | Phase 6 | Pending |
 | LCH-01 | Phase 6 | Pending |
 | LCH-02 | Phase 6 | Pending |
-| DOC-01 | Phase 1 | Pending |
+| DOC-01 | Phase 1 | Complete |
 | DOC-02 | Phase 1 | Pending |
 | DOC-03 | Phase 1 | Pending |
 | DOC-04 | Phase 1 | Pending |
@@ -158,6 +158,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DOC-06 | Phase 1 | Pending |
 
 **Coverage:**
+
 - v1 requirements: 41 total
 - Mapped to phases: 41 ✓
 - Unmapped: 0

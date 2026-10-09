@@ -2,18 +2,18 @@
 gsd_state_version: 1.0
 milestone: v2
 current_phase: 01
-current_phase_name: decisions-and-documentation
+current_phase_name: Decisions and Documentation
 status: executing
-stopped_at: Phase 1 context gathered
-last_updated: "2026-10-09T08:59:27.665Z"
+stopped_at: Completed 01-01-PLAN.md
+last_updated: "2026-10-09T19:45:05.839Z"
 last_activity: 2026-10-09
-last_activity_desc: Roadmap created (6 phases, 41/41 v1 requirements mapped)
-state_head: d97cedc80db3e6862eb8ad3004beb9fb3518e8dc
+last_activity_desc: Phase 01 execution started
+state_head: 0650abd6347146ad0fcaa553ac688b9a50a155eb
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 7
-  completed_plans: 0
+  completed_plans: 1
   percent: 0
 ---
 
@@ -24,14 +24,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-10-08)
 
 **Core value:** The site must feel crafted and memorable (tactile, physics-based motion, strong visual identity) while key info stays instantly accessible, on mobile as much as desktop.
-**Current focus:** Phase 1 - Decisions and Documentation
+**Current focus:** Phase 01 — Decisions and Documentation
 
 ## Current Position
 
-Phase: 01 (decisions-and-documentation) — READY TO EXECUTE
-Plan: 0 of 0 in current phase
+Phase: 01 (Decisions and Documentation) — EXECUTING
+Plan: 2 of 7
 Status: Ready to execute
-Last activity: 2026-10-09 - Roadmap created (6 phases, 41/41 v1 requirements mapped)
+Last activity: 2026-10-09 — Phase 01 execution started
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -55,6 +55,11 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: -
 
 *Updated after each plan completion*
+**Per-Plan Metrics:**
+
+| Plan | Duration | Tasks | Files |
+|------|----------|-------|-------|
+| Phase 01 P01 | 25 min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -67,6 +72,7 @@ Recent decisions affecting current work:
 - [Roadmap]: Static content-complete site (Phase 3) ships before the motion system and signature rail (Phase 4)
 - [Roadmap]: react-spring is scoped to 3-5 signature interactions; keep-or-drop decision after Phase 4; do not add @use-gesture/react up front
 - [Roadmap]: Cutover is last (Phase 6) and additive into aa-phan.github.io after tagging v1-ipod; never force-push
+- [Phase 01]: Candidate A light --primary tuned 2f27ce -> 281fb4 so focus ring holds 3:1 on background and filled button; dark --link uses accent (OKLCH mix toward white leaves gamut) — Seed primary makes the two focus-ring pairs jointly infeasible (needs luminance >=0.295 and <=0.289)
 
 ### Pending Todos
 
@@ -92,6 +98,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-09T08:22:38.494Z
-Stopped at: Phase 1 context gathered
-Resume file: .planning/phases/01-decisions-and-documentation/01-CONTEXT.md
+Last session: 2026-10-09T19:45:05.829Z
+Stopped at: Completed 01-01-PLAN.md
+Resume file: None
