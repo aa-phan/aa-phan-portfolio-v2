@@ -4,16 +4,16 @@ milestone: v2
 current_phase: 01
 current_phase_name: Decisions and Documentation
 status: executing
-stopped_at: Completed 01-04-PLAN.md
-last_updated: "2026-10-09T20:06:09.131Z"
+stopped_at: Completed 01-06-PLAN.md
+last_updated: "2026-10-09T20:08:36.660Z"
 last_activity: 2026-10-09
 last_activity_desc: Phase 01 execution started
-state_head: b5a78e1db6a255f13253d374c5aa30afa4b9dbba
+state_head: b539bf453b52295c7c8784f02773e55186440914
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 7
-  completed_plans: 5
+  completed_plans: 6
   percent: 0
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-10-08)
 ## Current Position
 
 Phase: 01 (Decisions and Documentation) — EXECUTING
-Plan: 6 of 7
+Plan: 7 of 7
 Status: Ready to execute
 Last activity: 2026-10-09 — Phase 01 execution started
 
@@ -64,6 +64,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01 P05 | 5 min | 2 tasks | 1 files |
 | Phase 01 P03 | 1 session | 3 tasks | 1 files |
 | Phase 01 P04 | n/a | 3 tasks | 1 files |
+| Phase 01 P06 | 8min | 3 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -83,6 +84,7 @@ Recent decisions affecting current work:
 - [Phase 01]: Single useMotionPreference hook feeds MotionConfig, Globals.assign skipAnimation and a CSS guard; Lenis not started under reduced motion — One source of truth for reduced motion across both libraries (MOT-01)
 - [Phase 01]: 01-03: Content gaps ruled accept-defaults; featured PRJ-01..03, hero option 1, public email confirmed, 5 experience / 7 projects, no phase-gate deviation
 - [Phase 01]: 01-04: Chosen palette A (tuned seed indigo, light primary 5046e5), Inter only (@fontsource-variable/inter 5.3.0), scale ratio 1.200
+- [Phase 01]: 01-06: Pages cutover is additive after tagging v1-ipod; TypeScript ~6.0.3; inline SVG brand icons; overlay dialog falls back to native showModal() if MorphingDialog fails the spike
 
 ### Pending Todos
 
@@ -108,6 +110,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-09T20:06:09.120Z
-Stopped at: Completed 01-04-PLAN.md
+Last session: 2026-10-09T20:08:36.650Z
+Stopped at: Completed 01-06-PLAN.md
 Resume file: None

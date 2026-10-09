@@ -36,7 +36,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. A design tokens doc records the palette and type chosen via realtimecolors after exploring alternatives to the seed indigo, as light and dark sets, with a contrast matrix of text, UI and focus pairs in both themes that meets WCAG 2.2 AA on paper.
   5. A motion spec lists each interaction with its owner library, touch equivalent and reduced-motion fallback, and an architecture doc, an ADR log (open decisions listed) and a deploy runbook draft exist.
 
-**Plans:** 5/7 plans executed
+**Plans:** 6/7 plans executed
 
 Plans:
 **Wave 1**
@@ -52,7 +52,7 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 01-06-PLAN.md — ADR-0003..0006 (Pages source, TS 6, SVG icons, dialog a11y) and deploy runbook (wave 3)
+- [x] 01-06-PLAN.md — ADR-0003..0006 (Pages source, TS 6, SVG icons, dialog a11y) and deploy runbook (wave 3)
 
 **Wave 4** *(blocked on Wave 3 completion)*
 
@@ -152,7 +152,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Decisions and Documentation | 5/7 | In Progress|  |
+| 1. Decisions and Documentation | 6/7 | In Progress|  |
 | 2. Deployed Themed Skeleton | 0/0 | Not started | - |
 | 3. Content-Complete Site | 0/0 | Not started | - |
 | 4. Motion System and Signature Rail | 0/0 | Not started | - |
