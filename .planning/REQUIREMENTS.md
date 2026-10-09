@@ -72,7 +72,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **DOC-02**: Content inventory
 - [ ] **DOC-03**: Information architecture and wireframes at 375, 768 and 1280
 - [ ] **DOC-04**: Design tokens doc with palette exploration and contrast matrix
-- [ ] **DOC-05**: Motion spec with per-interaction owner library, touch equivalent and reduced-motion fallback
+- [x] **DOC-05**: Motion spec with per-interaction owner library, touch equivalent and reduced-motion fallback
 - [ ] **DOC-06**: Architecture doc, ADRs as decisions land, and a deploy runbook
 
 ## v2 Requirements
@@ -154,7 +154,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DOC-02 | Phase 1 | Pending |
 | DOC-03 | Phase 1 | Pending |
 | DOC-04 | Phase 1 | Pending |
-| DOC-05 | Phase 1 | Pending |
+| DOC-05 | Phase 1 | Complete |
 | DOC-06 | Phase 1 | Pending |
 
 **Coverage:**
