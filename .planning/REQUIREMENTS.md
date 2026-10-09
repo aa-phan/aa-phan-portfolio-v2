@@ -25,8 +25,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [ ] **CNT-01**: All six sections (About Me, Skills, Education, Experience, Projects, Contact Me) render from typed content modules
 - [ ] **CNT-02**: All v1 content is carried over: 5 experience entries, all 7 v1 projects (RecipeCart, A.T.L.A.S, Suspect Genie, MediaDash, Full-Stack Library Simulator, FPGA-Based Stopwatch, Smart Mirror), education entries including GPA, public email, and the DJ Instagram link
-- [ ] **CNT-03**: Content is reconciled against `references/Aaron_Phan_Resume.pdf`; inconsistent metrics (e.g. Symbotic 76% accuracy vs Suspect Genie >=50%) and date formats are resolved in a content inventory before typing
-- [ ] **CNT-04**: Visitor can download a resume PDF (source: `references/Aaron_Phan_Resume.pdf`, contact details to be confirmed before publishing)
+- [ ] **CNT-03**: `references/Aaron_Phan_Resume.pdf` is the source of truth: where it conflicts with v1, the resume wins; v1-only items it does not cover (4 extra projects, ITS Student Consultant role) are kept from v1. The resume's own metric overlap (Symbotic 76% accuracy vs Suspect Genie >=50%) is shown only where the resume places each figure, and date formats are normalized, all recorded in a content inventory before typing
+- [ ] **CNT-04**: Visitor can download a resume PDF generated from `references/Aaron_Phan_Resume.pdf` with the phone number removed. The phone number must not appear anywhere on the site, including the PDF, meta tags, JSON-LD and OG data
 - [ ] **CNT-05**: Only used images are migrated, optimized (AVIF/WebP) and stripped of EXIF
 
 ### Navigation and Recruiter Fast Path
@@ -107,6 +107,7 @@ Explicitly excluded. Documented to prevent scope creep.
 | Hover-only content | Not reachable on touch |
 | Skill percentage bars | Low-signal for recruiters |
 | `.planning/` and `references/` in the public repo | Public repo contains only the site |
+| Phone number anywhere on the site | User instruction; the source resume contains it, so the web copy must strip it |
 
 ## Traceability
 
@@ -114,13 +115,55 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (filled by roadmapper) | | |
+| FND-01 | Phase 2 | Pending |
+| FND-02 | Phase 2 | Pending |
+| FND-03 | Phase 2 | Pending |
+| FND-04 | Phase 2 | Pending |
+| DSN-01 | Phase 2 | Pending |
+| DSN-02 | Phase 2 | Pending |
+| DSN-03 | Phase 2 | Pending |
+| DSN-04 | Phase 2 | Pending |
+| CNT-01 | Phase 3 | Pending |
+| CNT-02 | Phase 3 | Pending |
+| CNT-03 | Phase 1 | Pending |
+| CNT-04 | Phase 3 | Pending |
+| CNT-05 | Phase 3 | Pending |
+| NAV-01 | Phase 2 | Pending |
+| NAV-02 | Phase 3 | Pending |
+| NAV-03 | Phase 3 | Pending |
+| NAV-04 | Phase 3 | Pending |
+| SIG-01 | Phase 4 | Pending |
+| SIG-02 | Phase 4 | Pending |
+| SIG-03 | Phase 4 | Pending |
+| SIG-04 | Phase 4 | Pending |
+| MOT-01 | Phase 2 | Pending |
+| MOT-02 | Phase 4 | Pending |
+| MOT-03 | Phase 4 | Pending |
+| MOT-04 | Phase 4 | Pending |
+| MOT-05 | Phase 4 | Pending |
+| SEC-01 | Phase 5 | Pending |
+| SEC-02 | Phase 5 | Pending |
+| SEC-03 | Phase 5 | Pending |
+| SEC-04 | Phase 5 | Pending |
+| QA-01 | Phase 6 | Pending |
+| QA-02 | Phase 6 | Pending |
+| QA-03 | Phase 6 | Pending |
+| LCH-01 | Phase 6 | Pending |
+| LCH-02 | Phase 6 | Pending |
+| DOC-01 | Phase 1 | Pending |
+| DOC-02 | Phase 1 | Pending |
+| DOC-03 | Phase 1 | Pending |
+| DOC-04 | Phase 1 | Pending |
+| DOC-05 | Phase 1 | Pending |
+| DOC-06 | Phase 1 | Pending |
 
 **Coverage:**
 - v1 requirements: 41 total
-- Mapped to phases: 0
-- Unmapped: 41 ⚠️
+- Mapped to phases: 41 ✓
+- Unmapped: 0
+
+**Per phase:** Phase 1: 7, Phase 2: 10, Phase 3: 7, Phase 4: 8, Phase 5: 4, Phase 6: 5
 
 ---
 *Requirements defined: 2026-10-09*
-*Last updated: 2026-10-09 after initial definition*
+*Last updated: 2026-10-09 after roadmap creation*
