@@ -32,7 +32,16 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Information architecture and wireframes exist at 375, 768 and 1280 px showing the recruiter fast path, plus the project rail and overlay in both a desktop (hover) form and a touch (swipe and tap) form.
   4. A design tokens doc records the palette and type chosen via realtimecolors after exploring alternatives to the seed indigo, as light and dark sets, with a contrast matrix of text, UI and focus pairs in both themes that meets WCAG 2.2 AA on paper.
   5. A motion spec lists each interaction with its owner library, touch equivalent and reduced-motion fallback, and an architecture doc, an ADR log (open decisions listed) and a deploy runbook draft exist.
-**Plans**: TBD
+**Plans:** 7 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Tracer: Contact Me slice through inventory, wireframes, tokens and contrast checker; design brief; motion catalog seed (wave 1)
+- [ ] 01-02-PLAN.md — docs/architecture.md, ADR log, ADR-0001 doc split, ADR-0002 skeleton-gate skip, ignore references/ (wave 2)
+- [ ] 01-03-PLAN.md — Content inventory reconciled against the resume, gap rulings checkpoint (wave 2)
+- [ ] 01-04-PLAN.md — Three palette and type candidates, user pick, contrast matrix and tokens (wave 2)
+- [ ] 01-05-PLAN.md — Motion spec: tokens, reduced motion, ownership matrix, 17 interactions (wave 2)
+- [ ] 01-06-PLAN.md — ADR-0003..0006 (Pages source, TS 6, SVG icons, dialog a11y) and deploy runbook (wave 3)
+- [ ] 01-07-PLAN.md — IA and wireframes at 375/768/1280, rail/overlay/nav states, cross-doc check (wave 3)
 
 ### Phase 2: Deployed Themed Skeleton
 **Goal:** As a visitor, I want to open the deployed project URL and see a fast, themed hero in light or dark, so that hosting, CI, theming and motion risks are retired before content is built.
