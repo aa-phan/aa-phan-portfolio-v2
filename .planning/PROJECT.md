@@ -60,7 +60,19 @@ The site must feel crafted and memorable (tactile, physics-based motion and stro
 | Playful, tactile direction | User selection | — Pending |
 | Audience: recruiters and design-eng community equally | User selection | — Pending |
 | Same content, new form | Reuse existing copy/images | — Pending |
-| Explore palette alternatives | User not committed to the linked indigo palette | — Pending |
+| Explore palette alternatives | User not committed to the linked indigo palette; seed indigo fails contrast on dark (2.23:1), so per-theme tokens are required | — Pending |
+| Signature interaction: an object you handle (ref 539, Batch Merch rail): hover/lift, neighbors shift, click opens focused detail view | User choice after reviewing references/ | — Pending |
+| Mobile version of handled object: swipe rail + tap to open | Hover is unavailable on touch | — Pending |
+| Draggable hero toy deferred to v1.x | Ship content-complete site first; avoid stacking two physics features | — Pending |
+| Keep both motion and react-spring; only react-spring for 3-5 signature physics interactions; do not add @use-gesture/react up front | Measure after first slice, then keep or drop react-spring | — Pending |
+| Cutover: additive push into existing aa-phan.github.io repo after tagging v1-ipod; never force-push | Keeps history, easy rollback | — Pending |
+| No 3D/WebGL | Protects mobile budget | — Pending |
+| Lenis smooth scroll adopted (touch stays native, reduced-motion respected) | User choice; +~5.6 kB gz | — Pending |
+| Launch gates: mobile Lighthouse perf >=90, a11y >=95, initial JS <=150 kB gz (relaxed from a stricter 120), LCP <=2.5 s, WCAG 2.2 AA, full reduced-motion support | User first chose stricter, then relaxed JS to 150 kB because probe is ~139 kB before content; code-split to stay under | — Pending |
+| Project detail is an in-page overlay (morphing dialog), no router or deep links | Avoids GitHub Pages path issues | — Pending |
+| Drop click sounds for v1 | Revisit later as opt-in | — Pending |
+| Keep .planning/ and references/ out of the public site repo | Public repo contains only the site | — Pending |
+| Defaults pending user override: TypeScript 6, inline SVG brand icons, Tilt/Magnetic/Spotlight desktop-only polish | Researcher recommendations | — Pending |
 
 ## Evolution
 
