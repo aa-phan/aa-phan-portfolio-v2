@@ -4,16 +4,16 @@ milestone: v2
 current_phase: 01
 current_phase_name: Decisions and Documentation
 status: executing
-stopped_at: Completed 01-03-PLAN.md
-last_updated: "2026-10-09T19:56:02.515Z"
+stopped_at: Completed 01-04-PLAN.md
+last_updated: "2026-10-09T20:06:09.131Z"
 last_activity: 2026-10-09
 last_activity_desc: Phase 01 execution started
-state_head: 55435feb3efee106f0f921340c7bca635567b706
+state_head: b5a78e1db6a255f13253d374c5aa30afa4b9dbba
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 7
-  completed_plans: 4
+  completed_plans: 5
   percent: 0
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-10-08)
 ## Current Position
 
 Phase: 01 (Decisions and Documentation) — EXECUTING
-Plan: 5 of 7
+Plan: 6 of 7
 Status: Ready to execute
 Last activity: 2026-10-09 — Phase 01 execution started
 
@@ -63,6 +63,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01 P02 | 4min | 2 tasks | 5 files |
 | Phase 01 P05 | 5 min | 2 tasks | 1 files |
 | Phase 01 P03 | 1 session | 3 tasks | 1 files |
+| Phase 01 P04 | n/a | 3 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -81,6 +82,7 @@ Recent decisions affecting current work:
 - [Phase 01]: react-spring owns exactly four interactions (IX-02, IX-03, IX-06, IX-10); IX-14 uses motion layout expand — Keeps the second animation library scoped to velocity-carrying tactile physics; keep-or-drop decided after the rail is measured
 - [Phase 01]: Single useMotionPreference hook feeds MotionConfig, Globals.assign skipAnimation and a CSS guard; Lenis not started under reduced motion — One source of truth for reduced motion across both libraries (MOT-01)
 - [Phase 01]: 01-03: Content gaps ruled accept-defaults; featured PRJ-01..03, hero option 1, public email confirmed, 5 experience / 7 projects, no phase-gate deviation
+- [Phase 01]: 01-04: Chosen palette A (tuned seed indigo, light primary 5046e5), Inter only (@fontsource-variable/inter 5.3.0), scale ratio 1.200
 
 ### Pending Todos
 
@@ -106,6 +108,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-09T19:56:02.504Z
-Stopped at: Completed 01-03-PLAN.md
+Last session: 2026-10-09T20:06:09.120Z
+Stopped at: Completed 01-04-PLAN.md
 Resume file: None
