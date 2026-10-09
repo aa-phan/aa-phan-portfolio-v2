@@ -72,6 +72,7 @@ The site must feel crafted and memorable (tactile, physics-based motion and stro
 | Project detail is an in-page overlay (morphing dialog), no router or deep links | Avoids GitHub Pages path issues | — Pending |
 | Drop click sounds for v1 | Revisit later as opt-in | — Pending |
 | Keep .planning/ and references/ out of the public site repo | Public repo contains only the site | — Pending |
+| Keep all 7 v1 projects, 5 experience entries, GPA, public email and DJ Instagram link; resume PDF supplied in references/ | User confirmed 2026-10-09 | — Pending |
 | Defaults pending user override: TypeScript 6, inline SVG brand icons, Tilt/Magnetic/Spotlight desktop-only polish | Researcher recommendations | — Pending |
 
 ## Evolution
