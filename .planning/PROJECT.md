@@ -1,0 +1,83 @@
+# Aaron Phan Portfolio v2
+
+## What This Is
+
+A remake of Aaron Phan's personal portfolio (currently the click-wheel iPod site at `../aa-phan.github.io`) as a visually distinctive, playful and tactile React site. It serves recruiters/hiring managers and the design-engineering community equally: personality on the surface, key information (experience, projects, contact) reachable in seconds.
+
+## Core Value
+
+The site must feel crafted and memorable (tactile, physics-based motion and strong visual identity) while key info stays instantly accessible, on mobile as much as desktop.
+
+## Requirements
+
+### Validated
+
+(None yet — ship to validate)
+
+### Active
+
+- [ ] Same six content sections as v1 (About Me, Skills, Education, Experience, Projects, Contact Me), existing copy and images reused, with new presentation (Skills/Education may become lighter treatments)
+- [ ] Playful, tactile visual identity: spring/physics-driven interactions (react-spring), polished UI motion primitives (motion-primitives)
+- [ ] Color palette and type system chosen via realtimecolors.com, after exploring alternatives to the initially linked palette; light and dark support
+- [ ] Design direction informed by godly.design references
+- [ ] Mobile-first quality: touch-friendly interactions, no desktop-only gestures required
+- [ ] Deployed to GitHub Pages (GitHub Actions build) at aa-phan.github.io
+- [ ] Documentation-first workflow: design/tool research and decision docs completed before any code
+
+### Out of Scope
+
+- Click-wheel iPod concept — user chose to drop it entirely; fresh identity
+- Blog/CMS — not requested; revisit later
+- Backend/server features — static site on GitHub Pages
+- Next.js — Vite + React chosen as simpler fit
+
+## Context
+
+- Existing site: single self-contained `index.html` (vanilla JS, inline CSS), prior Bootstrap version in `index.bak.html`; content, images (`images/`, employer favicons, `about-dj.jpg`) and copy are reusable. Git history exists in `../aa-phan.github.io`.
+- Author: Aaron Phan, student at UT Austin.
+- Tools the user wants to try:
+  - motion-primitives (github.com/ibelick/motion-primitives): React + Tailwind + `motion` components
+  - godly.design/posts: curated web design inspiration (research/reference, not a dependency)
+  - realtimecolors.com: palette and font visualizer. Seed link: 050315 / fbfbfe / 2f27ce / dedcff / 433bff, Inter/Inter. User wants alternatives explored.
+  - react-spring.dev: physics-based animation hooks
+- User asked that gaps in tooling be researched and surfaced for decision rather than assumed (e.g. any capability not covered by the four tools).
+- Both motion-primitives (via `motion`) and react-spring are animation libraries; overlap/coexistence needs a researched decision.
+
+## Constraints
+
+- **Tech stack**: Vite + React + TypeScript + Tailwind — required by motion-primitives and react-spring
+- **Hosting**: GitHub Pages — static output only, needs Actions workflow or a built-output branch
+- **Platform**: Mobile must be excellent — touch interactions, performance on phones
+- **Accessibility/perf**: Assumed baseline: `prefers-reduced-motion` respected, good Lighthouse scores (to confirm with user)
+- **Process**: Detailed documentation before coding; research and surface findings for tooling decisions
+
+## Key Decisions
+
+| Decision | Rationale | Outcome |
+|----------|-----------|---------|
+| Drop iPod concept | User preference for a fresh identity | — Pending |
+| Vite + React + TS + Tailwind | Fits motion-primitives and react-spring; static output suits GitHub Pages | — Pending |
+| Playful, tactile direction | User selection | — Pending |
+| Audience: recruiters and design-eng community equally | User selection | — Pending |
+| Same content, new form | Reuse existing copy/images | — Pending |
+| Explore palette alternatives | User not committed to the linked indigo palette | — Pending |
+
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `/gsd-transition`):
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
+
+**After each milestone** (via `/gsd-complete-milestone`):
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
+
+---
+*Last updated: 2026-10-08 after initialization*
