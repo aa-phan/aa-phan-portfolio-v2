@@ -4,16 +4,16 @@ milestone: v2
 current_phase: 01
 current_phase_name: Decisions and Documentation
 status: executing
-stopped_at: Completed 01-01-PLAN.md
-last_updated: "2026-10-09T19:45:05.839Z"
+stopped_at: Completed 01-02-PLAN.md
+last_updated: "2026-10-09T19:47:19.022Z"
 last_activity: 2026-10-09
 last_activity_desc: Phase 01 execution started
-state_head: 0650abd6347146ad0fcaa553ac688b9a50a155eb
+state_head: afe1a4af31810001f7cb74274f5ef5176bdba38c
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 7
-  completed_plans: 1
+  completed_plans: 2
   percent: 0
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-10-08)
 ## Current Position
 
 Phase: 01 (Decisions and Documentation) — EXECUTING
-Plan: 2 of 7
+Plan: 3 of 7
 Status: Ready to execute
 Last activity: 2026-10-09 — Phase 01 execution started
 
@@ -60,6 +60,7 @@ Progress: [░░░░░░░░░░] 0%
 | Plan | Duration | Tasks | Files |
 |------|----------|-------|-------|
 | Phase 01 P01 | 25 min | 2 tasks | 6 files |
+| Phase 01 P02 | 4min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,8 @@ Recent decisions affecting current work:
 - [Roadmap]: react-spring is scoped to 3-5 signature interactions; keep-or-drop decision after Phase 4; do not add @use-gesture/react up front
 - [Roadmap]: Cutover is last (Phase 6) and additive into aa-phan.github.io after tagging v1-ipod; never force-push
 - [Phase 01]: Candidate A light --primary tuned 2f27ce -> 281fb4 so focus ring holds 3:1 on background and filled button; dark --link uses accent (OKLCH mix toward white leaves gamut) — Seed primary makes the two focus-ring pairs jointly infeasible (needs luminance >=0.295 and <=0.289)
+- [Phase 01]: [Phase 01-02]: Import rules fixed: only src/anim/ and motion-primitives import motion libs; only Page.tsx imports content data
+- [Phase 01]: [Phase 01-02]: OD-01 repo visibility vs private notes in history blocks the first push
 
 ### Pending Todos
 
@@ -98,6 +101,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-09T19:45:05.829Z
-Stopped at: Completed 01-01-PLAN.md
+Last session: 2026-10-09T19:47:19.011Z
+Stopped at: Completed 01-02-PLAN.md
 Resume file: None
