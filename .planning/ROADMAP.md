@@ -13,7 +13,7 @@ The journey runs from decisions to a live site in six phases. It starts with a s
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Decisions and Documentation** - Time-boxed design, content, IA, tokens, motion and architecture docs that gate all code
+- [x] **Phase 1: Decisions and Documentation** - Time-boxed design, content, IA, tokens, motion and architecture docs that gate all code (completed 2026-10-09)
 - [ ] **Phase 2: Deployed Themed Skeleton** - Vite/React/TS/Tailwind app live on the project URL with CI, JS budget, light/dark tokens and one motion-preference source
 - [ ] **Phase 3: Content-Complete Site** - All six sections with real content, resume download, copy-email and navigation, passing the 10-second phone test
 - [ ] **Phase 4: Motion System and Signature Rail** - Shared motion rules plus the handled-object project rail with overlay, touch and keyboard paths
@@ -36,7 +36,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. A design tokens doc records the palette and type chosen via realtimecolors after exploring alternatives to the seed indigo, as light and dark sets, with a contrast matrix of text, UI and focus pairs in both themes that meets WCAG 2.2 AA on paper.
   5. A motion spec lists each interaction with its owner library, touch equivalent and reduced-motion fallback, and an architecture doc, an ADR log (open decisions listed) and a deploy runbook draft exist.
 
-**Plans:** 7/7 plans executed
+**Plans:** 7/7 plans complete
 
 Plans:
 **Wave 1**
@@ -152,7 +152,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Decisions and Documentation | 7/7 | In Progress|  |
+| 1. Decisions and Documentation | 7/7 | Complete    | 2026-10-09 |
 | 2. Deployed Themed Skeleton | 0/0 | Not started | - |
 | 3. Content-Complete Site | 0/0 | Not started | - |
 | 4. Motion System and Signature Rail | 0/0 | Not started | - |
