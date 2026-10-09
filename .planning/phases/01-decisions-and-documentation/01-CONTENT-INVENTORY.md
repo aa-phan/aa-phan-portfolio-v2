@@ -1,6 +1,6 @@
 # Content Inventory (DOC-02, CNT-03)
 
-Status: Draft
+Status: Accepted
 
 Phase 1 plan 01-01 created this file with the structure, the source-of-truth rules and the Contact Me section. Plan 01-03 adds the other six sections, the gap register (D-07) and the experience recount (D-09).
 
@@ -50,7 +50,8 @@ Wireframes: `### Frame: Hero` in `01-IA-WIREFRAMES.md`. The hero role line is ga
 - Option 3: Software engineer who builds real-time pipelines, serverless services and the tools around them.
 - Source: resume (Capital One, Spectrum, Symbotic bullets and the Education block supply the facts behind each option).
 - Legacy-site value: None. The iPod site has no hero or tagline.
-- Resolution: Open until the G-04 ruling. Option 1 is the proposed default.
+- Chosen: Software engineer building cloud-native backends in Go.
+- Resolution: Option 1 chosen by the G-04 ruling (accept-defaults, 2026-10-09).
 
 ### HERO-03 CTAs
 
@@ -121,7 +122,7 @@ Five entries, newest first. EXP-01 to EXP-03 come from the resume. EXP-04 and EX
   3. Utilized Linux to integrate a network-attached storage rack into business infrastructure.
 - Source: legacy site
 - Legacy-site value: Software Engineer Intern, OdderTech IT: June 2023 - Aug 2023.
-- Resolution: Not on the resume, so kept from the legacy site (G-10, R-06). Dates normalized per the policy. Location is unknown and is left blank rather than guessed.
+- Resolution: Not on the resume, so kept from the legacy site (G-10 ruled: kept, R-06). Dates normalized per the policy. Location is unknown and is left blank rather than guessed.
 
 ### EXP-05 The University of Texas at Austin
 
@@ -153,9 +154,9 @@ Seven projects. PRJ-01 to PRJ-03 come from the resume; PRJ-04 to PRJ-07 are lega
   2. Developed a deterministic matching engine ranking grocery products by availability, package fit, and unit price.
   3. Implemented an OAuth2-secured cart workflow with explicit user approval, encrypted tokens, and automated secret redaction.
 - Related experience: none
-- Links: none supplied (G-01)
-- Image: none supplied (G-02)
-- Featured: open (G-03, proposed yes)
+- Links: none yet, deferred to Phase 3 (G-01)
+- Image: none yet, deferred to Phase 3 (G-02)
+- Featured: yes
 - Source: resume
 - Legacy-site value: Personal Project: July 2026; stack TypeScript, Railway, Docker, CSS. Bullets identical.
 - Resolution: Resume stack "Typescript" recased to "TypeScript" (R-09).
@@ -171,9 +172,9 @@ Seven projects. PRJ-01 to PRJ-03 come from the resume; PRJ-04 to PRJ-07 are lega
   2. Conducted user testing with off-net installation teams to iteratively refine features based on direct feedback.
   3. Documented technical architecture, reducing developer onboarding time by 12%.
 - Related experience: EXP-02
-- Links: none supplied (G-01)
-- Image: none supplied (G-02)
-- Featured: open (G-03, proposed yes)
+- Links: none yet, deferred to Phase 3 (G-01)
+- Image: none yet, deferred to Phase 3 (G-02)
+- Featured: yes
 - Source: resume
 - Legacy-site value: Spectrum: May 2025 – August 2025; stack Python, Flask, HTML/CSS, JavaScript. Bullets identical.
 - Resolution: Resume lists HTML and CSS as separate stack items and the resume wins, so they are kept separate. "Javascript" recased to "JavaScript" (R-09). The 30% figure matches EXP-02 (R-07).
@@ -190,9 +191,9 @@ Seven projects. PRJ-01 to PRJ-03 come from the resume; PRJ-04 to PRJ-07 are lega
   3. Trained and evaluated classification models with TensorFlow and Keras to identify patterns associated with unusable freight.
   4. Built a PyQt interface enabling non-technical teams to upload CSV files and review SKU-level predictions for targeted investigation.
 - Related experience: EXP-03
-- Links: none supplied (G-01)
-- Image: none supplied (G-02)
-- Featured: open (G-03, proposed yes)
+- Links: none yet, deferred to Phase 3 (G-01)
+- Image: none yet, deferred to Phase 3 (G-02)
+- Featured: yes
 - Source: resume
 - Legacy-site value: Symbotic: January 2025 – May 2025; stack Python, PyQT, TensorFlow, Keras, Scikit-learn. Four bullets with the figures 25% automation, at least 50% accuracy, 24% model improvement and 36% fewer labor hours.
 - Resolution: Resume bullets used verbatim, none of the legacy figures published (R-01, D-08). Stack "PyQT" recased to "PyQt" (R-09).
@@ -209,9 +210,9 @@ Seven projects. PRJ-01 to PRJ-03 come from the resume; PRJ-04 to PRJ-07 are lega
   3. Applied database management concepts to ensure low-latency exchange between frontend and backend applications.
   4. Integrated Supabase into the data storage schema for previous user watch history.
 - Related experience: none
-- Links: none supplied (G-01)
-- Image: none supplied (G-02)
-- Featured: open (G-03, proposed no)
+- Links: none yet, deferred to Phase 3 (G-01)
+- Image: none yet, deferred to Phase 3 (G-02)
+- Featured: no
 - Source: legacy site
 - Legacy-site value: Brainrot Hackathon: November 2024; stack Python, Langchain, Supabase. Same as above.
 - Resolution: Not on the resume, kept from the legacy site.
@@ -228,12 +229,12 @@ Seven projects. PRJ-01 to PRJ-03 come from the resume; PRJ-04 to PRJ-07 are lega
   3. Integrated MongoDB for efficient data storage and retrieval, ensuring robust and scalable database management.
   4. Utilized Scene Builder to design and arrange user interface components, streamlining development and improving usability.
 - Related experience: none
-- Links: none supplied (G-01)
-- Image: none supplied (G-02)
-- Featured: open (G-03, proposed no)
+- Links: none yet, deferred to Phase 3 (G-01)
+- Image: none yet, deferred to Phase 3 (G-02)
+- Featured: no
 - Source: legacy site
 - Legacy-site value: ECE 422C: Spring 2024.
-- Resolution: Academic term converted to months per the G-08 proposed default (Spring 2024 = January 2024 – May 2024). Final months follow the G-08 ruling.
+- Resolution: Academic term converted to months per the G-08 ruling (Spring 2024 = January 2024 – May 2024). Confirmed by the G-08 ruling.
 
 ### PRJ-06 FPGA-Based Stopwatch
 
@@ -246,12 +247,12 @@ Seven projects. PRJ-01 to PRJ-03 come from the resume; PRJ-04 to PRJ-07 are lega
   2. Developed and tested the stopwatch functionality on an FPGA board, ensuring accurate timekeeping and reliable performance.
   3. Applied state machine concepts to manage the stopwatch's operational states, enhancing the overall system efficiency.
 - Related experience: none
-- Links: none supplied (G-01)
-- Image: none supplied (G-02)
-- Featured: open (G-03, proposed no)
+- Links: none yet, deferred to Phase 3 (G-01)
+- Image: none yet, deferred to Phase 3 (G-02)
+- Featured: no
 - Source: legacy site
 - Legacy-site value: ECE 313: Fall 2023.
-- Resolution: Academic term converted per the G-08 proposed default (Fall 2023 = August 2023 – December 2023). Final months follow the G-08 ruling.
+- Resolution: Academic term converted per the G-08 ruling (Fall 2023 = August 2023 – December 2023). Confirmed by the G-08 ruling.
 
 ### PRJ-07 Smart Mirror
 
@@ -263,12 +264,12 @@ Seven projects. PRJ-01 to PRJ-03 come from the resume; PRJ-04 to PRJ-07 are lega
   1. Fabricated a mirror frame using plywood and power tools to house a two-way mirror, a Raspberry Pi, and a computer monitor.
   2. Used Ubuntu Linux to create a custom GUI displaying information such as real-time weather content and traffic data to function as a smart display.
 - Related experience: none
-- Links: none supplied (G-01)
-- Image: none supplied (G-02)
-- Featured: open (G-03, proposed no)
+- Links: none yet, deferred to Phase 3 (G-01)
+- Image: none yet, deferred to Phase 3 (G-02)
+- Featured: no
 - Source: legacy site
 - Legacy-site value: Personal Project: Summer 2022.
-- Resolution: Academic term converted per the G-08 proposed default (Summer 2022 = June 2022 – August 2022). Final months follow the G-08 ruling.
+- Resolution: Academic term converted per the G-08 ruling (Summer 2022 = June 2022 – August 2022). Confirmed by the G-08 ruling.
 
 ## About Me {#about}
 
@@ -371,7 +372,7 @@ Six items. Five are public; one (CON-06) is recorded only to make its exclusion 
 - Value: aaron.phan240@gmail.com
 - Source: resume (header)
 - Legacy-site value: aaron.phan240@gmail.com (`mailto:aaron.phan240@gmail.com`).
-- Resolution: Resume and legacy agree, so there is no conflict. The user already confirmed a public email on 2026-10-09 (PROJECT.md key decisions); plan 01-03 rules on the final confirmation per D-11. Rendered as a `mailto:` link plus a Copy email button (IX-09).
+- Resolution: Resume and legacy agree, so there is no conflict. Confirmed public (D-11 ruling, 2026-10-09, G-07). Rendered as a `mailto:` link plus a Copy email button (IX-09).
 
 ### CON-02 GitHub
 
@@ -423,27 +424,27 @@ Every place the resume and the legacy site disagree, or a source was added or dr
 | R-07 | Spectrum and A.T.L.A.S both state 30% efficiency | The resume places the 30% figure in both the Spectrum bullet and the A.T.L.A.S bullet | Same | Kept in both places as written on the resume (EXP-02, PRJ-02). |
 | R-08 | Education GPA and track | Omitted | GPA 3.2, Track Data Science | Taken from the legacy site because the resume omits them (EDU-01). |
 | R-09 | Stack and skill name casing and order | Mixed casing (Typescript, Javascript, MatLAB, PyQT, Tensorflow, Pytorch) | PyQT, otherwise official casing | Official product casing and alphabetical skill order per G-09 (SKL-01..04, PRJ-01..03). |
-| R-10 | Legacy skills absent from the resume skills list | Not listed | AWS CloudFormation, AWS Lambda under Developer Tools | Dropped by default per D-10 (G-13). Both still appear in the Capital One bullets. |
+| R-10 | Legacy skills absent from the resume skills list | Not listed | AWS CloudFormation, AWS Lambda under Developer Tools | Dropped per D-10 (G-13 ruled: dropped). Both still appear in the Capital One bullets. |
 
 ## Content gaps
 
-Each gap needs a ruling (D-07): supplied, deferred (Phase 3) or dropped. The Ruling column is filled and Status is changed after the user rules.
+Each gap needs a ruling (D-07): supplied, deferred (Phase 3) or dropped. The user ruled on 2026-10-09 with "accept-defaults": every proposed default stands and the public email is confirmed (D-11).
 
 | ID | Gap | Proposed default | Ruling | Status |
 |----|-----|------------------|--------|--------|
-| G-01 | Project links (repo or demo URLs) for PRJ-01 to PRJ-07 | Deferred (Phase 3) |  | open |
-| G-02 | Project screenshots or cover art | Deferred (Phase 3) |  | open |
-| G-03 | Featured projects | Supplied as PRJ-01, PRJ-02, PRJ-03 |  | open |
-| G-04 | Hero role line (HERO-02) | Supplied as option 1 from HERO-02 |  | open |
-| G-05 | UT Austin logo | Deferred (Phase 3), with a monogram chip if no asset arrives |  | open |
-| G-06 | OdderTech logo | Deferred (Phase 3), with a monogram chip if no asset arrives |  | open |
-| G-07 | Public email | Supplied as aaron.phan240@gmail.com (resume and legacy agree, D-11) |  | open |
-| G-08 | Academic-term dates | Supplied: Spring 2024 = January 2024 – May 2024, Fall 2023 = August 2023 – December 2023, Summer 2022 = June 2022 – August 2022 |  | open |
-| G-09 | Skill and stack name casing and order | Supplied: official product casing (TypeScript, JavaScript, PyQt, MATLAB, TensorFlow, PyTorch), alphabetical within each skill group, stacks keep source order |  | open |
-| G-10 | Keep the legacy-only OdderTech IT role (EXP-04) | Supplied (kept) |  | open |
-| G-11 | Keep the high school education entry (EDU-02) | Supplied (kept) |  | open |
-| G-12 | Higher-resolution employer logos (Capital One, Spectrum, Symbotic are favicon-grade) | Deferred (Phase 3) |  | open |
-| G-13 | Legacy-only skills not on the resume skills list (AWS CloudFormation, AWS Lambda) | Dropped per D-10 |  | open |
+| G-01 | Project links (repo or demo URLs) for PRJ-01 to PRJ-07 | Deferred (Phase 3) | Default accepted: no URLs supplied now | deferred (Phase 3) |
+| G-02 | Project screenshots or cover art | Deferred (Phase 3) | Default accepted: no images supplied now | deferred (Phase 3) |
+| G-03 | Featured projects | Supplied as PRJ-01, PRJ-02, PRJ-03 | Default accepted: PRJ-01, PRJ-02, PRJ-03 are featured | supplied |
+| G-04 | Hero role line (HERO-02) | Supplied as option 1 from HERO-02 | Default accepted: option 1, "Software engineer building cloud-native backends in Go." | supplied |
+| G-05 | UT Austin logo | Deferred (Phase 3), with a monogram chip if no asset arrives | Default accepted: asset deferred, monogram chip fallback | deferred (Phase 3) |
+| G-06 | OdderTech logo | Deferred (Phase 3), with a monogram chip if no asset arrives | Default accepted: asset deferred, monogram chip fallback | deferred (Phase 3) |
+| G-07 | Public email | Supplied as aaron.phan240@gmail.com (resume and legacy agree, D-11) | Default accepted: aaron.phan240@gmail.com confirmed public (D-11) | supplied |
+| G-08 | Academic-term dates | Supplied: Spring 2024 = January 2024 – May 2024, Fall 2023 = August 2023 – December 2023, Summer 2022 = June 2022 – August 2022 | Default accepted as proposed | supplied |
+| G-09 | Skill and stack name casing and order | Supplied: official product casing (TypeScript, JavaScript, PyQt, MATLAB, TensorFlow, PyTorch), alphabetical within each skill group, stacks keep source order | Default accepted as proposed | supplied |
+| G-10 | Keep the legacy-only OdderTech IT role (EXP-04) | Supplied (kept) | Default accepted: EXP-04 kept | supplied |
+| G-11 | Keep the high school education entry (EDU-02) | Supplied (kept) | Default accepted: EDU-02 kept | supplied |
+| G-12 | Higher-resolution employer logos (Capital One, Spectrum, Symbotic are favicon-grade) | Deferred (Phase 3) | Default accepted: higher-resolution logos deferred | deferred (Phase 3) |
+| G-13 | Legacy-only skills not on the resume skills list (AWS CloudFormation, AWS Lambda) | Dropped per D-10 | Default accepted: AWS CloudFormation and AWS Lambda dropped from the skills list | dropped |
 
 ## Assets
 
@@ -463,3 +464,10 @@ The legacy template images (img-1 to img-6, blog-1 to blog-4, cover_bg_1, img_bg
 - The phone number: never published, digits not recorded (CON-06).
 - The iPod click-wheel concept and its click sounds: the v2 site is a different concept.
 - The legacy meta description: replaced by new v2 metadata.
+
+## Phase gate: ROADMAP criterion 2
+
+Experience entries: 5 (ROADMAP Phase 1 success criterion 2 expects 5)
+Projects: 7 (ROADMAP Phase 1 success criterion 2 expects 7)
+Education entries: 2 (EDU-01 carries the GPA the criterion requires)
+Deviation: none
