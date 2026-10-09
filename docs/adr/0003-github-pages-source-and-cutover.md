@@ -15,7 +15,7 @@ gh api repos/aa-phan/aa-phan.github.io/pages --jq '{build_type, source, html_url
 
 So the live site is published from branch `main`, path `/`, with `build_type` `legacy`. A Vite build cannot be served that way: the new site needs the "GitHub Actions" source, which changes how the live URL is published.
 
-This development repository is not yet on GitHub. Pushing it is gated by open decision OD-01 in the [ADR log](README.md).
+This development repository is not yet on GitHub. The OD-01 gate on pushing it is resolved (see the [ADR log](README.md)).
 
 ## Decision
 
@@ -32,7 +32,7 @@ The step-by-step procedure, the workflow settings and the smoke test are in the 
 - The live site and its history stay recoverable at every point: the old site is a tag, the cutover is one revertible commit, and nothing is rewritten.
 - There may be a short window, while the Pages source is switched, in which the live URL returns a 404. This is possible but unverified (open decision OD-05); the switch and the workflow trigger are done back to back to keep it short.
 - Staging on the project URL proves the Actions pipeline, base-path handling and asset paths before the user-site URL is touched.
-- Staging requires pushing this repository to GitHub, which is blocked until OD-01 is resolved.
+- Staging requires pushing this repository to GitHub, which OD-01 no longer blocks.
 
 ## Rollback
 

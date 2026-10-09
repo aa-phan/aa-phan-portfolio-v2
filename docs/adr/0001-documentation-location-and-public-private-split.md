@@ -20,7 +20,7 @@ The project is documentation-first: major decisions get written answers before a
 
 - Anything the public needs from a working document must be restated in `docs/`, because `docs/` cannot point at the private area.
 - Design detail for each phase stays private, so a reader of the public repo sees the decisions and their rationale but not the exploration behind them.
-- The visibility of this development repo itself is still open: its history already contains private planning notes. This is tracked as OD-01 in the [ADR log](README.md) and blocks the first push.
+- The visibility of this development repo itself was tracked as OD-01 in the [ADR log](README.md). It is resolved: personal contact details were rewritten out of the history, so the first push is no longer blocked.
 
 ## Alternatives considered
 

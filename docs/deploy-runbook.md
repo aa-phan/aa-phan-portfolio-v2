@@ -15,7 +15,7 @@ Assets are module-imported, so no absolute asset paths exist. Anything under `pu
 
 ## Prerequisites
 
-1. OD-01 resolved: blocks first push. This development repo's history already contains private planning notes, including one that records the owner's personal contact details, so before any git push of this repo to GitHub the owner either keeps the repo private or rewrites that history, and records the choice in the [ADR log](adr/README.md). This is a hard precondition, not advice.
+1. OD-01 resolved (2026-10-09): the owner's personal contact details were rewritten out of this repo's entire history. Before any push, re-run a pattern search for phone numbers over history (`git log --all -G'[0-9]{3}[-. )]+[0-9]{3}[-.][0-9]{4}' -E --oneline` should print nothing) as a guard.
 2. Node 22.12 or newer locally, `lts/*` in CI.
 3. A committed lockfile (`npm ci` fails without one).
 4. The Pages source set to GitHub Actions on the deploying repository.
@@ -43,8 +43,8 @@ Both workflows are written in the scaffold milestone. Pin every action by commit
 
 ## First staging deploy
 
-1. Stop unless OD-01 is resolved in the ADR log (blocks first push). If it is not, do nothing below.
-2. Create the GitHub repository named `aa-phan-portfolio-v2` with the visibility chosen in OD-01.
+1. Stop unless the OD-01 guard search in Prerequisites prints nothing. If it prints anything, do nothing below.
+2. Create the GitHub repository named `aa-phan-portfolio-v2` with the visibility the owner chooses.
 3. Push `main`.
 4. In the repository settings, set Pages, Source, to GitHub Actions.
 5. Run the deploy workflow with `workflow_dispatch` and watch it finish.
