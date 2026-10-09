@@ -139,6 +139,69 @@ Notes:
 - Every button and card carries the press-squish [IX-02] on its inner surface.
 - Hero text is left aligned and the bottom pill never covers a CTA at 375 x 667.
 
+### Frame: Hero @ 768
+
+The sticky top nav replaces the pill nav at 768 px. The nav row is drawn to scale, so it has no side padding in this frame.
+
+```text
++--------------------------------------------------------------+
+|Experience Projects About Skills Education Contact (o)[Resume]|
+|sticky top nav  [IX-08] indicator  [IX-10] theme              |
+|                                                              |
+| {#hero}                                                      |
+|                                                              |
+| Aaron Phan                                                   |
+|                                                              |
+| Software engineer building cloud-native backends in          |
+| Go.   [IX-01]                                                |
+|                                                              |
+| +----------------------+  +------------------+               |
+| | [ Download resume ]  |  | [ Copy email ]   |   Contact >   |
+| +----------------------+  +------------------+               |
+| CTA surfaces squish on press [IX-02]; copy [IX-09]           |
+|                                                              |
+| Experience                                                   |
+| (top edge of {#experience})                                  |
++--------------------------------------------------------------+
+```
+
+Notes:
+
+- Nav is chosen by width (768 px and up); pointer effects are chosen by pointer capability.
+- The skip link targets {#main} and appears before the nav on first Tab.
+
+### Frame: Hero @ 1280
+
+The hero at desktop width. Name and role sit left; the CTA wrappers get the fine-pointer Magnetic effect, which is decoration only.
+
+```text
++----------------------------------------------------------------------------------------------+
+| Aaron Phan      Experience  Projects  About  Skills  Education  Contact     (o) [ Resume ]   |
+|sticky top nav   scroll-spy [IX-08]   theme toggle [IX-10]                                    |
+|                                                                                              |
+| {#hero}                                                                                      |
+|                                                                                              |
+|                                                                                              |
+| Aaron Phan                                                                                   |
+|                                                                                              |
+| Software engineer building cloud-native backends in Go.   [IX-01]                            |
+|                                                                                              |
+| +------------------------+   +------------------+                                            |
+| | [ Download resume ]    |   | [ Copy email ]   |    Contact >                               |
+| +------------------------+   +------------------+                                            |
+|   ^ CTA wrappers carry Magnetic [IX-17]; inner buttons squish [IX-02]                        |
+|                                                                                              |
+| wheel scroll is smoothed on desktop [IX-16]; first section reveal [IX-15]                    |
+|                                                                                              |
+| Experience   (top edge of {#experience})                                                     |
++----------------------------------------------------------------------------------------------+
+```
+
+Notes:
+
+- Magnetic is fine-pointer only: (hover: hover) and (pointer: fine). Touch gets [IX-02] only.
+- IX IDs used here: [IX-01] [IX-02] [IX-08] [IX-09] [IX-10] [IX-15] [IX-16] [IX-17]. Anchors: {#hero}, {#main}.
+
 ### Frame: Experience @ 375
 
 Five cards, newest first, one per inventory entry (EXP-01 to EXP-05). Logo chips [logo] come from the assets; EXP-04 and EXP-05 use monogram chips (G-05, G-06). Cards are collapsed by default; Details expands the three bullets.
@@ -197,6 +260,95 @@ Notes:
 - The metric (a number in the bullets) counts up once when it scrolls into view [IX-12]; the final value is in the DOM from the start.
 - Card header is a button with aria-expanded [IX-11]. Frame labels are abbreviated; full copy lives in 01-CONTENT-INVENTORY.md.
 
+### Frame: Experience @ 768
+
+A single column of full-width cards. The sticky nav is above; expanding a card pushes the next one down (layout animation, [IX-11]).
+
+```text
++--------------------------------------------------------------+
+| {#experience}                                                |
+|                                                              |
+| Experience                                                   |
+|                                                              |
+| +----------------------------------------------------------+ |
+| | [logo] Software Engineer Intern                          | |
+| |        Capital One, Plano, TX     June 2026 - August 2026| |
+| |        100K+ events/day [IX-12]         v Details [IX-11]| |
+| +----------------------------------------------------------+ |
+| +----------------------------------------------------------+ |
+| | [logo] Network Engineer Intern                           | |
+| |        Spectrum, Austin, TX        May 2025 - August 2025| |
+| |        30% efficiency [IX-12]           v Details [IX-11]| |
+| +----------------------------------------------------------+ |
+| +----------------------------------------------------------+ |
+| | [logo] System Engineer Intern                            | |
+| |        Symbotic, Raymond, NH      January 2025 - May 2025| |
+| |        8+ prod lines [IX-12]            v Details [IX-11]| |
+| +----------------------------------------------------------+ |
+| +----------------------------------------------------------+ |
+| | [ O  ] Software Engineer Intern                          | |
+| |        OdderTech IT               June 2023 - August 2023| |
+| |                                         v Details [IX-11]| |
+| +----------------------------------------------------------+ |
+| +----------------------------------------------------------+ |
+| | [ UT ] ITS Student Consultant I                          | |
+| |        Univ. of Texas at Austin    August 2022 - Oct 2023| |
+| |                                         v Details [IX-11]| |
+| +----------------------------------------------------------+ |
+|                                                              |
+| each card reveals on scroll [IX-15]                          |
++--------------------------------------------------------------+
+```
+
+Notes:
+
+- Card expand and metric count-up behave as at 375. Anchors: {#experience}. IX IDs: [IX-11] [IX-12] [IX-15].
+
+### Frame: Experience @ 1280
+
+Two columns. Spotlight [IX-17] is on the experience cards and is fine-pointer only.
+
+```text
++----------------------------------------------------------------------------------------------+
+| {#experience}                                                                                |
+|                                                                                              |
+| Experience                                                                                   |
+|                                                                                              |
+| +-------------------------------------------+  +-------------------------------------------+ |
+| | [logo] Software Engineer Intern           |  | [logo] Network Engineer Intern            | |
+| |        Capital One, Plano, TX             |  |        Spectrum, Austin, TX               | |
+| |        June 2026 - August 2026            |  |        May 2025 - August 2025             | |
+| |        100K+ events/day [IX-12]           |  |        30% efficiency [IX-12]             | |
+| |                         v Details [IX-11] |  |                         v Details [IX-11] | |
+| |        Spotlight follows pointer [IX-17]  |  |                                           | |
+| +-------------------------------------------+  +-------------------------------------------+ |
+|                                                                                              |
+| +-------------------------------------------+  +-------------------------------------------+ |
+| | [logo] System Engineer Intern             |  | [ O  ] Software Engineer Intern           | |
+| |        Symbotic, Raymond, NH              |  |        OdderTech IT                       | |
+| |        January 2025 - May 2025            |  |        June 2023 - August 2023            | |
+| |        8+ prod lines [IX-12]              |  |        (no metric)                        | |
+| |                         v Details [IX-11] |  |                         v Details [IX-11] | |
+| |                                           |  |                                           | |
+| +-------------------------------------------+  +-------------------------------------------+ |
+|                                                                                              |
+| +-------------------------------------------+                                                |
+| | [ UT ] ITS Student Consultant I           |                                                |
+| |        Univ. of Texas at Austin           |                                                |
+| |        August 2022 - October 2023         |                                                |
+| |        (no metric)                        |                                                |
+| |                         v Details [IX-11] |                                                |
+| |                                           |                                                |
+| +-------------------------------------------+                                                |
+|                                                                                              |
+| each card reveals on scroll [IX-15]                                                          |
++----------------------------------------------------------------------------------------------+
+```
+
+Notes:
+
+- Card expand [IX-11] and metric count-up [IX-12] are the same on every width. Anchors: {#experience}.
+
 ### Frame: Projects @ 375
 
 The touch rail: native horizontal scroll with scroll-snap. The current card is about 80 percent of the width and the next card peeks, so the rail reads as swipeable.
@@ -231,6 +383,72 @@ Notes:
 
 - Tap a card to open the overlay [IX-05]. Tapping squishes the card [IX-02]. See the Rail touch form state for the swipe strip.
 - Cards show a cover placeholder because no screenshots exist yet (G-02, deferred to Phase 3).
+
+### Frame: Projects @ 768
+
+The same scroll-snap rail, with two and a half cards visible.
+
+```text
++--------------------------------------------------------------+
+| {#projects}                                                  |
+|                                                              |
+| Projects                                                     |
+| swipe, then tap a card [IX-04]                               |
+|                                                              |
+| +----------------------+ +----------------------+ +--------  |
+| | cover (G-02)         | | cover (G-02)         | | cover (  |
+| |                      | |                      | |          |
+| | * Featured           | | * Featured           | | * Featu  |
+| | RecipeCart           | | A.T.L.A.S            | | Suspect  |
+| |                      | |                      | |          |
+| | TypeScript, Railway, | | Python, Flask, HTML, | | Python,  |
+| | Docker, CSS          | | CSS, JavaScript      | | TensorF  |
+| |                      | |                      | | Scikit-  |
+| | July 2026            | | May 2025-Aug 2025    | | Jan 202  |
+| +----------------------+ +----------------------+ +--------  |
+|                                                              |
+| 1 / 7      o . . . . . .                                     |
+|                                                              |
+| At 768 the rail stays a touch rail; trackpad and             |
+| shift-wheel also scroll it.                                  |
++--------------------------------------------------------------+
+```
+
+Notes:
+
+- Anchors: {#projects}. IX IDs: [IX-04] [IX-05] (open) [IX-02].
+
+### Frame: Projects @ 1280
+
+Rail at rest on a fine pointer. The hover and keyboard-focus forms are drawn in the state frames.
+
+```text
++----------------------------------------------------------------------------------------------+
+| {#projects}                                                                                  |
+|                                                                                              |
+| Projects                                                                                     |
+| hover lifts a card [IX-03]; Tab and arrow keys do the same [IX-06]                           |
+|                                                                                              |
+| +--------------------+ +--------------------+ +--------------------+ +--------------------+ +|
+| | cover (G-02)       | | cover (G-02)       | | cover (G-02)       | | cover (G-02)       | ||
+| |                    | |                    | |                    | |                    | ||
+| | * Featured         | | * Featured         | | * Featured         | |                    | ||
+| | RecipeCart         | | A.T.L.A.S          | | Suspect Genie      | | MediaDash: Content | ||
+| |                    | |                    | |                    | | Recommendation Hub | ||
+| | TypeScript,        | | Python, Flask,     | | Python, PyQt,      | | Python, Langchain, | ||
+| | Railway, Docker,   | | HTML, CSS,         | | TensorFlow, Keras, | | Supabase           | ||
+| | CSS                | | JavaScript         | | Scikit-learn       | |                    | ||
+| | July 2026          | | May 2025-Aug 2025  | | Jan 2025-May 2025  | | November 2024      | ||
+| +--------------------+ +--------------------+ +--------------------+ +--------------------+ +|
+|                                                                                              |
+| 1 / 7      scroll with trackpad or shift-wheel [IX-04]                                       |
+| click or Enter opens the overlay [IX-05]                                                     |
++----------------------------------------------------------------------------------------------+
+```
+
+Notes:
+
+- No Tilt on rail cards (IX-17 is scoped to the About photo). Anchors: {#projects}. IX IDs: [IX-03] [IX-04] [IX-05] [IX-06].
 
 ### Frame: About Me @ 375
 
@@ -272,6 +490,64 @@ Notes:
 
 - Photo alt text: Aaron Phan DJing at his UT Austin graduation. The DJ Instagram link lives in {#contact}.
 
+### Frame: About Me @ 768
+
+Photo left, copy right.
+
+```text
++--------------------------------------------------------------+
+| {#about}                                                     |
+|                                                              |
+| About Me                                                     |
+|                                                              |
+| +----------------------+  Hello there! My name is Aaron      |
+| |                      |  Phan, and I'm a software engineer  |
+| |  photo (539 x 800)   |  by day, and aspiring artist by     |
+| |  about-dj.jpg        |  night.                             |
+| |                      |                                     |
+| |  Tilt: desktop only  |  In my spare time, I enjoy          |
+| |  [IX-17]             |  listening to EDM, cooking, and     |
+| |                      |  DJing under the pseudonym PHVNTM.  |
+| +----------------------+                                     |
+|                           "The best time to start was        |
+|                           yesterday, the next best time to   |
+|                           start is today."                   |
+|                                                              |
+| reveal on scroll [IX-15]                                     |
++--------------------------------------------------------------+
+```
+
+Notes:
+
+- Anchors: {#about}. IX IDs: [IX-15] [IX-17] (Tilt, fine pointer only).
+
+### Frame: About Me @ 1280
+
+The About photo is the only Tilt target on the page.
+
+```text
++----------------------------------------------------------------------------------------------+
+| {#about}                                                                                     |
+|                                                                                              |
+| About Me                                                                                     |
+|                                                                                              |
+|  +--------------------------+    Hello there! My name is Aaron Phan, and I'm a software      |
+|  |                          |    engineer by day, and aspiring artist by night.              |
+|  |  photo (539 x 800)       |                                                                |
+|  |  about-dj.jpg            |    In my spare time, I enjoy listening to EDM, cooking, and    |
+|  |                          |    DJing under the pseudonym PHVNTM.                           |
+|  |  Tilt on pointer [IX-17] |                                                                |
+|  |                          |    "The best time to start was yesterday, the next best time   |
+|  +--------------------------+    to start is today."                                         |
+|                                                                                              |
+| reveal on scroll [IX-15]                                                                     |
++----------------------------------------------------------------------------------------------+
+```
+
+Notes:
+
+- Tilt is disabled on touch and under reduced motion. Anchors: {#about}.
+
 ### Frame: Skills @ 375
 
 The slider strip [IX-13] carries four rows (Languages, Frameworks, Developer Tools, Libraries). Every skill is also reachable as static text.
@@ -307,6 +583,52 @@ The slider strip [IX-13] carries four rows (Languages, Frameworks, Developer Too
 Notes:
 
 - With reduced motion or no JavaScript the strip is replaced by the wrapped static list; no skill is only available inside the moving strip.
+
+### Frame: Skills @ 768
+
+Four labelled strips.
+
+```text
++--------------------------------------------------------------+
+| {#skills}                                                    |
+|                                                              |
+| Skills                                                       |
+|                                                              |
+| Languages        (C/C++) (Go) (HTML/CSS) (Java) ->           |
+| Frameworks       (Flask) (JavaFX) (JUnit) (Langchain) ->     |
+| Developer Tools  (Anaconda) (Claude Code) (Docker) ->        |
+| Libraries        (Keras) (Matplotlib) (NumPy) ->             |
+|                                                              |
+| strips drift [IX-13]; static list if motion is reduced       |
++--------------------------------------------------------------+
+```
+
+Notes:
+
+- Anchors: {#skills}. IX IDs: [IX-13] [IX-15].
+
+### Frame: Skills @ 1280
+
+Four strips; the chips repeat to make the loop seamless.
+
+```text
++----------------------------------------------------------------------------------------------+
+| {#skills}                                                                                    |
+|                                                                                              |
+| Skills                                                                                       |
+|                                                                                              |
+|  Languages        (C/C++) (Go) (HTML/CSS) (Java) (JavaScript) (MATLAB) (Python) ->           |
+|  Frameworks       (Flask) (JavaFX) (JUnit) (Langchain) (PyQt) (Flask) (JavaFX) ->            |
+|  Developer Tools  (Anaconda) (Claude Code) (Docker) (Git) (IntelliJ) (Jenkins) ->            |
+|  Libraries        (Keras) (Matplotlib) (NumPy) (Pandas) (PyTorch) (Scikit-learn) ->          |
+|                                                                                              |
+| strips drift and pause on hover or focus [IX-13]                                             |
++----------------------------------------------------------------------------------------------+
+```
+
+Notes:
+
+- The repeated chips are aria-hidden copies; screen readers get each skill once. Anchors: {#skills}.
 
 ### Frame: Education @ 375
 
@@ -345,6 +667,59 @@ Two cards: UT Austin (the degree, newest first) and the high school entry. Cards
 Notes:
 
 - Card header is a button with aria-expanded [IX-14]. Anchors: {#education}.
+
+### Frame: Education @ 768
+
+Full-width cards; UT Austin is drawn expanded.
+
+```text
++--------------------------------------------------------------+
+| {#education}                                                 |
+|                                                              |
+| Education                                                    |
+|                                                              |
+| +----------------------------------------------------------+ |
+| | B.S. Electrical & Computer Engineering                   | |
+| | The University of Texas at Austin, Austin, TX            | |
+| | August 2022 - December 2026                              | |
+| | GPA 3.2   Track: Data Science                            | |
+| |                                        ^ Details [IX-14] | |
+| +----------------------------------------------------------+ |
+| +----------------------------------------------------------+ |
+| | High School Diploma                             May 2022 | |
+| | Glenda Dawson High School, Pearland, TX                  | |
+| |                                        v Details [IX-14] | |
+| +----------------------------------------------------------+ |
++--------------------------------------------------------------+
+```
+
+Notes:
+
+- Anchors: {#education}. IX IDs: [IX-14] [IX-15].
+
+### Frame: Education @ 1280
+
+Two cards side by side; the UT Austin card is drawn expanded.
+
+```text
++----------------------------------------------------------------------------------------------+
+| {#education}                                                                                 |
+|                                                                                              |
+| Education                                                                                    |
+|                                                                                              |
+|  +--------------------------------------------+   +--------------------------------------+   |
+|  | B.S. Electrical & Computer Engineering     |   | High School Diploma                  |   |
+|  | The University of Texas at Austin          |   | Glenda Dawson High School            |   |
+|  | Austin, TX   August 2022 - December 2026   |   | Pearland, TX   May 2022              |   |
+|  | GPA 3.2   Track: Data Science              |   |                                      |   |
+|  |                          ^ Details [IX-14] |   |                    v Details [IX-14] |   |
+|  +--------------------------------------------+   +--------------------------------------+   |
++----------------------------------------------------------------------------------------------+
+```
+
+Notes:
+
+- Anchors: {#education}. IX IDs: [IX-14] [IX-15].
 
 ### Frame: Contact Me @ 375
 
@@ -388,3 +763,47 @@ Notes:
 - Every row is a full-width 44 px or taller touch target; the email address is also a plain `mailto:` link so it works without JavaScript.
 - Each link has a visible text label, so no link is identified by an icon alone.
 - Focus order follows reading order: Copy email, mailto link, Download resume, GitHub, LinkedIn, DJ Instagram.
+
+### Frame: Contact Me @ 768
+
+Two columns: the copy and email actions on the left, the resume and the three profile links on the right. Touch targets stay at least 44 px. The sticky top nav is in use at this width, so there is no bottom pill.
+
+```text
++--------------------------------------------------------------+
+| {#contact}                                                   |
+|                                                              |
+| Contact Me                                                   |
+| The fastest way to reach me is email.                        |
+|                                                              |
+| +--------------------------+  +--------------------------+   |
+| | [ Copy email ]   [IX-09] |  | [ Download resume ]      |   |
+| +--------------------------+  +--------------------------+   |
+|  aaron.phan240@gmail.com       GitHub       github.com/..    |
+|  (mailto)                      LinkedIn     linkedin.com/..  |
+|                                DJ Instagram instagram.com/.  |
++--------------------------------------------------------------+
+```
+
+### Frame: Contact Me @ 1280
+
+A wide block in the content column. At this width the sticky nav is at the top of the page, so there is no bottom pill.
+
+```text
++----------------------------------------------------------------------------------------------+
+| {#contact}                                                                                   |
+|                                                                                              |
+| Contact Me                                                                                   |
+| The fastest way to reach me is email.                                                        |
+|                                                                                              |
+| +------------------------------+       +--------------------------------------------------+  |
+| | [ Copy email ]       [IX-09] |       | GitHub          github.com/aa-phan               |  |
+| +------------------------------+       | LinkedIn        linkedin.com/in/aa-phan          |  |
+|  aaron.phan240@gmail.com (mailto)      | DJ Instagram    instagram.com/phvntm_            |  |
+|                                        +--------------------------------------------------+  |
+| +------------------------------+                                                             |
+| | [ Download resume ]          |                                                             |
+| +------------------------------+                                                             |
+|                                                                                              |
+| Copy email is the Magnetic wrapper target [IX-17]; the copy action itself is [IX-09]         |
++----------------------------------------------------------------------------------------------+
+```
