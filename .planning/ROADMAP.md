@@ -41,7 +41,7 @@ Plans:
 - [ ] 01-04-PLAN.md — Three palette and type candidates, user pick, contrast matrix and tokens (wave 2)
 - [ ] 01-05-PLAN.md — Motion spec: tokens, reduced motion, ownership matrix, 17 interactions (wave 2)
 - [ ] 01-06-PLAN.md — ADR-0003..0006 (Pages source, TS 6, SVG icons, dialog a11y) and deploy runbook (wave 3)
-- [ ] 01-07-PLAN.md — IA and wireframes at 375/768/1280, rail/overlay/nav states, cross-doc check (wave 3)
+- [ ] 01-07-PLAN.md — IA and wireframes at 375/768/1280, rail/overlay/nav states, cross-doc check (wave 4)
 
 ### Phase 2: Deployed Themed Skeleton
 **Goal:** As a visitor, I want to open the deployed project URL and see a fast, themed hero in light or dark, so that hosting, CI, theming and motion risks are retired before content is built.
