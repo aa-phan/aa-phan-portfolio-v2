@@ -212,7 +212,7 @@ Each interaction is a subsection of bullet lines in the form `- Label: value`, w
 ### IX-07 Mobile morphing pill nav
 
 - Section: global
-- Trigger: tap on the bottom pill below 768 px
+- Trigger: tap on the Menu segment of the bottom pill below 768 px (the Experience and Projects segments are plain anchors that jump straight to their sections)
 - Element: the bottom pill, which expands in place into a frosted panel (reference 445)
 - Owner library: motion
 - API: layout animation on the pill and panel container, AnimatePresence for the panel content

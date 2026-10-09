@@ -47,10 +47,10 @@ A first-time visitor on a phone can find name, role, experience, projects, resum
 |------|----------------|-------------------|
 | Name | {#hero} | Visible on first paint with no scrolling |
 | Role | {#hero} | The role line directly under the name |
-| Experience | {#experience} | Bottom pill nav: open the pill, tap the item |
-| Projects | {#projects} | Bottom pill nav: open the pill, tap the item |
+| Experience | {#experience} | Bottom pill nav: the Experience segment, one tap |
+| Projects | {#projects} | Bottom pill nav: the Projects segment, one tap |
 | Resume | {#hero} | The hero Resume CTA, one tap |
-| Contact | {#contact} | Bottom pill nav: open the pill, tap the item |
+| Contact | {#contact} | Hero Contact CTA, one tap (also in the pill Menu panel) |
 
 Pass rule: all six found in 10 seconds or less, timed on a real phone with motion enabled.
 
