@@ -1,6 +1,6 @@
 # Information Architecture and Wireframes (DOC-03)
 
-Status: Draft
+Status: Accepted
 
 Phase 1 plan 01-01 created this file with the anchor registry, the frame conventions and the Contact Me frames. Plan 01-07 set the final section order and added the hero, nav, rail, overlay and every other section at 375, 768 and 1280 px.
 
@@ -806,4 +806,312 @@ A wide block in the content column. At this width the sticky nav is at the top o
 |                                                                                              |
 | Copy email is the Magnetic wrapper target [IX-17]; the copy action itself is [IX-09]         |
 +----------------------------------------------------------------------------------------------+
+```
+
+### State: Rail hover form @ 1280
+
+Reference 539: the hovered project lifted and enlarged out of the rail, its neighbors shifted aside, label visible. Fine pointer only; touch uses the swipe form.
+
+```text
++----------------------------------------------------------------------------------------------+
+| {#projects}   pointer is over card 3 (fine pointer only) [IX-03]                             |
+|                                                                                              |
+|                               +----------------------------+                                 |
+|                               | cover (G-02)               |                                 |
+|                               |                            |                                 |
+|  --+ +--------------------+   | * Featured                 |   +--------------------+ +--    |
+|    | | cover (G-02)       |   | Suspect Genie              |   | cover (G-02)       | | c    |
+|    | |                    |   |                            |   |                    | |      |
+|    | | * Featured         |   | Python, PyQt, TensorFlow,  |   |                    | |      |
+|    | | A.T.L.A.S          |   | Keras, Scikit-learn        |   | MediaDash: Content | | F    |
+|    | |                    |   |                            |   | Recommendation Hub | | S    |
+|    | | Python, Flask,     |   | Jan 2025-May 2025          |   | Python, Langchain, | | J    |
+|    | | HTML, CSS,         |   |                            |   | Supabase           | |      |
+|    | | JavaScript         |   | Open (click or Enter)      |   |                    | |      |
+|    | | May 2025-Aug 2025  |   +----------------------------+   | November 2024      | | J    |
+|  --+ +--------------------+                                    +--------------------+ +--    |
+|                                                                                              |
+|  The hovered card lifts and grows out of the rail; its neighbors make room                   |
+|  (translate only). 3 / 7                                                                     |
++----------------------------------------------------------------------------------------------+
+```
+
+Lift and neighbor shift are react-spring springs on the outer rail item [IX-03]; under reduced motion the card gets an elevation and outline change instead of the lift.
+
+### State: Rail keyboard focus @ 1280
+
+The focused card lifts like the hover form and carries a visible focus ring.
+
+```text
++----------------------------------------------------------------------------------------------+
+| {#projects}   card 2 has keyboard focus [IX-06]                                              |
+|                                                                                              |
+|                            ######################                                            |
+|                            # cover (G-02)       #                                            |
+|   +--------------------+   #                    #   +--------------------+                   |
+|   | cover (G-02)       |   # * Featured         #   | cover (G-02)       |                   |
+|   |                    |   # A.T.L.A.S          #   |                    |                   |
+|   | * Featured         |   #                    #   | * Featured         |                   |
+|   | RecipeCart         |   # Python, Flask,     #   | Suspect Genie      |                   |
+|   |                    |   # HTML, CSS,         #   |                    |                   |
+|   | TypeScript,        |   # JavaScript         #   | Python, PyQt,      |                   |
+|   | Railway, Docker,   |   # May 2025-Aug 2025  #   | TensorFlow, Keras, |                   |
+|   | CSS                |   #                    #   | Scikit-learn       |                   |
+|   | July 2026          |   # Enter opens        #   | Jan 2025-May 2025  |                   |
+|   +--------------------+   ######################   +--------------------+                   |
+|                                                                                              |
+|  # marks the visible focus ring (3:1 contrast against both backgrounds)                      |
+|  Left and Right arrows move between cards; Enter opens the overlay [IX-05];                  |
+|  Tab leaves the rail. The lift uses the same springs as the hover form [IX-03].              |
++----------------------------------------------------------------------------------------------+
+```
+
+Under reduced motion the lift is dropped and the focus ring alone marks the card.
+
+### State: Rail touch form @ 375
+
+A horizontal swipe strip with scroll-snap. The current card is about 80 percent of the width and the next card peeks.
+
+```text
++------------------------------------+
+| {#projects}                        |
+|                                    |
+| Projects  swipe [IX-04]            |
+|                                    |
+| +--------------------------+ +-----|
+| | cover (G-02)             | | cove|
+| |                          | |     |
+| | * Featured               | | * Fe|
+| | A.T.L.A.S                | | Susp|
+| |                          | |     |
+| | Python, Flask, HTML,     | | Pyth|
+| | CSS, JavaScript          | | Tens|
+| |                          | | Scik|
+| | May 2025-Aug 2025        | | Jan |
+| +--------------------------+ +-----|
+|                                    |
+| 2 / 7      . o . . . . .           |
+|                                    |
+| snaps to the next card on release  |
+| tap a card to open [IX-05]         |
+| press squishes the card [IX-02]    |
+| page scroll stays vertical         |
++------------------------------------+
+```
+
+Native horizontal overflow with scroll-snap; no touch-action is set, so vertical page scroll is never captured. Keyboard users get the focus form above.
+
+### State: Rail touch form @ 768
+
+At 768 the rail stays a touch rail but the cards cap at a fixed width, so two and a half cards show instead of one at about 80 percent.
+
+```text
++--------------------------------------------------------------+
+| {#projects}                                                  |
+|                                                              |
+| Projects  swipe left or right [IX-04]                        |
+|                                                              |
+| +----------------------+ +----------------------+ +--------  |
+| | cover (G-02)         | | cover (G-02)         | | cover (  |
+| |                      | |                      | |          |
+| | * Featured           | | * Featured           | |          |
+| | A.T.L.A.S            | | Suspect Genie        | | MediaDa  |
+| |                      | |                      | | Recomme  |
+| | Python, Flask, HTML, | | Python, PyQt,        | | Python,  |
+| | CSS, JavaScript      | | TensorFlow, Keras,   | | Supabas  |
+| |                      | | Scikit-learn         | |          |
+| | May 2025-Aug 2025    | | Jan 2025-May 2025    | | Novembe  |
+| +----------------------+ +----------------------+ +--------  |
+|                                                              |
+| 2 / 7      . o . . . . .                                     |
+|                                                              |
+| tap a card to open [IX-05]; page scroll stays vertical       |
++--------------------------------------------------------------+
+```
+
+Native horizontal overflow with scroll-snap; no touch-action is set, so vertical page scroll is never captured. Keyboard users get the focus form above.
+
+### State: Overlay open @ 1280
+
+Reference 539: a focused project panel with the rail blurred behind it, an NN / 07 index, prev and next at the sides and a clear Close at the top right.
+
+```text
++----------------------------------------------------------------------------------------------+
+| :::::::::: blurred rail behind (backdrop) :::::::::::::::::::::::::::::::::::::::::::::::::: |
+| :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: |
+|         +----------------------------------------------------------+                         |
+|         | RecipeCart                                   [ X Close ] |                         |
+|         | 01 / 07                                        July 2026 |                         |
+|         |                                                          |                         |
+|  [ < ]  | (TypeScript) (Railway) (Docker) (CSS)                    |  [ > ]                  |
+|  Prev   |                                                          |  Next                   |
+|         | - Built a TypeScript pipeline converting TikTok          |                         |
+|         |   recipes into Kroger cart items using OCR and Claude.   |                         |
+|         | - Developed a deterministic matching engine ...          |                         |
+|         | - Implemented an OAuth2-secured cart workflow ...        |                         |
+|         |                                                          |                         |
+|         | Links: shown only if supplied (none yet, G-01)           |                         |
+|         +----------------------------------------------------------+                         |
+| :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: |
+|                                                                                              |
+| [IX-05] the panel morphs out of the card; prev and next crossfade and wrap around.           |
+| Arrow keys also move prev and next; the URL does not change.                                 |
++----------------------------------------------------------------------------------------------+
+```
+
+Dialog behavior (ADR-0006): role="dialog" with aria-modal="true", labelled by the project title; focus moves into the panel and is trapped there; Escape and the Close button dismiss; the background is inert and scroll-locked; focus returns to the rail item that opened it. Motion animates only the morph and the backdrop (D-13d); if the vendored MorphingDialog fails the spike, a native dialog element drawn the same way is used.
+
+### State: Overlay open @ 375
+
+A full-screen sheet opened by tapping a card; the Close button has a 44 px target at the top right and prev and next sit in the bottom thumb zone.
+
+```text
++------------------------------------+
+| 01 / 07               [ X ]  Close |
+|                     (44 px target) |
+|                                    |
+| RecipeCart                         |
+| July 2026                          |
+|                                    |
+| (TypeScript) (Railway)             |
+| (Docker) (CSS)                     |
+|                                    |
+| - Built a TypeScript pipeline      |
+|   converting TikTok recipes into   |
+|   Kroger cart items using OCR      |
+|   and Claude.                      |
+| - Developed a deterministic        |
+|   matching engine ...              |
+| - Implemented an OAuth2-secured    |
+|   cart workflow ...                |
+|                                    |
+| Links: shown only if supplied      |
+|                                    |
+| +--------------+  +--------------+ |
+| | [ < Prev ]   |  | [ Next > ]   | |
+| +--------------+  +--------------+ |
+| thumb zone: prev and next [IX-05]  |
++------------------------------------+
+```
+
+Dialog behavior (ADR-0006): role="dialog" with aria-modal="true", labelled by the project title; focus moves into the panel and is trapped there; Escape and the Close button dismiss; the background is inert and scroll-locked; focus returns to the rail item that opened it. Motion animates only the morph and the backdrop (D-13d); if the vendored MorphingDialog fails the spike, a native dialog element drawn the same way is used.
+
+### State: Pill nav collapsed @ 375
+
+The bottom pill collapsed: two direct section segments and a Menu segment (the recruiter fast path needs no extra tap).
+
+```text
++------------------------------------+
+| {#contact} (page scrolls behind)   |
+|                                    |
+| Contact Me                         |
+| The fastest way to reach me is     |
+| email.                             |
+|                                    |
+|                                    |
+| ================================== |
+| =  Experience | Projects | Menu  = |
+| ================================== |
+|                                    |
+|  tap Experience or Projects: jump  |
+|  tap Menu: expand in place [IX-07] |
++------------------------------------+
+```
+
+The pill is a fixed element 50 on the z-index scale and sits clear of the page content. The Menu segment is a native button with aria-expanded.
+
+### State: Pill nav expanded @ 375
+
+Reference 445: the pill expands in place into a frosted panel with the six section links, the theme toggle and Resume.
+
+```text
++------------------------------------+
+| (page dims behind the panel)       |
+|                                    |
+|                                    |
+|                                    |
+|                                    |
+| ================================== |
+| = Menu               [ X ] close = |
+| =                                = |
+| =   Experience                   = |
+| =   Projects                     = |
+| =   About Me                     = |
+| =   Skills                       = |
+| =   Education                    = |
+| =   Contact Me                   = |
+| =                                = |
+| = Theme  (o)             [IX-10] = |
+| = [ Resume ]                     = |
+| ================================== |
+|                                    |
+| one element morphs pill to panel   |
+| [IX-07]; Escape or X collapses and |
+| returns focus to the pill          |
++------------------------------------+
+```
+
+Layout animation is motion's job [IX-07]; the theme toggle thumb is a react-spring spring [IX-10]. Reduced motion switches state instantly.
+
+### State: Sticky nav scroll-spy @ 1280
+
+The sticky top nav with the scroll-spy indicator under the active link.
+
+```text
++----------------------------------------------------------------------------------------------+
+| Aaron Phan      Experience  Projects  About  Skills  Education  Contact     (o) [ Resume ]   |
+|                             ========   <- indicator slides to the active link [IX-08]        |
+|                                                                                              |
+| {#projects} is in the active band, so Projects is marked                                     |
+|                                                                                              |
+|   ... Experience section above (scrolled past) ...                                           |
+|                                                                                              |
+|   Projects                                                                                   |
+|   (rail cards)                                                                               |
+|                                                                                              |
+| scroll-margin-top on every section equals the sticky nav height, so a link jump              |
+| never hides a heading under the nav.                                                         |
++----------------------------------------------------------------------------------------------+
+```
+
+The indicator is a shared-layout element that slides between links [IX-08]; nav links are plain anchors.
+
+### State: Skip link focus @ 1280
+
+The skip link on first Tab: it is the first focusable element, becomes visible on focus and sits on the top z-index layer.
+
+```text
++----------------------------------------------------------------------------------------------+
+| [ Skip to main content ]                                                                     |
+|                                                                                              |
+| Aaron Phan      Experience  Projects  About  Skills  Education  Contact     (o) [ Resume ]   |
+|                                                                                              |
+| {#main} receives focus when the skip link is activated                                       |
++----------------------------------------------------------------------------------------------+
+```
+
+Targets {#main}. Keyboard users then reach nav links, theme toggle and Resume in reading order.
+
+### State: Copy-email toast @ 375
+
+After Copy email is activated, a toast appears above the bottom pill nav, centered, with the confirmation text. It fades and slides in, stays about 4 seconds, then leaves. The text is also announced through a polite live region that is in the DOM before the toast appears. The toast never covers the Copy email button.
+
+```text
++------------------------------------+
+| Contact Me                         |
+| The fastest way to reach me is     |
+| email.                             |
+|                                    |
+| +--------------------------------+ |
+| | [ Copy email ]                 | |
+| +--------------------------------+ |
+| aaron.phan240@gmail.com  (mailto)  |
+|                                    |
+|   ((  Email copied to clipboard )) |
+|   ((  [IX-09]                   )) |
+|                                    |
+| ================================== |
+| =  Experience | Projects | Menu  = |
+| ================================== |
++------------------------------------+
 ```
