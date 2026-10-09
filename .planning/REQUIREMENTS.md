@@ -25,7 +25,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [ ] **CNT-01**: All six sections (About Me, Skills, Education, Experience, Projects, Contact Me) render from typed content modules
 - [ ] **CNT-02**: All v1 content is carried over: 5 experience entries, all 7 v1 projects (RecipeCart, A.T.L.A.S, Suspect Genie, MediaDash, Full-Stack Library Simulator, FPGA-Based Stopwatch, Smart Mirror), education entries including GPA, public email, and the DJ Instagram link
-- [ ] **CNT-03**: `references/Aaron_Phan_Resume.pdf` is the source of truth: where it conflicts with v1, the resume wins; v1-only items it does not cover (4 extra projects, ITS Student Consultant role) are kept from v1. The resume's own metric overlap (Symbotic 76% accuracy vs Suspect Genie >=50%) is shown only where the resume places each figure, and date formats are normalized, all recorded in a content inventory before typing
+- [x] **CNT-03**: `references/Aaron_Phan_Resume.pdf` is the source of truth: where it conflicts with v1, the resume wins; v1-only items it does not cover (4 extra projects, ITS Student Consultant role) are kept from v1. The resume's own metric overlap (Symbotic 76% accuracy vs Suspect Genie >=50%) is shown only where the resume places each figure, and date formats are normalized, all recorded in a content inventory before typing
 - [ ] **CNT-04**: Visitor can download a resume PDF generated from `references/Aaron_Phan_Resume.pdf` with the phone number removed. The phone number must not appear anywhere on the site, including the PDF, meta tags, JSON-LD and OG data
 - [ ] **CNT-05**: Only used images are migrated, optimized (AVIF/WebP) and stripped of EXIF
 
@@ -69,7 +69,7 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Documentation (gates all code)
 
 - [x] **DOC-01**: Design brief with the 10-second test and the user's references
-- [ ] **DOC-02**: Content inventory
+- [x] **DOC-02**: Content inventory
 - [ ] **DOC-03**: Information architecture and wireframes at 375, 768 and 1280
 - [ ] **DOC-04**: Design tokens doc with palette exploration and contrast matrix
 - [x] **DOC-05**: Motion spec with per-interaction owner library, touch equivalent and reduced-motion fallback
@@ -125,7 +125,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DSN-04 | Phase 2 | Pending |
 | CNT-01 | Phase 3 | Pending |
 | CNT-02 | Phase 3 | Pending |
-| CNT-03 | Phase 1 | Pending |
+| CNT-03 | Phase 1 | Complete |
 | CNT-04 | Phase 3 | Pending |
 | CNT-05 | Phase 3 | Pending |
 | NAV-01 | Phase 2 | Pending |
@@ -151,7 +151,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | LCH-01 | Phase 6 | Pending |
 | LCH-02 | Phase 6 | Pending |
 | DOC-01 | Phase 1 | Complete |
-| DOC-02 | Phase 1 | Pending |
+| DOC-02 | Phase 1 | Complete |
 | DOC-03 | Phase 1 | Pending |
 | DOC-04 | Phase 1 | Pending |
 | DOC-05 | Phase 1 | Complete |
