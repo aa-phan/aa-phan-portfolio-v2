@@ -196,7 +196,7 @@ Content is visible by default and is never hidden until JavaScript runs. Hidden 
 
 ## Build and deploy
 
-GitHub Actions builds the site and publishes it to GitHub Pages. The Vite base comes from the VITE_BASE environment variable: the project URL path (for example /aa-phan-portfolio-v2/) while staging, and / after the cutover to the user-site URL. Assets are module-imported so no absolute asset paths exist; anything under public/ that JavaScript references goes through import.meta.env.BASE_URL. CI also builds with the project-path base so a broken sub-path is caught before launch. Steps, settings, cutover and rollback are in the deploy runbook (deploy-runbook.md, written later in the documentation phase).
+GitHub Actions builds the site and publishes it to GitHub Pages. The Vite base comes from the VITE_BASE environment variable: the project URL path (for example /aa-phan-portfolio-v2/) while staging, and / after the cutover to the user-site URL. Assets are module-imported so no absolute asset paths exist; anything under public/ that JavaScript references goes through import.meta.env.BASE_URL. CI also builds with the project-path base so a broken sub-path is caught before launch. Steps, settings, cutover and rollback are in the deploy runbook (deploy-runbook.md).
 
 ## Quality gates
 
