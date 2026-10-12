@@ -76,7 +76,31 @@ Plans:
   4. Every text, UI and focus color pair in both themes passes WCAG 2.2 AA according to the committed contrast matrix, checked against the real token files.
   5. With the OS reduce-motion setting on, a rendered motion-primitives component and the page show all content with no animation, driven by one preference source, and lint fails any import of `motion/react` or `@react-spring/web` outside `anim/` and the vendored primitives.
 
-**Plans**: TBD
+**Plans:** 7 plans
+
+Plans:
+**Wave 1**
+
+- [ ] 02-01-PLAN.md — Package legitimacy gate, then tracer: themed static hero under the project base visible with JS off; anchors, stand-in resume, self-hosted Inter, base CSS (wave 1)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 02-02-PLAN.md — One `npm run verify` chain (typecheck, lint, Prettier, shell parity test, build), import-boundary lint with fixtures, SHA-pinned ci.yml and deploy.yml (wave 2)
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [ ] 02-03-PLAN.md — Two-state theme toggle: inline head script, system default, stored choice, no flash, react-spring thumb via the anim barrel (wave 3)
+- [ ] 02-04-PLAN.md — Build gates: 150 kB gzip JS budget, path-case, raw colors, phone-number check (wave 3)
+
+**Wave 4** *(blocked on Wave 3 completion)*
+
+- [ ] 02-05-PLAN.md — One motion-preference source (MotionConfig, react-spring Globals, CSS guard), lazy vendored TextEffect on the role line, ADR-0007 (wave 4)
+- [ ] 02-06-PLAN.md — Contrast gate against the shipped tokens.css, generated docs/contrast-matrix.md, palette A unit test (wave 4)
+
+**Wave 5** *(blocked on Wave 4 completion)*
+
+- [ ] 02-07-PLAN.md — Owner decision on planning-area visibility, Pages source checkpoint, guarded push, CI and deploy green, live Playwright suite (wave 5)
+
 **UI hint**: yes
 
 ### Phase 3: Content-Complete Site
