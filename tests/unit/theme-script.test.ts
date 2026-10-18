@@ -1,0 +1,113 @@
+import { readFileSync } from 'node:fs'
+import path from 'node:path'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { setMediaQuery } from '../setup'
+
+const DARK_QUERY = '(prefers-color-scheme: dark)'
+
+// Read the real index.html at test time, so this always covers whatever ships.
+const html = readFileSync(path.resolve(import.meta.dirname, '../../index.html'), 'utf8')
+const doc = new DOMParser().parseFromString(html, 'text/html')
+const scripts = [...doc.querySelectorAll('script:not([src])')]
+
+function runScript() {
+  new Function(scripts[0]!.textContent ?? '')()
+}
+
+function theme() {
+  return document.documentElement.getAttribute('data-theme')
+}
+
+beforeEach(() => {
+  document.documentElement.removeAttribute('data-theme')
+})
+
+describe('inline theme-init script in index.html', () => {
+  it('is exactly one classic inline script in the head, before the module script', () => {
+    expect(scripts).toHaveLength(1)
+    expect(scripts[0]!.hasAttribute('type')).toBe(false)
+    expect(scripts[0]!.parentElement).toBe(doc.head)
+  })
+
+  it('uses the system preference when nothing is stored (system dark)', () => {
+    setMediaQuery(DARK_QUERY, true)
+    runScript()
+    expect(theme()).toBe('dark')
+  })
+
+  it('uses the system preference when nothing is stored (system light)', () => {
+    setMediaQuery(DARK_QUERY, false)
+    runScript()
+    expect(theme()).toBe('light')
+  })
+
+  it('a stored light choice wins over a dark system', () => {
+    setMediaQuery(DARK_QUERY, true)
+    vi.spyOn(Storage.prototype, 'getItem').mockReturnValue('light')
+    runScript()
+    expect(theme()).toBe('light')
+  })
+
+  it('a stored dark choice wins over a light system', () => {
+    setMediaQuery(DARK_QUERY, false)
+    vi.spyOn(Storage.prototype, 'getItem').mockReturnValue('dark')
+    runScript()
+    expect(theme()).toBe('dark')
+  })
+
+  it('ignores a stored value that is not light or dark', () => {
+    setMediaQuery(DARK_QUERY, true)
+    vi.spyOn(Storage.prototype, 'getItem').mockReturnValue('purple')
+    runScript()
+    expect(theme()).toBe('dark')
+  })
+
+  it('falls back to the system preference when getItem throws, without an uncaught error', () => {
+    setMediaQuery(DARK_QUERY, true)
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('blocked')
+    })
+    expect(() => runScript()).not.toThrow()
+    expect(theme()).toBe('dark')
+  })
+
+  it('gives light when matchMedia is missing', () => {
+    const original = window.matchMedia
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      writable: true,
+      value: undefined,
+    })
+    try {
+      expect(() => runScript()).not.toThrow()
+      expect(theme()).toBe('light')
+    } finally {
+      Object.defineProperty(window, 'matchMedia', {
+        configurable: true,
+        writable: true,
+        value: original,
+      })
+    }
+  })
+
+  it('gives light when matchMedia throws', () => {
+    const original = window.matchMedia
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      writable: true,
+      value: () => {
+        throw new Error('unsupported')
+      },
+    })
+    try {
+      expect(() => runScript()).not.toThrow()
+      expect(theme()).toBe('light')
+    } finally {
+      Object.defineProperty(window, 'matchMedia', {
+        configurable: true,
+        writable: true,
+        value: original,
+      })
+    }
+  })
+})
