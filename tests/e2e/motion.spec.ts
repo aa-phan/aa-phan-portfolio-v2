@@ -14,13 +14,20 @@ test('reduced motion: theme thumb snaps to its target', async ({ browser }) => {
     const button = document.querySelector<HTMLButtonElement>('button[aria-pressed]')
     const thumb = document.querySelector<HTMLElement>('[data-part="theme-thumb"]')
     if (!button || !thumb) throw new Error('toggle not found')
+    const start = getComputedStyle(thumb).transform
     button.click()
     return new Promise<string>((resolve) => {
-      // Read two frames (about 33 ms) after the click. A spring cannot have arrived by then;
-      // a snapped value has.
-      requestAnimationFrame(() =>
-        requestAnimationFrame(() => resolve(getComputedStyle(thumb).transform)),
-      )
+      // Resolve with the first frame whose transform differs from the start. A snapped thumb
+      // jumps straight to its target; a spring would show an in-between value first. Waiting
+      // for the first change (up to 120 frames) keeps this independent of how slowly a loaded
+      // runner commits the state update.
+      let frames = 0
+      const tick = () => {
+        const current = getComputedStyle(thumb).transform
+        if (current !== start || frames++ > 120) resolve(current)
+        else requestAnimationFrame(tick)
+      }
+      requestAnimationFrame(tick)
     })
   })
   expect(transform).toBe(END_MATRIX)
