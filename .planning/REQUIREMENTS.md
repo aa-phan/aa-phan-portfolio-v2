@@ -12,7 +12,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **FND-01**: Site builds as Vite + React + TypeScript + Tailwind v4 and deploys via GitHub Actions to the project URL, with an env-driven `base`
 - [ ] **FND-02**: CI on Linux runs typecheck, lint, build and a path-case consistency check
 - [ ] **FND-03**: Initial JS is at most 150 kB gzipped, enforced by a CI budget check
-- [ ] **FND-04**: Layered imports are enforced by lint (only `anim/` and vendored primitives may import `motion/react` or `@react-spring/web`; only the page root imports content)
+- [x] **FND-04**: Layered imports are enforced by lint (only `anim/` and vendored primitives may import `motion/react` or `@react-spring/web`; only the page root imports content)
 
 ### Design System
 
@@ -118,7 +118,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FND-01 | Phase 2 | Complete |
 | FND-02 | Phase 2 | Pending |
 | FND-03 | Phase 2 | Pending |
-| FND-04 | Phase 2 | Pending |
+| FND-04 | Phase 2 | Complete |
 | DSN-01 | Phase 2 | Complete |
 | DSN-02 | Phase 2 | Pending |
 | DSN-03 | Phase 2 | Pending |

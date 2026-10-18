@@ -4,16 +4,16 @@ milestone: v2
 current_phase: 02
 current_phase_name: Deployed Themed Skeleton
 status: executing
-stopped_at: Completed 02-03-PLAN.md
-last_updated: "2026-10-18T05:24:33.598Z"
+stopped_at: Completed 02-04-PLAN.md
+last_updated: "2026-10-18T05:27:58.273Z"
 last_activity: 2026-10-18
 last_activity_desc: Phase 02 execution started
-state_head: 01d59efefeb3bb5f7b7a3a78f926c7758fa6bf85
+state_head: af8f21abda8a23cffe436a8d13c8e16002b9df69
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 16
-  completed_plans: 10
+  completed_plans: 11
   percent: 17
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-10-08)
 ## Current Position
 
 Phase: 02 (Deployed Themed Skeleton) — EXECUTING
-Plan: 4 of 9
+Plan: 5 of 9
 Status: Ready to execute
 Last activity: 2026-10-18 — Phase 02 execution started
 
@@ -69,6 +69,7 @@ Progress: [██░░░░░░░░] 17%
 | Phase 02 P01 | 35min | 2 tasks | 19 files |
 | Phase 02 P02 | 12 min | 2 tasks | 10 files |
 | Phase 02 P03 | 6 min | 2 tasks | 2 files |
+| Phase 02 P04 | 2 min | 2 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -95,6 +96,8 @@ Recent decisions affecting current work:
 - [Phase 02]: Stand-in resume.pdf generated from scratch (no private reference data); Phase 3 CNT-04 replaces it
 - [Phase 02]: Static shell section stubs mirror the React Section markup verbatim for the 02-04 parity test
 - [Phase 02]: deploy.yml re-runs npm run verify before publishing instead of depending on a reusable CI workflow — Research Open Question 4; deploy cannot ship a build failing the gates
+- [Phase 02]: Import-boundary lint patterns use ** (not *) so nested paths such as @/anim/physics/X and motion/react/client are rejected — oxlint single * does not cross path separators; verified with a probe (02-04)
+- [Phase 02]: Re-exports from animation libraries are caught by no-restricted-imports; architecture doc states re-exports are covered — export from motion/react is flagged by oxlint, asserted in tests/unit/boundaries.test.ts (02-04)
 
 ### Pending Todos
 
@@ -120,6 +123,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-18T05:24:33.564Z
-Stopped at: Completed 02-03-PLAN.md
+Last session: 2026-10-18T05:27:58.240Z
+Stopped at: Completed 02-04-PLAN.md
 Resume file: None
