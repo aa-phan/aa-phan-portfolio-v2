@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Aaron Phan</title>
+  </head>
+  <body class="bg-background font-sans text-text antialiased">
+    <div id="root">
+      <main id="main">
+        <section id="hero" aria-labelledby="hero-heading" class="pt-24 pb-16">
+          <div class="mx-auto max-w-5xl px-5 md:px-8">
+            <h1 id="hero-heading" class="text-5xl font-bold tracking-display">Aaron Phan</h1>
+            <p class="mt-4 max-w-2xl text-lg text-muted md:text-xl">
+              Software engineer building cloud-native backends in Go.
+            </p>
+            <div class="mt-8 flex flex-col gap-3 md:flex-row md:items-center">
+              <a
+                href="%BASE_URL%resume.pdf"
+                download
+                class="inline-flex min-h-11 items-center justify-center rounded-pill bg-primary px-6 font-medium text-on-primary hover:bg-primary-hover"
+              >
+                Download resume
+              </a>
+              <a
+                href="mailto:aaron.phan240@gmail.com"
+                class="inline-flex min-h-11 items-center justify-center rounded-pill border border-border-strong px-6 font-medium text-text hover:bg-surface"
+              >
+                Copy email
+              </a>
+              <a
+                href="#contact"
+                class="inline-flex min-h-11 items-center px-2 font-medium text-link underline underline-offset-4"
+              >
+                Contact
+              </a>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

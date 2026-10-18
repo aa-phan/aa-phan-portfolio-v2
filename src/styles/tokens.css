@@ -1,0 +1,62 @@
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+  --text: oklch(0.119 0.0436 285.36);
+  --background: oklch(0.9889 0.0039 286.33);
+  --primary: oklch(0.5113 0.2298 277.28);
+  --secondary: oklch(0.907 0.0475 288.03);
+  --accent: oklch(0.5143 0.2729 272.97);
+
+  --surface: color-mix(in oklch, var(--secondary) 30%, var(--background));
+  --muted: color-mix(in oklch, var(--text) 70%, var(--background));
+  --border: color-mix(in oklch, var(--text) 14%, var(--background));
+  --border-strong: color-mix(in oklch, var(--text) 55%, var(--background));
+  --link: color-mix(in oklch, var(--primary) 80%, var(--text));
+  --on-primary: color-mix(in oklch, var(--background) 100%, var(--text));
+  --on-accent: color-mix(in oklch, var(--background) 100%, var(--text));
+  --primary-hover: color-mix(in oklch, var(--primary) 85%, var(--text));
+  --focus-ring: color-mix(in oklch, var(--text) 100%, var(--background));
+
+  --elevation-sm: 0 1px 2px color-mix(in oklch, var(--text) 10%, transparent);
+  --elevation-md: 0 4px 12px color-mix(in oklch, var(--text) 12%, transparent);
+  --elevation-lg: 0 12px 32px color-mix(in oklch, var(--text) 16%, transparent);
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --text: oklch(0.9889 0.0039 286.33);
+  --background: oklch(0.119 0.0436 285.36);
+  --primary: oklch(0.6383 0.1988 281.11);
+  --secondary: oklch(0.2561 0.0973 279.44);
+  --accent: oklch(0.7288 0.1457 283.95);
+
+  --surface: color-mix(in oklch, var(--secondary) 60%, var(--background));
+  --muted: color-mix(in oklch, var(--text) 72%, var(--background));
+  --border: color-mix(in oklch, var(--text) 16%, var(--background));
+  --border-strong: color-mix(in oklch, var(--text) 55%, var(--background));
+  --link: color-mix(in oklch, var(--accent) 100%, var(--background));
+  --on-primary: color-mix(in oklch, var(--background) 100%, var(--text));
+  --on-accent: color-mix(in oklch, var(--background) 100%, var(--text));
+  --primary-hover: color-mix(in oklch, var(--primary) 94%, var(--background));
+  --focus-ring: color-mix(in oklch, var(--text) 100%, var(--background));
+
+  --elevation-sm: 0 1px 2px oklch(0 0 0 / 0.5);
+  --elevation-md: 0 4px 12px oklch(0 0 0 / 0.55);
+  --elevation-lg: 0 12px 32px oklch(0 0 0 / 0.65);
+}
+
+:root {
+  --z-base: 0;
+  --z-rail-lift: 10;
+  --z-sticky-nav: 40;
+  --z-pill-nav: 50;
+  --z-overlay-backdrop: 60;
+  --z-overlay: 70;
+  --z-toast: 80;
+  --z-skip-link: 90;
+
+  --dur-fast: 120ms;
+  --dur-base: 220ms;
+  --dur-slow: 420ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}

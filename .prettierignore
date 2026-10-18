@@ -1,0 +1,13 @@
+node_modules
+dist
+package-lock.json
+test-results
+playwright-report
+coverage
+public
+src/components/motion-primitives/
+docs/
+.planning/
+.claude/
+references/
+.gsd/
