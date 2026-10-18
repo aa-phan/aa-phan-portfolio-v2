@@ -99,3 +99,59 @@ test('hero: React mount keeps name, role and CTAs', async ({ page }) => {
 
   expect(errors).toEqual([])
 })
+
+test('hero: CTA targets are at least 44px and resolve', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 667 })
+  await page.goto('./')
+  await page.waitForLoadState('networkidle')
+
+  const links = page.locator('#hero a')
+  await expect(links).toHaveCount(3)
+  for (const link of await links.all()) {
+    const box = await link.boundingBox()
+    expect(box).not.toBeNull()
+    expect(box!.height).toBeGreaterThanOrEqual(44)
+    expect(box!.width).toBeGreaterThanOrEqual(44)
+  }
+
+  const resumeHref = await page.getByRole('link', { name: 'Download resume' }).getAttribute('href')
+  const resume = await page.request.get(resumeHref!)
+  expect(resume.status()).toBe(200)
+  expect(resume.headers()['content-type']).toContain('application/pdf')
+  expect((await resume.body()).subarray(0, 5).toString('latin1')).toBe('%PDF-')
+
+  const iconHref = await page.locator('link[rel="icon"]').getAttribute('href')
+  expect(iconHref).toMatch(/favicon\.svg$/)
+  expect(iconHref!.startsWith(BASE)).toBe(true)
+  const icon = await page.request.get(iconHref!)
+  expect(icon.status()).toBe(200)
+})
+
+test('fonts: only same-origin requests and at most 2 font families', async ({ page, baseURL }) => {
+  const origin = new URL(baseURL!).origin
+  const requested: string[] = []
+  page.on('request', (req) => {
+    if (!req.url().startsWith('data:')) requested.push(req.url())
+  })
+
+  await page.goto('./')
+  await page.evaluate(() => document.fonts.ready)
+  await page.waitForLoadState('networkidle')
+
+  expect(requested.length).toBeGreaterThan(0)
+  for (const url of requested) {
+    expect(new URL(url).origin, url).toBe(origin)
+  }
+
+  const families = await page.evaluate(() =>
+    [...document.fonts].map((f) => f.family.replace(/^["']|["']$/g, '')),
+  )
+  const unique = [...new Set(families)]
+  expect(unique.length).toBeLessThanOrEqual(2)
+  expect(unique).toContain('Inter Variable')
+
+  const h1Family = await page.evaluate(
+    () => getComputedStyle(document.querySelector('h1')!).fontFamily,
+  )
+  expect(h1Family.replace(/["']/g, '')).toMatch(/^Inter Variable/)
+})
