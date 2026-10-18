@@ -703,16 +703,17 @@ jobs:
 | A6 | `lts/*` resolves to a Node version satisfying Vite 8 and Vitest 5 on the day CI runs | Pitfall 10 | Pin `node-version: 24` |
 | A7 | Browser-computed `color-mix(in oklch)` values equal the script's math to within WCAG-relevant precision (Chromium returned `oklch(0.119 0.0436 285.36)` for the dark background, matching the token) | DSN-02 | Add a Playwright computed-color cross-check for the derived tokens |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Public repo contains `.planning/` and `.claude/`.**
+1. **Public repo contains `.planning/` and `.claude/`.** RESOLVED by plan 02-09.
    - What we know: remote `main` has `.claude`, `.planning`, `docs`, `.gitignore`; REQUIREMENTS "Out of Scope" and ADR-0001 say the public repo contains only the site and docs; D-02 chose public. History was scrubbed of the phone number; the guard prints nothing.
    - What's unclear: whether the user accepts planning files being browsable, or wants them moved out.
    - Recommendation: surface to the user before the first deploy push. Options: accept and update REQUIREMENTS/ADR-0001 wording, or `git rm -r --cached .planning .claude` + `.gitignore` entries and keep them local (note `commit_docs: true` in `.planning/config.json` then needs to be `false`). Not a blocker for building the code.
-2. **Is the role line's short re-reveal acceptable?** (Pattern 3.) Static text shows first, then fades per word in about 0.35 s after the lazy chunk arrives. Alternative with no blink: `per="line"` fade only, or a variant whose hidden state keeps opacity above 0. Recommend shipping as specified and judging it in the staging review.
-3. **JS-off dark users get the light theme.** Adding an `@media (prefers-color-scheme: dark) { :root:not([data-theme]) { ... } }` fallback duplicates the 14 dark values. Recommend not doing it (single block per theme is the Phase 1 principle).
-4. **`deploy.yml` re-runs `verify`.** Costs about a minute per deploy for a guaranteed gate; the alternative is `needs:` a reusable CI. Recommend the re-run.
-5. **Should `index.html` be in `.prettierignore`?** Prettier reformats the inline script and shell; the tests tolerate it. Recommend formatting it (consistency) unless it fights `%BASE_URL%`.
+   - Resolution: plan 02-09 Task 1 is a blocking owner decision (keep-tracked, untrack-forward or untrack-scrub) taken after the OD-01 guards run against the already-public remote; Task 3 applies it before the push and records it in ADR-0008 using only the ADR template's status values (keep-tracked marks ADR-0001 "Superseded by 0008"; the untrack options leave it Accepted). The uncommitted `.planning/config.json` change and the untracked `.planning/state.json` are committed only under keep-tracked and stay local and ignored under the untrack options.
+2. **Is the role line's short re-reveal acceptable?** (Pattern 3.) Static text shows first, then fades per word in about 0.35 s after the lazy chunk arrives. Alternative with no blink: `per="line"` fade only, or a variant whose hidden state keeps opacity above 0. Recommend shipping as specified and judging it in the staging review. RESOLVED by plan 02-07: ship as specified (word reveal, about 0.35 s); judged at the end-of-phase human check in plan 02-07 Task 3 and again in the staging smoke test of plan 02-09 Task 3.
+3. **JS-off dark users get the light theme.** Adding an `@media (prefers-color-scheme: dark) { :root:not([data-theme]) { ... } }` fallback duplicates the 14 dark values. Recommend not doing it (single block per theme is the Phase 1 principle). RESOLVED by plan 02-01: no fallback block; the light `:root` block is the documented JS-off default (a backstop truth in plan 02-01).
+4. **`deploy.yml` re-runs `verify`.** Costs about a minute per deploy for a guaranteed gate; the alternative is `needs:` a reusable CI. Recommend the re-run. RESOLVED by plan 02-03: deploy.yml re-runs `npm run verify` before upload (Task 2).
+5. **Should `index.html` be in `.prettierignore`?** Prettier reformats the inline script and shell; the tests tolerate it. Recommend formatting it (consistency) unless it fights `%BASE_URL%`. RESOLVED by plan 02-01: `index.html` is formatted, not ignored (Prettier config lands with the first source file); plan 02-05's theme-script unit test reads the formatted file from disk, and plan 02-04's parity test compares class sets so Prettier's class sorting cannot break it.
 
 ## Environment Availability
 
