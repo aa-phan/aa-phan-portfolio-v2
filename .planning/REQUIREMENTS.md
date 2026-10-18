@@ -18,7 +18,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **DSN-01**: Palette and type are chosen via realtimecolors after exploring alternatives to the seed palette, delivered as light and dark token sets
 - [ ] **DSN-02**: A contrast matrix covers every text, UI and focus pair in both themes and meets WCAG 2.2 AA
-- [ ] **DSN-03**: User can toggle light/dark, defaulting to system preference, with no flash on load
+- [x] **DSN-03**: User can toggle light/dark, defaulting to system preference, with no flash on load
 - [x] **DSN-04**: Fonts are self-hosted, with at most 2 families
 
 ### Content
@@ -121,7 +121,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FND-04 | Phase 2 | Complete |
 | DSN-01 | Phase 2 | Complete |
 | DSN-02 | Phase 2 | Pending |
-| DSN-03 | Phase 2 | Pending |
+| DSN-03 | Phase 2 | Complete |
 | DSN-04 | Phase 2 | Complete |
 | CNT-01 | Phase 3 | Pending |
 | CNT-02 | Phase 3 | Pending |

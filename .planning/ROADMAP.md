@@ -76,7 +76,7 @@ Plans:
   4. Every text, UI and focus color pair in both themes passes WCAG 2.2 AA according to the committed contrast matrix, checked against the real token files.
   5. With the OS reduce-motion setting on, a rendered motion-primitives component and the page show all content with no animation, driven by one preference source, and lint fails any import of `motion/react` or `@react-spring/web` outside `anim/` and the vendored primitives.
 
-**Plans:** 4/9 plans executed
+**Plans:** 5/9 plans executed
 
 Plans:
 **Wave 1**
@@ -94,7 +94,7 @@ Plans:
 
 **Wave 4** *(blocked on Wave 3 completion)*
 
-- [ ] 02-05-PLAN.md — Two-state theme toggle: inline head script, system default, stored choice, no flash, react-spring thumb via the anim barrel (wave 4)
+- [x] 02-05-PLAN.md — Two-state theme toggle: inline head script, system default, stored choice, no flash, react-spring thumb via the anim barrel (wave 4)
 
 **Wave 5** *(blocked on Wave 4 completion)*
 
@@ -190,7 +190,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Decisions and Documentation | 7/7 | Complete    | 2026-10-09 |
-| 2. Deployed Themed Skeleton | 4/9 | In Progress | - |
+| 2. Deployed Themed Skeleton | 5/9 | In Progress | - |
 | 3. Content-Complete Site | 0/0 | Not started | - |
 | 4. Motion System and Signature Rail | 0/0 | Not started | - |
 | 5. Section Treatments | 0/0 | Not started | - |
