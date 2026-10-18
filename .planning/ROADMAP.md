@@ -76,7 +76,7 @@ Plans:
   4. Every text, UI and focus color pair in both themes passes WCAG 2.2 AA according to the committed contrast matrix, checked against the real token files.
   5. With the OS reduce-motion setting on, a rendered motion-primitives component and the page show all content with no animation, driven by one preference source, and lint fails any import of `motion/react` or `@react-spring/web` outside `anim/` and the vendored primitives.
 
-**Plans:** 8/9 plans executed
+**Plans:** 9/9 plans executed
 
 Plans:
 **Wave 1**
@@ -110,7 +110,7 @@ Plans:
 
 **Wave 8** *(blocked on Wave 7 completion)*
 
-- [ ] 02-09-PLAN.md — Owner decision on planning-area visibility (including the uncommitted planning metadata), Pages source checkpoint (repo already exists), guarded push, CI and deploy green, live Playwright suite (wave 8)
+- [x] 02-09-PLAN.md — Owner decision on planning-area visibility (including the uncommitted planning metadata), Pages source checkpoint (repo already exists), guarded push, CI and deploy green, live Playwright suite (wave 8)
 
 Waves 4 to 8 run one plan each: every plan from 02-05 on builds into `dist/` and runs the repo-wide verify chain in the one shared working tree.
 
@@ -190,7 +190,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Decisions and Documentation | 7/7 | Complete    | 2026-10-09 |
-| 2. Deployed Themed Skeleton | 8/9 | In Progress | - |
+| 2. Deployed Themed Skeleton | 9/9 | In Progress | - |
 | 3. Content-Complete Site | 0/0 | Not started | - |
 | 4. Motion System and Signature Rail | 0/0 | Not started | - |
 | 5. Section Treatments | 0/0 | Not started | - |
