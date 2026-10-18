@@ -34,10 +34,13 @@ function lintFixture(relativePath: string): LintResult {
   }
 }
 
+// A specifier such as motion/react matches both the paths list and the animation-subpath
+// pattern, so oxlint can report one line twice; lines are de-duplicated here.
 function restrictedLines(result: LintResult): number[] {
   return result.findings
     .filter((f) => f.rule.includes(RULE))
     .map((f) => f.line)
+    .filter((line, index, all) => all.indexOf(line) === index)
     .sort((a, b) => a - b)
 }
 
@@ -89,8 +92,26 @@ describe('import boundaries (oxlint no-restricted-imports)', () => {
     expect(restrictedLines(lintFixture(SECTIONS))).toContain(reexportLine)
   })
 
-  it('sections: nothing else in the fixture is flagged (ten violations, barrel excluded)', () => {
-    expect(restrictedLines(lintFixture(SECTIONS))).toHaveLength(10)
+  it('sections: deep paths under anim, motion-primitives, content and the libraries are flagged', () => {
+    const deep = linesOf(SECTIONS, [
+      "import { deepThumb } from '@/anim/physics/ThemeThumb'",
+      "import { deepPrimitive } from '@/components/motion-primitives/nested/deep'",
+      "import { deepContent } from '@/content/projects/data'",
+      "import { deepSpring } from '@react-spring/web/nested/deep'",
+    ])
+    const flagged = restrictedLines(lintFixture(SECTIONS))
+    for (const line of deep) expect(flagged).toContain(line)
+  })
+
+  it('sections: only the barrel line escapes (14 violation lines, the barrel excluded)', () => {
+    const result = lintFixture(SECTIONS)
+    const fixtureLines = readFileSync(path.join(ROOT, SECTIONS), 'utf8').split('\n')
+    const importLines = fixtureLines.flatMap((text, index) =>
+      /^(import|export) .* from |= import\(/.test(text.trim()) ? [index + 1] : [],
+    )
+    const [barrelLine] = linesOf(SECTIONS, ["import { ThemeThumb } from '@/anim'"])
+    expect(restrictedLines(result)).toEqual(importLines.filter((line) => line !== barrelLine))
+    expect(importLines).toHaveLength(15)
   })
 
   it('anim: may import both libraries but not sections (one diagnostic, on the sections line)', () => {

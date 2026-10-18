@@ -9,6 +9,10 @@ import { hero } from '@/content'
 const dynamicMotion = import('motion/react')
 import { ThemeThumb } from '@/anim'
 export { useScroll } from 'motion/react'
+import { deepThumb } from '@/anim/physics/ThemeThumb'
+import { deepPrimitive } from '@/components/motion-primitives/nested/deep'
+import { deepContent } from '@/content/projects/data'
+import { deepSpring } from '@react-spring/web/nested/deep'
 
 export const used = [
   motion,
@@ -21,4 +25,8 @@ export const used = [
   hero,
   dynamicMotion,
   ThemeThumb,
+  deepThumb,
+  deepPrimitive,
+  deepContent,
+  deepSpring,
 ]

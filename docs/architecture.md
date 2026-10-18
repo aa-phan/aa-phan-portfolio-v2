@@ -58,7 +58,7 @@ Only src/app/Page.tsx imports content data.
 | anim/* | motion/react, @react-spring/web, components/motion-primitives/*, the token mirror in styles | sections, layout |
 | app/Page.tsx | content data, sections | any animation library or anim internals |
 
-These rules are enforced by lint in the scaffold (restricted-import rules plus a boundaries plugin), so a violation fails CI rather than relying on review. A gesture library is not adopted up front. It would be added to the anim row only if a react-spring drag cannot be built well otherwise, after a React 19 compatibility check.
+These rules are enforced by oxlint's `no-restricted-imports` rule with per-folder overrides in `.oxlintrc.json`, covering dynamic `import()` and re-exports as well, so a violation fails CI rather than relying on review. Unit tests under `tests/unit` may import the libraries for assertions. A gesture library is not adopted up front. It would be added to the anim row only if a react-spring drag cannot be built well otherwise, after a React 19 compatibility check.
 
 ## Folder structure
 
@@ -69,7 +69,7 @@ repo root
 |-- index.html               meta and social tags, inline theme-init script,
 |                            noscript fallback content
 |-- vite.config.ts           base from env, Tailwind plugin, imagetools, "@" alias
-|-- eslint config            import-boundary rules (see Import rules)
+|-- .oxlintrc.json           import-boundary rules (see Import rules)
 |-- .github/workflows/       ci.yml, deploy.yml
 `-- src/
     |-- main.tsx

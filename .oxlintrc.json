@@ -4,6 +4,122 @@
   "categories": { "correctness": "error" },
   "rules": {
     "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
+    "react/only-export-components": ["warn", { "allowConstantExport": true }],
+    "no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "motion/react",
+            "message": "Animation libraries are allowed only in src/anim and src/components/motion-primitives."
+          },
+          {
+            "name": "@react-spring/web",
+            "message": "Animation libraries are allowed only in src/anim."
+          },
+          { "name": "framer-motion", "message": "Use motion/react, and only inside src/anim." },
+          { "name": "motion", "message": "Use motion/react, and only inside src/anim." },
+          { "name": "react-spring", "message": "Use @react-spring/web, and only inside src/anim." }
+        ],
+        "patterns": [
+          {
+            "group": ["motion/**", "@react-spring/**", "framer-motion/**"],
+            "message": "Animation libraries are allowed only in src/anim and src/components/motion-primitives."
+          },
+          {
+            "group": [
+              "@/anim/**",
+              "**/anim/**",
+              "**/motion-primitives",
+              "**/motion-primitives/**",
+              "@/components/motion-primitives/**"
+            ],
+            "message": "Import animation through the @/anim barrel only."
+          },
+          {
+            "group": ["**/content", "**/content/**", "@/content", "@/content/**"],
+            "message": "Content data may be imported only by src/app/Page.tsx."
+          }
+        ]
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["**/anim/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "@/sections",
+                  "@/sections/**",
+                  "**/sections/**",
+                  "@/layout",
+                  "@/layout/**",
+                  "**/layout/**",
+                  "@/content",
+                  "@/content/**",
+                  "**/content/**"
+                ],
+                "message": "src/anim must not import sections, layout or content."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["**/motion-primitives/**"],
+      "rules": { "no-restricted-imports": "off" }
+    },
+    {
+      "files": ["**/app/Page.tsx"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "motion/react",
+                "message": "Animation libraries are allowed only in src/anim and src/components/motion-primitives."
+              },
+              {
+                "name": "@react-spring/web",
+                "message": "Animation libraries are allowed only in src/anim."
+              },
+              { "name": "framer-motion", "message": "Use motion/react, and only inside src/anim." },
+              { "name": "motion", "message": "Use motion/react, and only inside src/anim." },
+              {
+                "name": "react-spring",
+                "message": "Use @react-spring/web, and only inside src/anim."
+              }
+            ],
+            "patterns": [
+              {
+                "group": ["motion/**", "@react-spring/**", "framer-motion/**"],
+                "message": "Animation libraries are allowed only in src/anim and src/components/motion-primitives."
+              },
+              {
+                "group": [
+                  "@/anim/**",
+                  "**/anim/**",
+                  "**/motion-primitives",
+                  "**/motion-primitives/**",
+                  "@/components/motion-primitives/**"
+                ],
+                "message": "Import animation through the @/anim barrel only."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["tests/unit/**"],
+      "rules": { "no-restricted-imports": "off" }
+    }
+  ]
 }
