@@ -16,8 +16,11 @@ test('reduced motion: theme thumb snaps to its target', async ({ browser }) => {
     if (!button || !thumb) throw new Error('toggle not found')
     button.click()
     return new Promise<string>((resolve) => {
-      // Read in the first frame after the click, the earliest a spring would paint.
-      requestAnimationFrame(() => resolve(getComputedStyle(thumb).transform))
+      // Read two frames (about 33 ms) after the click. A spring cannot have arrived by then;
+      // a snapped value has.
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => resolve(getComputedStyle(thumb).transform)),
+      )
     })
   })
   expect(transform).toBe(END_MATRIX)

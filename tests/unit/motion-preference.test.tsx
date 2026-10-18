@@ -1,16 +1,12 @@
 import { act, render, renderHook } from '@testing-library/react'
 import { useReducedMotionConfig } from 'motion/react'
 import { Globals } from '@react-spring/web'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { MotionPreferenceProvider } from '@/anim/MotionPreferenceProvider'
 import { useMotionPreference } from '@/anim/useMotionPreference'
 import { setMediaQuery } from '../setup'
 
 const QUERY = '(prefers-reduced-motion: reduce)'
-
-afterEach(() => {
-  vi.restoreAllMocks()
-})
 
 describe('useMotionPreference', () => {
   it('reports reduced false by default', () => {
@@ -47,24 +43,25 @@ describe('useMotionPreference', () => {
 })
 
 describe('MotionPreferenceProvider', () => {
-  it('assigns skipAnimation true under reduce, false when it flips off, and resets on unmount', () => {
-    const assign = vi.spyOn(Globals, 'assign')
+  it('sets react-spring skipAnimation true under reduce, false when it flips off, and resets on unmount', () => {
+    // Globals is a frozen module namespace, so it cannot be spied on; skipAnimation is a live binding.
+    expect(Globals.skipAnimation).toBe(false)
     setMediaQuery(QUERY, true)
     const { unmount } = render(
       <MotionPreferenceProvider>
         <span>child</span>
       </MotionPreferenceProvider>,
     )
-    expect(assign).toHaveBeenLastCalledWith({ skipAnimation: true })
+    expect(Globals.skipAnimation).toBe(true)
 
     act(() => setMediaQuery(QUERY, false))
-    expect(assign).toHaveBeenLastCalledWith({ skipAnimation: false })
+    expect(Globals.skipAnimation).toBe(false)
 
     act(() => setMediaQuery(QUERY, true))
-    expect(assign).toHaveBeenLastCalledWith({ skipAnimation: true })
+    expect(Globals.skipAnimation).toBe(true)
 
     unmount()
-    expect(assign).toHaveBeenLastCalledWith({ skipAnimation: false })
+    expect(Globals.skipAnimation).toBe(false)
   })
 
   it('feeds motion: useReducedMotionConfig reports true under reduce and false otherwise', () => {
