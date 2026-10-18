@@ -220,6 +220,26 @@ describe('check-no-phone', () => {
     expect(run.out).toContain('index.html')
   })
 
+  it.each([
+    ['an unquoted href', '<a href=tel:+1>call</a>\n', 'index.html'],
+    ['a quoted scheme string in JS', 'var u="tel:"+n;\n', 'assets/app.js'],
+    ['a template string in JS', 'var u=`tel:${n}`;\n', 'assets/app.js'],
+    ['a CSS url', 'a{background:url(tel:x)}\n', 'assets/app.css'],
+  ])('flags a tel: link as %s', (_name, content, file) => {
+    const root = makeRoot()
+    write(root, `dist/${file}`, content)
+    const run = runGate(script, ['--root', root])
+    expect(run.status).toBe(1)
+  })
+
+  it('does not flag a bare tel key in minified JS (React DOM input-type list)', () => {
+    const root = makeRoot()
+    write(root, 'dist/assets/app.js', 'var t={search:!0,tel:!0,text:!0};\n')
+    const run = runGate(script, ['--root', root])
+    expect(run.status).toBe(0)
+    expect(run.out).toContain('no-phone: OK')
+  })
+
   it('flags a standalone ten-digit run in HTML', () => {
     const root = makeRoot()
     write(root, 'dist/index.html', `<p>${['55501', '00123'].join('')}</p>\n`)

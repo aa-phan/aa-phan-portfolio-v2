@@ -200,17 +200,23 @@ GitHub Actions builds the site and publishes it to GitHub Pages. The Vite base c
 
 ## Quality gates
 
-| Gate | Fails the build when |
-|------|----------------------|
-| Typecheck (tsc --noEmit, satisfies) | A content field is missing or a reference is wrong |
-| Lint including import boundaries | A section imports an animation library or content data |
-| Build | The Vite build errors |
-| Path-case check on Linux CI | An import differs in case from the file on disk |
-| Initial JS budget | Initial JavaScript exceeds 150 kB gzipped |
-| Token contrast test | Any text, UI or focus pair is below AA in either theme |
-| Reduced-motion smoke test | Content is hidden or a transform animation is running with reduced motion emulated |
-| axe | Serious or critical violations in light or dark |
-| Mobile Lighthouse | Targets set in the scaffold milestone are missed |
+| Gate | Command | Fails the build when |
+|------|---------|----------------------|
+| Typecheck | `tsc -b` | A content field is missing or a reference is wrong |
+| Lint with import boundaries | oxlint, warnings denied | A section imports an animation library or content data |
+| Format check | Prettier with Tailwind class sorting | A file is not formatted |
+| Unit tests | Vitest: shell parity, theme logic, motion preference, gate negatives | Any test fails |
+| Path-case check | `scripts/check-path-case.mjs`, run locally and on Linux CI | An import differs in case from the file on disk |
+| Raw color check | `scripts/check-colors.mjs` | Source outside the token file and vendored primitives holds a raw hex, rgb, hsl, oklch or oklab value, or a Tailwind default palette utility |
+| Build | `vite build` | The Vite build errors |
+| Initial JS budget | `scripts/check-js-budget.mjs` | The module script and modulepreloads exceed 150 kB gzipped |
+| Phone-number check | `scripts/check-no-phone.mjs` over the built site | A served file holds a phone-shaped string or a tel: link |
+| Token contrast test | Lands with the contrast gate | Any text, UI or focus pair is below AA in either theme |
+| Smoke tests | Playwright in CI | The hero is missing with JavaScript off, the theme flashes, or content is hidden or a transform animation runs with reduced motion emulated |
+| axe | Later gate | Serious or critical violations in light or dark |
+| Mobile Lighthouse | Later gate | Targets set in the scaffold milestone are missed |
+
+`npm run verify` chains the first nine rows in that order, and both CI workflows call it.
 
 ## Stack
 
