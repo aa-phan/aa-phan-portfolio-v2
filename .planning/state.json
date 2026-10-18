@@ -1,0 +1,43 @@
+{
+  "contract": "1.0.0",
+  "flavor": "core",
+  "milestone": "v2",
+  "phases": [
+    {
+      "number": "1",
+      "name": "Decisions and Documentation",
+      "status": "complete"
+    },
+    {
+      "number": "2",
+      "name": "Deployed Themed Skeleton",
+      "status": "in_progress"
+    },
+    {
+      "number": "3",
+      "name": "Content-Complete Site",
+      "status": "pending"
+    },
+    {
+      "number": "4",
+      "name": "Motion System and Signature Rail",
+      "status": "pending"
+    },
+    {
+      "number": "5",
+      "name": "Section Treatments",
+      "status": "pending"
+    },
+    {
+      "number": "6",
+      "name": "Hardening and Cutover",
+      "status": "pending"
+    }
+  ],
+  "next": {
+    "command": "/gsd-progress --next",
+    "label": "Advance to the next step",
+    "reason": "Phase 2 of 6 · 17% · executing"
+  },
+  "updated_at": "2026-10-18T05:46:10.585Z"
+}
