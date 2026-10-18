@@ -20,6 +20,7 @@ Each ADR file is named `NNNN-kebab-title.md` and contains:
 | 0004 | [TypeScript 6.0.x](0004-typescript-6.md) | Accepted | 2026-10-09 |
 | 0005 | [Inline SVG brand icons](0005-inline-svg-brand-icons.md) | Accepted | 2026-10-09 |
 | 0006 | [Project overlay dialog accessibility](0006-project-overlay-dialog-accessibility.md) | Accepted | 2026-10-09 |
+| 0007 | [Vendored motion-primitives](0007-vendored-motion-primitives.md) | Accepted | 2026-10-18 |
 
 ## Open decisions
 

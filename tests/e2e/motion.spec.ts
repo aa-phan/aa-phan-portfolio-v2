@@ -173,3 +173,42 @@ test('motion: role line stays readable when the effect chunk fails to load', asy
   await expect(page.getByRole('button', { name: 'Dark theme' })).toBeVisible()
   await context.close()
 })
+
+test('reduced motion: every hero element and section heading is visible with no running animations', async ({
+  browser,
+}) => {
+  const context = await browser.newContext({ colorScheme: 'light', reducedMotion: 'reduce' })
+  const page = await context.newPage()
+  await page.goto('./')
+  await page.waitForLoadState('networkidle')
+
+  const content = [
+    page.locator('#hero h1'),
+    page.locator('#hero p'),
+    page.getByRole('link', { name: 'Download resume' }),
+    page.getByRole('link', { name: 'Copy email' }),
+    page.getByRole('link', { name: 'Contact', exact: true }),
+    ...['experience', 'projects', 'about', 'skills', 'education', 'contact'].map((id) =>
+      page.locator(`#${id} h2`),
+    ),
+  ]
+
+  async function expectAllVisibleAndStill() {
+    for (const locator of content) {
+      await expect(locator).toBeVisible()
+      const opacity = await locator.evaluate((el) => getComputedStyle(el).opacity)
+      expect(opacity).toBe('1')
+    }
+    // The reduced-motion CSS guard shortens a theme change's color transitions to 0.01 ms, which
+    // still exist for a single frame; they must be gone almost at once, and nothing else runs.
+    await expect
+      .poll(() => page.evaluate(() => document.getAnimations().length), { timeout: 1000 })
+      .toBe(0)
+  }
+
+  await expectAllVisibleAndStill()
+  await page.getByRole('button', { name: 'Dark theme' }).click()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+  await expectAllVisibleAndStill()
+  await context.close()
+})
