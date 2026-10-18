@@ -76,7 +76,7 @@ Plans:
   4. Every text, UI and focus color pair in both themes passes WCAG 2.2 AA according to the committed contrast matrix, checked against the real token files.
   5. With the OS reduce-motion setting on, a rendered motion-primitives component and the page show all content with no animation, driven by one preference source, and lint fails any import of `motion/react` or `@react-spring/web` outside `anim/` and the vendored primitives.
 
-**Plans:** 6/9 plans executed
+**Plans:** 7/9 plans executed
 
 Plans:
 **Wave 1**
@@ -102,7 +102,7 @@ Plans:
 
 **Wave 6** *(blocked on Wave 5 completion)*
 
-- [ ] 02-07-PLAN.md — One motion-preference source (MotionConfig, react-spring Globals, CSS guard), lazy vendored TextEffect on the role line, ADR-0007 (wave 6)
+- [x] 02-07-PLAN.md — One motion-preference source (MotionConfig, react-spring Globals, CSS guard), lazy vendored TextEffect on the role line, ADR-0007 (wave 6)
 
 **Wave 7** *(blocked on Wave 6 completion)*
 
@@ -190,7 +190,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Decisions and Documentation | 7/7 | Complete    | 2026-10-09 |
-| 2. Deployed Themed Skeleton | 6/9 | In Progress | - |
+| 2. Deployed Themed Skeleton | 7/9 | In Progress | - |
 | 3. Content-Complete Site | 0/0 | Not started | - |
 | 4. Motion System and Signature Rail | 0/0 | Not started | - |
 | 5. Section Treatments | 0/0 | Not started | - |

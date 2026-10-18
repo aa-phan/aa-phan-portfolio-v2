@@ -45,7 +45,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Motion System
 
-- [ ] **MOT-01**: One motion-preference source drives motion, react-spring and a CSS guard, and all content is visible with motion off
+- [x] **MOT-01**: One motion-preference source drives motion, react-spring and a CSS guard, and all content is visible with motion off
 - [ ] **MOT-02**: One library animates any given element, with an ownership matrix documented
 - [ ] **MOT-03**: Shared press-squish behavior and spring tokens are used across the site
 - [ ] **MOT-04**: Fine-pointer effects are gated by `(hover: hover) and (pointer: fine)`
@@ -136,7 +136,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SIG-02 | Phase 4 | Pending |
 | SIG-03 | Phase 4 | Pending |
 | SIG-04 | Phase 4 | Pending |
-| MOT-01 | Phase 2 | Pending |
+| MOT-01 | Phase 2 | Complete |
 | MOT-02 | Phase 4 | Pending |
 | MOT-03 | Phase 4 | Pending |
 | MOT-04 | Phase 4 | Pending |
