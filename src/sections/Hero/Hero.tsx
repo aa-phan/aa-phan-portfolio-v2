@@ -1,3 +1,4 @@
+import { TextReveal } from '@/anim'
 import { Container } from '@/layout/Container'
 
 export function Hero() {
@@ -7,9 +8,9 @@ export function Hero() {
         <h1 id="hero-heading" className="text-5xl font-bold tracking-display">
           Aaron Phan
         </h1>
-        <p className="mt-4 max-w-2xl text-lg text-muted md:text-xl">
+        <TextReveal className="mt-4 max-w-2xl text-lg text-muted md:text-xl">
           Software engineer building cloud-native backends in Go.
-        </p>
+        </TextReveal>
         <div className="mt-8 flex flex-col gap-3 md:flex-row md:items-center">
           <a
             href={`${import.meta.env.BASE_URL}resume.pdf`}

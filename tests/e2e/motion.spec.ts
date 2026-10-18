@@ -60,3 +60,116 @@ test('motion: theme thumb animates with no preference', async ({ browser }) => {
     .toBe(END_MATRIX)
   await context.close()
 })
+
+const ROLE_SENTENCE = 'Software engineer building cloud-native backends in Go.'
+
+/** Pathnames of the module script and modulepreloads that dist/index.html references. */
+async function initialScriptPaths(
+  request: import('@playwright/test').APIRequestContext,
+  baseURL: string,
+): Promise<Set<string>> {
+  const html = await (await request.get(baseURL)).text()
+  const paths = new Set<string>()
+  for (const tag of html.match(/<(?:script|link)\b[^>]*>/g) ?? []) {
+    const isModule = /<script\b[^>]*type="module"/.test(tag)
+    const isPreload = /<link\b[^>]*rel="modulepreload"/.test(tag)
+    if (!isModule && !isPreload) continue
+    const ref = /(?:src|href)="([^"]+)"/.exec(tag)?.[1]
+    if (ref) paths.add(new URL(ref, baseURL).pathname)
+  }
+  return paths
+}
+
+test('reduced motion: role line is static text with no per-word spans', async ({
+  browser,
+  baseURL,
+}) => {
+  const context = await browser.newContext({ colorScheme: 'light', reducedMotion: 'reduce' })
+  const page = await context.newPage()
+  const allowed = await initialScriptPaths(page.request, baseURL!)
+  expect(allowed.size).toBeGreaterThan(0)
+  const scripts: string[] = []
+  page.on('request', (req) => {
+    const { pathname } = new URL(req.url())
+    if (pathname.endsWith('.js')) scripts.push(pathname)
+  })
+
+  await page.goto('./')
+  await page.waitForLoadState('networkidle')
+  // Give a lazy chunk, had one been requested, time to arrive and replace the paragraph.
+  await page.waitForTimeout(500)
+
+  const role = page.locator('#hero p')
+  await expect(role).toBeVisible()
+  await expect(role).toHaveText(ROLE_SENTENCE)
+  await expect(page.locator('#hero p span')).toHaveCount(0)
+  expect(scripts.filter((p) => !allowed.has(p))).toEqual([])
+  await context.close()
+})
+
+test('motion: role line text effect runs and name and CTAs never animate', async ({ browser }) => {
+  const context = await browser.newContext({
+    colorScheme: 'light',
+    reducedMotion: 'no-preference',
+  })
+  const page = await context.newPage()
+
+  const steady = () =>
+    page.evaluate(() =>
+      Array.from(document.querySelectorAll<HTMLElement>('#hero h1, #hero a')).map((el) => ({
+        tag: el.tagName,
+        opacity: getComputedStyle(el).opacity,
+        animations: el.getAnimations({ subtree: true }).length,
+      })),
+    )
+
+  await page.goto('./', { waitUntil: 'domcontentloaded' })
+  const atFirstPaint = await steady()
+  expect(atFirstPaint).toHaveLength(4)
+  for (const item of atFirstPaint) {
+    expect(item.opacity).toBe('1')
+    expect(item.animations).toBe(0)
+  }
+
+  const role = page.locator('#hero p')
+  await expect(page.locator('#hero p span').first()).toBeAttached({ timeout: 2000 })
+  await expect(role).toContainText(ROLE_SENTENCE)
+
+  const afterEffect = await steady()
+  expect(afterEffect).toHaveLength(4)
+  for (const item of afterEffect) {
+    expect(item.opacity).toBe('1')
+    expect(item.animations).toBe(0)
+  }
+  await context.close()
+})
+
+test('motion: role line stays readable when the effect chunk fails to load', async ({
+  browser,
+  baseURL,
+}) => {
+  const context = await browser.newContext({
+    colorScheme: 'light',
+    reducedMotion: 'no-preference',
+  })
+  const page = await context.newPage()
+  const allowed = await initialScriptPaths(page.request, baseURL!)
+  expect(allowed.size).toBeGreaterThan(0)
+
+  let aborted = 0
+  await page.route('**/assets/*.js', (route) => {
+    if (allowed.has(new URL(route.request().url()).pathname)) return route.continue()
+    aborted += 1
+    return route.abort()
+  })
+
+  await page.goto('./')
+  await page.waitForTimeout(1000)
+
+  expect(aborted).toBeGreaterThan(0)
+  await expect(page.locator('#hero h1')).toBeVisible()
+  await expect(page.locator('#hero p')).toHaveText(ROLE_SENTENCE)
+  await expect(page.locator('#hero p')).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Dark theme' })).toBeVisible()
+  await context.close()
+})

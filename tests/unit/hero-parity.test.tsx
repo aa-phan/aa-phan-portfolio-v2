@@ -3,6 +3,7 @@ import path from 'node:path'
 import { render } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { Page } from '@/app/Page'
+import { setMediaQuery } from '../setup'
 
 interface CanonicalNode {
   tag: string
@@ -57,6 +58,11 @@ function reactMain(): HTMLElement {
 
 describe('static shell parity', () => {
   it('index.html shell and the React Page render identically', () => {
+    expect(canonical(shellMain())).toEqual(canonical(reactMain()))
+  })
+
+  it('shell and React Page render identically under reduced motion', () => {
+    setMediaQuery('(prefers-reduced-motion: reduce)', true)
     expect(canonical(shellMain())).toEqual(canonical(reactMain()))
   })
 
