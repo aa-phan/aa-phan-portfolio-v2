@@ -9,14 +9,14 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Foundations
 
-- [ ] **FND-01**: Site builds as Vite + React + TypeScript + Tailwind v4 and deploys via GitHub Actions to the project URL, with an env-driven `base`
+- [x] **FND-01**: Site builds as Vite + React + TypeScript + Tailwind v4 and deploys via GitHub Actions to the project URL, with an env-driven `base`
 - [ ] **FND-02**: CI on Linux runs typecheck, lint, build and a path-case consistency check
 - [ ] **FND-03**: Initial JS is at most 150 kB gzipped, enforced by a CI budget check
 - [ ] **FND-04**: Layered imports are enforced by lint (only `anim/` and vendored primitives may import `motion/react` or `@react-spring/web`; only the page root imports content)
 
 ### Design System
 
-- [ ] **DSN-01**: Palette and type are chosen via realtimecolors after exploring alternatives to the seed palette, delivered as light and dark token sets
+- [x] **DSN-01**: Palette and type are chosen via realtimecolors after exploring alternatives to the seed palette, delivered as light and dark token sets
 - [ ] **DSN-02**: A contrast matrix covers every text, UI and focus pair in both themes and meets WCAG 2.2 AA
 - [ ] **DSN-03**: User can toggle light/dark, defaulting to system preference, with no flash on load
 - [ ] **DSN-04**: Fonts are self-hosted, with at most 2 families
@@ -31,7 +31,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Navigation and Recruiter Fast Path
 
-- [ ] **NAV-01**: Hero shows name, role and CTAs in a static shell that is visible without JavaScript
+- [x] **NAV-01**: Hero shows name, role and CTAs in a static shell that is visible without JavaScript
 - [ ] **NAV-02**: Sticky nav with scroll-spy on desktop, a thumb-reachable morphing pill nav on mobile (reference 445), and a skip link
 - [ ] **NAV-03**: Visitor can copy the email address with a confirmation toast
 - [ ] **NAV-04**: A visitor can find name, role, experience, projects, resume and contact within 10 seconds on a phone (acceptance test)
@@ -115,11 +115,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FND-01 | Phase 2 | Pending |
+| FND-01 | Phase 2 | Complete |
 | FND-02 | Phase 2 | Pending |
 | FND-03 | Phase 2 | Pending |
 | FND-04 | Phase 2 | Pending |
-| DSN-01 | Phase 2 | Pending |
+| DSN-01 | Phase 2 | Complete |
 | DSN-02 | Phase 2 | Pending |
 | DSN-03 | Phase 2 | Pending |
 | DSN-04 | Phase 2 | Pending |
@@ -128,7 +128,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CNT-03 | Phase 1 | Complete |
 | CNT-04 | Phase 3 | Pending |
 | CNT-05 | Phase 3 | Pending |
-| NAV-01 | Phase 2 | Pending |
+| NAV-01 | Phase 2 | Complete |
 | NAV-02 | Phase 3 | Pending |
 | NAV-03 | Phase 3 | Pending |
 | NAV-04 | Phase 3 | Pending |

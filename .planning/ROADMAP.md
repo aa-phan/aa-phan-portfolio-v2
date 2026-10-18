@@ -76,12 +76,12 @@ Plans:
   4. Every text, UI and focus color pair in both themes passes WCAG 2.2 AA according to the committed contrast matrix, checked against the real token files.
   5. With the OS reduce-motion setting on, a rendered motion-primitives component and the page show all content with no animation, driven by one preference source, and lint fails any import of `motion/react` or `@react-spring/web` outside `anim/` and the vendored primitives.
 
-**Plans:** 9 plans
+**Plans:** 1/9 plans executed
 
 Plans:
 **Wave 1**
 
-- [ ] 02-01-PLAN.md — Package legitimacy gate, then tracer: scaffold, Prettier config, palette A tokens and a themed static hero under the project base visible with JS off (wave 1)
+- [x] 02-01-PLAN.md — Package legitimacy gate, then tracer: scaffold, Prettier config, palette A tokens and a themed static hero under the project base visible with JS off (wave 1)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -190,7 +190,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Decisions and Documentation | 7/7 | Complete    | 2026-10-09 |
-| 2. Deployed Themed Skeleton | 0/0 | Not started | - |
+| 2. Deployed Themed Skeleton | 1/9 | In Progress | - |
 | 3. Content-Complete Site | 0/0 | Not started | - |
 | 4. Motion System and Signature Rail | 0/0 | Not started | - |
 | 5. Section Treatments | 0/0 | Not started | - |
