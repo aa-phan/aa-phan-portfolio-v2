@@ -16,10 +16,11 @@
     "test:e2e": "npm run build && playwright test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "verify": "npm run typecheck && npm run lint && npm run format:check && npm run test && npm run check:case && npm run check:colors && npm run build && npm run check:budget && npm run check:no-phone",
+    "verify": "npm run typecheck && npm run lint && npm run format:check && npm run test && npm run check:case && npm run check:colors && npm run check:contrast && npm run build && npm run check:budget && npm run check:no-phone",
     "check:budget": "node scripts/check-js-budget.mjs",
     "check:case": "node scripts/check-path-case.mjs",
     "check:colors": "node scripts/check-colors.mjs",
+    "check:contrast": "node scripts/check-contrast.mjs",
     "check:no-phone": "node scripts/check-no-phone.mjs"
   },
   "dependencies": {

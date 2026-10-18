@@ -1,0 +1,122 @@
+[
+  {
+    "fg": "--text",
+    "bg": "--background",
+    "category": "text",
+    "usedBy": "#hero #experience #projects #about #skills #education #contact body copy"
+  },
+  {
+    "fg": "--text",
+    "bg": "--surface",
+    "category": "text",
+    "usedBy": "#projects #contact cards, toast, overlay panel"
+  },
+  {
+    "fg": "--text",
+    "bg": "--secondary",
+    "category": "text",
+    "usedBy": "#skills #education tinted bands and chips"
+  },
+  {
+    "fg": "--muted",
+    "bg": "--background",
+    "category": "text",
+    "usedBy": "#experience #education dates, captions, secondary copy"
+  },
+  {
+    "fg": "--muted",
+    "bg": "--surface",
+    "category": "text",
+    "usedBy": "#projects #about card metadata"
+  },
+  {
+    "fg": "--link",
+    "bg": "--background",
+    "category": "text",
+    "usedBy": "#about #contact inline links"
+  },
+  {
+    "fg": "--link",
+    "bg": "--surface",
+    "category": "text",
+    "usedBy": "#projects #contact links in cards and overlay"
+  },
+  {
+    "fg": "--on-primary",
+    "bg": "--primary",
+    "category": "text",
+    "usedBy": "#hero #contact filled button labels"
+  },
+  {
+    "fg": "--on-primary",
+    "bg": "--primary-hover",
+    "category": "text",
+    "usedBy": "#hero #contact hovered or pressed button labels"
+  },
+  {
+    "fg": "--on-accent",
+    "bg": "--accent",
+    "category": "text",
+    "usedBy": "#skills #projects accent chip and active pill labels"
+  },
+  {
+    "fg": "--border-strong",
+    "bg": "--background",
+    "category": "ui",
+    "usedBy": "#contact control boundaries"
+  },
+  {
+    "fg": "--border-strong",
+    "bg": "--surface",
+    "category": "ui",
+    "usedBy": "#projects control boundaries on cards"
+  },
+  {
+    "fg": "--primary",
+    "bg": "--background",
+    "category": "ui",
+    "usedBy": "#hero #contact filled control against page"
+  },
+  {
+    "fg": "--accent",
+    "bg": "--background",
+    "category": "ui",
+    "usedBy": "#experience #projects scroll-spy and active nav indicator"
+  },
+  {
+    "fg": "--accent",
+    "bg": "--surface",
+    "category": "ui",
+    "usedBy": "#projects active indicators on cards and pill nav"
+  },
+  {
+    "fg": "--focus-ring",
+    "bg": "--background",
+    "category": "focus",
+    "usedBy": "#hero #contact focus ring on page"
+  },
+  {
+    "fg": "--focus-ring",
+    "bg": "--surface",
+    "category": "focus",
+    "usedBy": "#projects #contact focus ring on cards"
+  },
+  {
+    "fg": "--focus-ring",
+    "bg": "--primary",
+    "category": "focus",
+    "usedBy": "#hero #contact ring adjacent to filled button"
+  },
+  {
+    "fg": "--focus-ring",
+    "bg": "--secondary",
+    "category": "focus",
+    "usedBy": "#skills #education ring on tinted bands"
+  },
+  {
+    "fg": "--primary",
+    "bg": "--surface",
+    "category": "ui",
+    "usedBy": "theme toggle thumb on its track"
+  }
+]
