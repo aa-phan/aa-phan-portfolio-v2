@@ -76,7 +76,7 @@ Plans:
   4. Every text, UI and focus color pair in both themes passes WCAG 2.2 AA according to the committed contrast matrix, checked against the real token files.
   5. With the OS reduce-motion setting on, a rendered motion-primitives component and the page show all content with no animation, driven by one preference source, and lint fails any import of `motion/react` or `@react-spring/web` outside `anim/` and the vendored primitives.
 
-**Plans:** 1/9 plans executed
+**Plans:** 2/9 plans executed
 
 Plans:
 **Wave 1**
@@ -85,7 +85,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 02-02-PLAN.md — Labelled section stubs and Contact jump, base CSS (focus ring, reduced-motion guard), stand-in resume, favicon, self-hosted Inter, 44 px CTAs (wave 2)
+- [x] 02-02-PLAN.md — Labelled section stubs and Contact jump, base CSS (focus ring, reduced-motion guard), stand-in resume, favicon, self-hosted Inter, 44 px CTAs (wave 2)
 - [ ] 02-03-PLAN.md — SHA-pinned ci.yml and deploy.yml calling `npm run verify` with the staging base, unpushed (wave 2)
 
 **Wave 3** *(blocked on Wave 2 completion)*
@@ -190,7 +190,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Decisions and Documentation | 7/7 | Complete    | 2026-10-09 |
-| 2. Deployed Themed Skeleton | 1/9 | In Progress | - |
+| 2. Deployed Themed Skeleton | 2/9 | In Progress | - |
 | 3. Content-Complete Site | 0/0 | Not started | - |
 | 4. Motion System and Signature Rail | 0/0 | Not started | - |
 | 5. Section Treatments | 0/0 | Not started | - |
