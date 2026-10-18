@@ -8,19 +8,19 @@ requires:
     provides: ci.yml and deploy.yml (02-03), the verify chain and gates (02-04, 02-06, 02-08), the themed hero and motion (02-05, 02-07)
 provides:
   - the Phase 2 skeleton live at https://aa-phan.github.io/aa-phan-portfolio-v2/ through a normal (never forced) push of main
-  - ci.yml and deploy.yml both green on ubuntu-latest for the pushed commit 76a5239
+  - ci.yml and deploy.yml both green on ubuntu-latest for the pushed commits 76a5239 (first push) and 3342834 (current main tip, after one fix-forward of a flaky e2e test)
   - docs/adr/0008-planning-area-visibility.md (Accepted), reversing the ADR-0001 planning-area rule for this repository
   - docs/deploy-runbook.md rewritten to the real workflows, with the staging record, a Local verification section and the cross-platform lockfile risk
   - the planning workflow config and state snapshot tracked and published
 affects: [phase-03, cutover]
 status: complete
-commits: 2
+commits: 4
 plan_head_before: 52f22bdacbcac246409dbd4250d86f4da26b88c4
-plan_head_after: 76a5239c1588421cffbc1e46dacd4bf229a2770f
+plan_head_after: 33428343c9a081735cdcdc8ce50b3aeb20db9ee6
 actuals:
   tokens: 9000
   tasks: 3
-  commits: 2
+  commits: 4
 tech-stack:
   added: []
   patterns: [guards run on every public ref and tree immediately before a push, fast-forward-only promotion of the phase branch to main, one-way public push gated by an owner decision recorded as an ADR]
@@ -47,7 +47,7 @@ coverage:
     requirement: FND-02
     verification:
       - kind: command
-        ref: "gh run list --commit 76a5239 -> CI success (run 39104898609), Deploy static content to Pages success (run 39104898622)"
+        ref: "gh run list --commit 76a5239 -> CI success (run 39104898609), Deploy success (run 39104898622); commit 3342834 -> CI success (run 39108357544), Deploy success (run 39108357514)"
         status: pass
     human_judgment: false
   - id: D2
@@ -55,7 +55,7 @@ coverage:
     requirement: FND-01
     verification:
       - kind: command
-        ref: "E2E_BASE_URL=https://aa-phan.github.io/aa-phan-portfolio-v2/ npx playwright test -> 17 passed"
+        ref: "E2E_BASE_URL=https://aa-phan.github.io/aa-phan-portfolio-v2/ npx playwright test -> 17 passed (run against both the 76a5239 and the 3342834 deployments)"
         status: pass
     human_judgment: false
   - id: D3
@@ -105,7 +105,7 @@ completed: 2026-10-18
 - Runbook rewritten: real ci.yml and deploy.yml steps with SHA-pinned versions, the staging record (repository already existed and was public, owner set the Pages source, first deploy ran from the push), a Local verification section, and the Linux lockfile risk.
 - Pre-push OD-01 guards immediately before the push (counts): history over all local and fetched refs 0; history over the remote refs 0; tracked tree 0; origin/main tree 0. Re-run on the public refs after the push: history 0, tree 0.
 - Pushed `main` from 7ca940b to 76a5239 with a normal `git push origin main` after `git merge --ff-only` of the phase branch (7ca940b was a direct ancestor, so no non-ff merge and no force). No rejection, so no `gh auth setup-git` was needed.
-- Pushed SHA: `76a5239c1588421cffbc1e46dacd4bf229a2770f`.
+- First pushed SHA: `76a5239c1588421cffbc1e46dacd4bf229a2770f`. The metadata push `7014714` then failed CI on one flaky test (below); the fix-forward `3342834` is the current main tip and is green.
   - CI: https://github.com/aa-phan/aa-phan-portfolio-v2/actions/runs/39104898609 -> success
   - Deploy static content to Pages: https://github.com/aa-phan/aa-phan-portfolio-v2/actions/runs/39104898622 -> success
 - Live check: status 200, name present, all three asset URLs under `/aa-phan-portfolio-v2/assets/` return 200, no root-absolute asset URLs. `E2E_BASE_URL=https://aa-phan.github.io/aa-phan-portfolio-v2/ npx playwright test`: 17 passed, 0 failed.
@@ -115,7 +115,9 @@ completed: 2026-10-18
 1. **Task 1 and Task 2:** checkpoints resolved by the owner and the orchestrator; no code.
 2. **Task 3 step 1, metadata:** `8a557e2` chore(planning): track workflow config and state snapshot (ADR-0008)
 3. **Task 3 steps 1 and 2, docs:** `76a5239` docs(02-09): ADR-0008 reverses planning-area rule, runbook matches real workflows
-4. **Plan metadata:** the SUMMARY, STATE and ROADMAP commit that follows this file.
+4. **Plan metadata:** `7014714` docs(02-09): complete staging deploy plan (SUMMARY, STATE, ROADMAP, REQUIREMENTS)
+5. **CI fix-forward:** `3342834` fix(02-09): reduced-motion thumb test waits for the first changed frame
+6. A final docs commit records this fix-forward in the SUMMARY (the `commits:` count above is measured up to `3342834`).
 
 ## Deviations from Plan
 
@@ -131,7 +133,15 @@ completed: 2026-10-18
 **2. Branch handling executed as `ff-main`, one extra push to follow**
 - The plan pushes `main` from the working branch; the owner chose to fast-forward local `main` to `gsd/phase-02-deployed-themed-skeleton`. Done with `git checkout main && git merge --ff-only`, then a normal push. Executor commits are made on the phase branch (the pre-commit protection forbids committing on `main`), so the plan-metadata commit that follows this SUMMARY is promoted the same way (fast-forward, normal push). That final push is docs-only and re-runs both workflows.
 
-**Total deviations:** 1 auto-added (Rule 2), 1 process note. **Impact:** none on scope; no CI fix-forward was needed, the Linux lockfile risk did not occur.
+**3. [Rule 1 - Bug] Flaky reduced-motion e2e test failed CI on the Linux runner**
+- **Found during:** Task 3 step 6 (the second push, `7014714`; the first push `76a5239` passed)
+- **Issue:** `tests/e2e/motion.spec.ts` "reduced motion: theme thumb snaps to its target" (from plan 02-07) read the thumb transform exactly two animation frames after the click. On the slower, cold Linux runner the React commit had not landed yet, so it read the start value (`matrix(1, 0, 0, 1, 0, 0)` instead of `matrix(1, 0, 0, 1, 20, 0)`). CI run 39105035973 failed on it; the deploy run for the same commit succeeded.
+- **Fix:** the test now resolves on the first frame whose transform differs from the start (up to 120 frames). A snapped thumb must jump straight to its target; a spring would show an in-between value first, so the test still discriminates. A CI-environment timing fix, pushed normally (no force, no history rewrite).
+- **Files modified:** `tests/e2e/motion.spec.ts`
+- **Verification:** 20 consecutive local repeats pass, full suite 17 passed, lint, typecheck and format check clean; CI run 39108357544 and Deploy run 39108357514 green on `3342834`; live suite 17 passed against the new deployment.
+- **Commit:** `3342834`
+
+**Total deviations:** 2 auto-fixed (1 Rule 2, 1 Rule 1), 1 process note. **Impact:** none on scope; the Linux lockfile risk did not occur.
 
 ## Authentication Gates
 
@@ -143,6 +153,7 @@ None added by this plan. `public/resume.pdf` is the intentional "Resume coming s
 
 ## Issues Encountered
 
+- Local Playwright runs became very slow (a 16 minute run with 2 spurious failures) while leftover preview and Playwright processes from interrupted runs were alive and the machine load average was above 15. After killing them the full suite passed in about 5 s. Not a code problem.
 - First push attempt did not run: my guard script compared padded `wc -l` output as a string, so the all-zero test failed and nothing was pushed (the guards themselves had printed 0). Re-ran with trimmed counts and pushed.
 - The CI run annotates that `ubuntu-latest` migrates to Ubuntu 26 on 2026-10-19. Worth watching on the next run; no action taken.
 - A supplementary bare 10-digit scan of the tracked tree hit 4 files; all were checked with digits masked and are OKLab matrix coefficients, PDF byte offsets and a note that records the same false positive. No phone number.
