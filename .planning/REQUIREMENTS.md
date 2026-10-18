@@ -106,7 +106,7 @@ Explicitly excluded. Documented to prevent scope creep.
 | Scroll-jacking | Hurts usability and accessibility |
 | Hover-only content | Not reachable on touch |
 | Skill percentage bars | Low-signal for recruiters |
-| `.planning/` and `references/` in the public repo | Public repo contains only the site |
+| `references/` in any public repo, or the planning area in the site repo (`aa-phan.github.io`) | The private reference folder never goes into any public repo, and the site repo receives only the site at cutover. This public development repo carries its planning notes by owner decision on 2026-10-18, reversing the original row (ADR-0008) |
 | Phone number anywhere on the site | User instruction; the source resume contains it, so the web copy must strip it |
 
 ## Traceability

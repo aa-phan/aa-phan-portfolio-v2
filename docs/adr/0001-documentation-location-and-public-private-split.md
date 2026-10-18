@@ -1,6 +1,6 @@
 # ADR-0001: Documentation location and public/private split
 
-Status: Accepted
+Status: Superseded by 0008
 
 Date: 2026-10-09
 

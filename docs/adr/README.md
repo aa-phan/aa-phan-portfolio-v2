@@ -14,13 +14,14 @@ Each ADR file is named `NNNN-kebab-title.md` and contains:
 
 | ADR | Title | Status | Date |
 |-----|-------|--------|------|
-| 0001 | [Documentation location and public/private split](0001-documentation-location-and-public-private-split.md) | Accepted | 2026-10-09 |
+| 0001 | [Documentation location and public/private split](0001-documentation-location-and-public-private-split.md) | Superseded by 0008 | 2026-10-09 |
 | 0002 | [Skip the skeleton gate for the documentation phase](0002-skip-skeleton-gate-for-docs-phase.md) | Accepted | 2026-10-09 |
 | 0003 | [GitHub Pages source, staging, cutover and rollback](0003-github-pages-source-and-cutover.md) | Accepted | 2026-10-09 |
 | 0004 | [TypeScript 6.0.x](0004-typescript-6.md) | Accepted | 2026-10-09 |
 | 0005 | [Inline SVG brand icons](0005-inline-svg-brand-icons.md) | Accepted | 2026-10-09 |
 | 0006 | [Project overlay dialog accessibility](0006-project-overlay-dialog-accessibility.md) | Accepted | 2026-10-09 |
 | 0007 | [Vendored motion-primitives](0007-vendored-motion-primitives.md) | Accepted | 2026-10-18 |
+| 0008 | [Planning area visibility in the public development repo](0008-planning-area-visibility.md) | Accepted | 2026-10-18 |
 
 ## Open decisions
 

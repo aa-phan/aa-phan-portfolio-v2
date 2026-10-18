@@ -71,7 +71,7 @@ The site must feel crafted and memorable (tactile, physics-based motion and stro
 | Launch gates: mobile Lighthouse perf >=90, a11y >=95, initial JS <=150 kB gz (relaxed from a stricter 120), LCP <=2.5 s, WCAG 2.2 AA, full reduced-motion support | User first chose stricter, then relaxed JS to 150 kB because probe is ~139 kB before content; code-split to stay under | — Pending |
 | Project detail is an in-page overlay (morphing dialog), no router or deep links | Avoids GitHub Pages path issues | — Pending |
 | Drop click sounds for v1 | Revisit later as opt-in | — Pending |
-| Keep .planning/ and references/ out of the public site repo | Public repo contains only the site | — Pending |
+| Keep .planning/ and references/ out of the public site repo | Public repo contains only the site | Reversed for this development repository on 2026-10-18 by ADR-0008 (planning notes stay tracked and public here); `references/` stays private and the site repo stays site-only |
 | Keep all 7 v1 projects, 5 experience entries, GPA, public email and DJ Instagram link; resume PDF supplied in references/ | User confirmed 2026-10-09 | — Pending |
 | Defaults pending user override: TypeScript 6, inline SVG brand icons, Tilt/Magnetic/Spotlight desktop-only polish | Researcher recommendations | — Pending |
 

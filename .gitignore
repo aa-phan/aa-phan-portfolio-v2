@@ -14,3 +14,6 @@ test-results/
 playwright-report/
 playwright/.cache/
 coverage
+
+# Machine lock file written by the planning tool; no documentation value
+.planning/milestone.lock

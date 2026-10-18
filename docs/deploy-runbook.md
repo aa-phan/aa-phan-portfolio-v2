@@ -1,8 +1,8 @@
 # Deploy runbook
 
-Status: Draft
+Status: Staging sections verified on 2026-10-18 (first deploy, both workflows green, live end-to-end suite passing). The cutover checklist and rollback are not yet rehearsed.
 
-How the site is built, deployed to a staging project URL, cut over to the user-site URL and rolled back. The reasoning is in [ADR-0003](adr/0003-github-pages-source-and-cutover.md); the build-side design is in [architecture.md](architecture.md). Draft because the workflows do not exist yet: the scaffold milestone writes them and then corrects this document wherever reality differs.
+How the site is built, deployed to a staging project URL, cut over to the user-site URL and rolled back. The reasoning is in [ADR-0003](adr/0003-github-pages-source-and-cutover.md); the build-side design is in [architecture.md](architecture.md).
 
 ## Environments
 
@@ -23,33 +23,42 @@ Assets are module-imported, so no absolute asset paths exist. Anything under `pu
 
 ## Workflows
 
-Both workflows are written in the scaffold milestone. Pin every action by commit SHA at scaffold time and keep the version in a comment.
+Every action is pinned by commit SHA with its version in a comment.
 
-**ci.yml**, on `push` and `pull_request`:
+**ci.yml**, on `push` and `pull_request` (concurrency per ref, permissions `contents: read`, `VITE_BASE=/aa-phan-portfolio-v2/`), one job on `ubuntu-latest`:
 
-1. `npm ci`
-2. Typecheck
-3. Lint (includes the import-boundary rules)
-4. Build with the project-path `VITE_BASE`
-5. Path-case check on the Linux runner
-6. Initial JavaScript budget: the build fails if initial JS exceeds 150 kB gzipped
+1. `actions/checkout` v7.0.1
+2. `actions/setup-node` v7.1.0 with `lts/*` and the npm cache
+3. `npm ci`
+4. `npm run verify`, which runs in order: typecheck, lint (includes the import-boundary rules), format check, unit tests, path-case check on the Linux runner, raw-color check, contrast check, build, initial JavaScript budget (the build fails if initial JS exceeds 150 kB gzipped), phone-number check over the built output
+5. `npx playwright install --with-deps chromium`
+6. `npm run test:e2e` (builds, then runs the Playwright suite against the preview server)
 
-**deploy.yml**, on `push` to `main` and on `workflow_dispatch`, following the Vite static-deploy guide:
+**deploy.yml** ("Deploy static content to Pages"), on `push` to `main` and on `workflow_dispatch`, following the Vite static-deploy guide:
 
 - Permissions: `contents: read`, `pages: write`, `id-token: write`.
 - Concurrency group `pages`.
-- Build job: `actions/checkout` v7, `actions/setup-node` v7, `actions/configure-pages` v6, then the build with `VITE_BASE` set for the target, then `actions/upload-pages-artifact` v5 with path `./dist`.
-- Deploy job: `actions/deploy-pages` v5, in environment `github-pages`.
+- Build job: `actions/checkout` v7.0.1, `actions/setup-node` v7.1.0, `npm ci`, `npm run verify` (so a build that fails any gate, including the JavaScript budget, is never deployed), `actions/configure-pages` v6.0.0, then `actions/upload-pages-artifact` v5.0.0 with path `./dist`. `VITE_BASE` is set in the workflow `env`; the cutover changes it to `/`.
+- Deploy job: `actions/deploy-pages` v5.0.1, in environment `github-pages`, followed by a `curl` check that the deployed page contains the owner's name.
 
 ## First staging deploy
 
-1. Stop unless the OD-01 guard search in Prerequisites prints nothing. If it prints anything, do nothing below.
-2. Create the GitHub repository named `aa-phan-portfolio-v2` with the visibility the owner chooses.
-3. Push `main`.
-4. In the repository settings, set Pages, Source, to GitHub Actions.
-5. Run the deploy workflow with `workflow_dispatch` and watch it finish.
-6. Open https://aa-phan.github.io/aa-phan-portfolio-v2/ and confirm the page loads and every asset resolves under `/aa-phan-portfolio-v2/` (browser network panel shows no 404 and no request to the bare root).
-7. Run the [smoke test](#smoke-test).
+What actually happened on 2026-10-18:
+
+1. The repository `aa-phan-portfolio-v2` already existed and was public, with `main` pushed, before the scaffold milestone. The create-repository step was therefore already done.
+2. The history and tree guards from Prerequisites were run over every local commit, every public branch and tag, the working tree and the public `main` tip. Every one printed nothing.
+3. The owner set Pages, Source, to GitHub Actions in the repository settings before the push, so the first deploy did not fail in `configure-pages`.
+4. `main` was pushed normally (never forced). The first deploy ran from that push; no manual `workflow_dispatch` was needed.
+5. The staging URL https://aa-phan.github.io/aa-phan-portfolio-v2/ served the hero with every asset under `/aa-phan-portfolio-v2/`, and the full Playwright suite passed against it (see Local verification).
+6. The real-device [smoke test](#smoke-test) is run by the owner on a phone.
+
+To repeat it on a fresh repository: stop unless the Prerequisites guard prints nothing, create the repository, set Pages, Source, to GitHub Actions, push `main`, and watch both workflows.
+
+## Local verification
+
+- `npm run verify` runs every gate that CI runs, except the end-to-end suite. Use `VITE_BASE=/aa-phan-portfolio-v2/` to match staging.
+- `npm run test:e2e` builds and runs the Playwright suite against a local server.
+- To check a live deployment, set `E2E_BASE_URL` to its URL and run `npx playwright test`; no local server starts in that mode. For staging: `E2E_BASE_URL=https://aa-phan.github.io/aa-phan-portfolio-v2/ npx playwright test`.
 
 ## Cutover checklist
 
@@ -96,3 +105,4 @@ If the new site is broken after the cutover:
 - Linux runners are case-sensitive and the owner's macOS filesystem is not, so an import that differs only in case works locally and fails in CI. The path-case check exists for this.
 - A stale CDN cache can serve the old site for a few minutes after a deploy. Hard-refresh or add a query string before concluding a deploy failed.
 - A missing lockfile makes `npm ci` fail in both workflows.
+- A lockfile generated on macOS can lack the optional native bindings Linux needs. If `npm ci` on the runner reports a missing optional binding, run `npm install --os=linux --cpu=x64` and commit the lockfile.
