@@ -31,7 +31,7 @@ created: "2026-10-19"
 
 - **After every task commit:** Run `npx vitest run` plus the single relevant script (`check:contrast`, `check:images`, `check:no-phone`, `check:budget`)
 - **After every plan wave:** Run `VITE_BASE=/aa-phan-portfolio-v2/ npm run verify`
-- **Before `/gsd-verify-work`:** Full suite green locally and in CI, then the real-phone 10-second test
+- **Before `/gsd-verify-work`:** Full suite green locally and in CI, then the real-phone 10-second test; the D-24 QA loop on the production build also passes before verification
 - **Max feedback latency:** 120 seconds
 
 ---
@@ -76,6 +76,8 @@ Task IDs are assigned by the planner; this table is keyed by requirement until p
 - [ ] `vitest.config.ts`: register `imagetools()`; TS types for `*?as=picture` imports
 - [ ] `playwright.config.ts`: `mobile` project with `testIgnore`/`testMatch` split
 - [ ] Update pinned values in `tokens.test.ts`, `smoke.spec.ts`, `theme.spec.ts`, `motion.spec.ts`, `hero-parity.test.tsx`
+- [ ] `.shots/` added to `.gitignore` (D-24)
+- [ ] `axe-core` resolvable from the project as a pinned devDependency approved through the package-legitimacy gate, so the shoot.mjs a11y pass is not skipped (D-24)
 
 ---
 
@@ -85,6 +87,9 @@ Task IDs are assigned by the planner; this table is keyed by requirement until p
 |----------|-------------|------------|-------------------|
 | First-time visitor finds name, role, experience, projects, resume and contact in 10 s or less | NAV-04 | Needs a real phone and a human first-time viewer | On a real phone with motion on, open the staging URL cold; time locating all six items; pass if 10 s or less |
 | Owner-supplied phone-free resume PDF, repo URLs, write-up and quote approvals | CNT-02, CNT-04 | Owner inputs | `checkpoint:human-verify` before content finalization |
+| Screenshot read-through of every desktop, mobile, reduced-motion, `k-*` focus and `h-*` hover frame plus the open-dialog frames (D-25) | D-24 | The report flags cases, but a human or agent must read the frames | Read every frame in `.shots/`; pass when no layout break, clipped text, invisible focus or broken dialog is visible |
+| Hover pairs on primary targets read by eye (`colorOnly`, `pixels`, `masked`) | D-24 | Pair metrics flag candidates; judging the treatment needs eyes | Compare each primary-target hover pair; pass when no primary target only changes text colour |
+| Fresh critic score, a new subagent per pass | D-24 | Needs an independent evidence-only judge | Give a new subagent only the `quality-bar.md` critic brief, `.shots/` and `.shots/audit.txt`; pass when every area scores 8 or above with screenshot evidence; the fix list feeds `/gsd-plan-phase 3 --gaps`; items reversing D-25 to D-28 go to the owner |
 
 ---
 
@@ -96,5 +101,6 @@ Task IDs are assigned by the planner; this table is keyed by requirement until p
 - [ ] No watch-mode flags
 - [ ] Feedback latency < 120s
 - [ ] `nyquist_compliant: true` set in frontmatter
+- [ ] D-24 QA loop thresholds and critic scores hold on the final pass
 
 **Approval:** pending
