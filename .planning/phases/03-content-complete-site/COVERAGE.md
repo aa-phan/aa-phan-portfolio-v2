@@ -1,0 +1,1 @@
+No external API integration: the phase builds a static site that uses only browser platform features (the Clipboard API, IntersectionObserver, the native dialog element) and build-time packages; it calls no external service, SDK or remote endpoint.

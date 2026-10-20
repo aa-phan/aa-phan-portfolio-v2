@@ -130,7 +130,64 @@ Waves 4 to 8 run one plan each: every plan from 02-05 on builds into `dist/` and
   4. Only the images the page uses ship, as optimized AVIF/WebP with EXIF stripped.
   5. On a phone, a first-time visitor can find name, role, experience, projects, resume and contact within 10 seconds (the 10-second acceptance test).
 
-**Plans**: TBD
+**Plans:** 14 plans
+
+Plans:
+**Wave 1**
+
+- [ ] 03-01-PLAN.md — Tracer: palette D through tokens, contrast gate, matrix and pins; Archivo and the poster type ladder; owner legitimacy check for pdfjs-dist and axe-core (wave 1)
+- [ ] 03-02-PLAN.md — Owner inputs: featured write-ups drafted from resume facts, then project links, write-up approval, the About line and the phone-free resume recorded in the inventory (wave 1)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 03-03-PLAN.md — Typed profile and contact modules, hero Copy email with live-region toast through LazyMotion, content rules and inventory parity test (wave 2)
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [ ] 03-04-PLAN.md — Poster hero in shell and React, ink-flood CTAs, head metadata, inventory and IA amendments (wave 3)
+
+**Wave 4** *(blocked on Wave 3 completion)*
+
+- [ ] 03-05-PLAN.md — Desktop sticky nav with scroll-spy, sliding indicator, label roll, skip link (wave 4)
+
+**Wave 5** *(blocked on Wave 4 completion)*
+
+- [ ] 03-06-PLAN.md — PHAN/PHVNTM wordmark, one theme store, phone top bar (wave 5)
+
+**Wave 6** *(blocked on Wave 5 completion)*
+
+- [ ] 03-07-PLAN.md — Mobile pill nav with in-place morph, mobile Playwright project, automated 10-second check (wave 6)
+
+**Wave 7** *(blocked on Wave 6 completion)*
+
+- [ ] 03-08-PLAN.md — Experience index list, image pipeline for the logos, check:images gate (wave 7)
+
+**Wave 8** *(blocked on Wave 7 completion)*
+
+- [ ] 03-09-PLAN.md — Projects crate and native dialog, audited inverted band and sleeve grounds (wave 8)
+
+**Wave 9** *(blocked on Wave 8 completion)*
+
+- [ ] 03-10-PLAN.md — About photo and bio, Skills statement, Education facts, SEC-02/SEC-03 and IX-13/IX-14 amendments (wave 9)
+
+**Wave 10** *(blocked on Wave 9 completion)*
+
+- [ ] 03-11-PLAN.md — Contact finale, footer wordmark fit to width, 404 "Dead air." page (wave 10)
+
+**Wave 11** *(blocked on Wave 10 completion)*
+
+- [ ] 03-12-PLAN.md — PDF text-layer phone gate and real-resume rule, Resume links, ADR-0009 and ADR-0010, docs catch-up (wave 11)
+
+**Wave 12** *(blocked on Wave 11 completion)*
+
+- [ ] 03-13-PLAN.md — Awwwards QA loop on the production build: thresholds, extra dialog and dark frames, fresh critic, 03-QA.md (wave 12)
+
+**Wave 13** *(blocked on Wave 12 completion)*
+
+- [ ] 03-14-PLAN.md — Owner-approved staging release, live checks including the Pages 404, real-phone 10-second test (wave 13)
+
+From wave 2 on, plans run one per wave: each builds into dist/ and runs the repo-wide verify chain in the one shared working tree.
+
 **UI hint**: yes
 
 ### Phase 4: Motion System and Signature Rail
