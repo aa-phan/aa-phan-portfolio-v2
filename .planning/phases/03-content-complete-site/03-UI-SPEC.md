@@ -48,10 +48,10 @@ Declared values (all multiples of 4). Tailwind's default 4 px step is kept; name
 | xl | 32px | Gutter maximum, dialog padding on desktop, row padding-block |
 | 2xl | 48px | Gap between a section heading and its content |
 | 3xl | 64px | Nav height (`--nav-h`), top bar height, large gaps between blocks |
-| 4xl | 96px | Section spacing, "tight" mood (Experience, Projects band, Skills, Education) |
-| 5xl | 160px | Section spacing, "airy" mood (before About) |
 
-Section spacing moods (DESIGN.md section 5, assigned on purpose): Experience, Projects, Skills, Education use **tight** (4xl top and bottom). About uses **airy** (5xl top). Hero uses its own height rule. Contact/footer finale is **full viewport** (`min-height: 100svh`).
+The scale is the standard set (4, 8, 16, 24, 32, 48, 64). These seven are the only values layout code may use for gaps, padding and margins. Anything else is a row in the Exceptions table below; there are no other named stops. Gaps of 12 px are not used anywhere: use 8 or 16.
+
+Section spacing moods (DESIGN.md section 5, assigned on purpose) are exceptions to the scale, listed below as **Section mood tight** (96 px) and **Section mood airy** (160 px): Experience, Projects, Skills, Education use tight top and bottom. About uses airy on top. Hero uses its own height rule. Contact/footer finale is **full viewport** (`min-height: 100svh`).
 
 Grid gutter and outer margin are fluid per DESIGN.md: `clamp(1rem, 2vw, 2rem)` (16 to 32 px). Outer margin equals the gutter.
 
@@ -64,6 +64,9 @@ Exceptions (each justified):
 | Radii | 4 px and 9999 px only (D-06) | Shape rule. One declared exception: the expanded pill panel keeps 28 px (half the 56 px pill height) so the pill-to-panel morph reads as one shape (IX-07) |
 | Pill nav | collapsed height 56 px, bottom offset 16 px + `env(safe-area-inset-bottom)` | Thumb zone. 56 = 14 x 4 |
 | Logo slot | 24 px square slot, logo drawn at 20 px | Aligns logo and monogram chips (D-07) |
+| Section mood tight | 96 px (6rem) | DESIGN.md section 5 assigns it on purpose between Experience and Projects and the other evidence sections; sits above the 64 px top of the standard scale because section rhythm needs a step larger than a block gap |
+| Section mood airy | 160 px (10rem) | DESIGN.md section 5: the one airy pause before About, so the personality section reads as a chapter change. Used once |
+| Bio offset (About) | 128 px top padding on the bio column at 768 and up | Starts the bio roughly one third of the way down the photo (DESIGN.md composition). 128 = 2 x 64; used once, desktop and tablet only |
 
 ---
 
@@ -84,7 +87,7 @@ One family, Archivo Variable. Ladder is the DESIGN.md section 5 ladder (D-03), r
 
 Rules:
 
-- **Declared sizes:** eight tokens (DESIGN.md ladder, locked by D-03). The generic "3 to 4 sizes" heuristic is for app UIs; this is a poster ladder where five of the eight are fluid. **Declared weights:** 400, 500, 600, 750, 800 (also locked by DESIGN.md). Both counts are flagged to the checker as owner-locked deviations, not oversights. Do not add a size or weight beyond this table.
+- **Declared sizes:** eight tokens (DESIGN.md ladder, locked by D-03). The generic "3 to 4 sizes" heuristic is for app UIs; this is a poster ladder where five of the eight are fluid. **Declared weights:** 400, 500, 600, 750, 800 (also locked by DESIGN.md). Both counts are flagged to the checker as owner-locked deviations, not oversights. Do not add a size or weight beyond this table. Accepted trade-offs: 13 px (`--t-xs`) and 14 px (`--t-s`) are near-sizes, as are 16 px and 17 px at body on wide screens; they are kept because they serve different roles (chips and sleeve metadata versus nav and dates; fluid body versus fixed label) and DESIGN.md fixes both. The five weights are the DESIGN.md width-and-weight voice (400 body, 500 labels and statements, 600 titles, 750 headings, 800 display) and are accepted as is.
 - Old Tailwind modular sizes (`text-xs` through `text-5xl`) are deleted from `@theme`; `--text-mega/xl/l/m/body/s/xs` replace them with `--line-height`, `--letter-spacing` and `--font-weight` modifiers. After the swap, grep the repo for the old names (`src/layout/Section.tsx` currently uses `text-3xl font-semibold`).
 - Display type: `margin-inline-start: -0.055em` on the h1 (optical alignment to the body left edge); `text-wrap: balance` on h1/h2; `white-space: nowrap` plus size from `cqi`/`vw` for the wordmarks.
 - Numerals: `font-variant-numeric: tabular-nums` on dates, GPA, graduation date, project index, dialog index.
@@ -110,11 +113,13 @@ Palette D (D-02). Hex values are from DESIGN.md section 5 for reference; the sou
 
 **Accent reserved for (explicit; nothing else may use indigo):**
 
-1. The Resume CTA fill at rest (`--primary`, label `--on-primary`), in the hero, desktop nav and pill panel.
+1. The filled primary CTA at rest (`--primary`, label `--on-primary`): Download resume in the hero, Resume in the desktop nav and pill panel, and "Back to the home page" on the 404.
 2. Inline text links in running text and the dialog (`--link`).
-3. The active scroll-spy mark: desktop nav indicator bar (`--accent`) and the active pill segment fill (`--accent`, label `--on-accent`).
+3. The active scroll-spy mark: desktop nav indicator bar (`--accent`), the active pill segment fill (`--accent`, label `--on-accent`) and the 2 px active-row bar in the pill panel (`--accent`).
 4. The theme toggle thumb (`--primary`, existing).
 5. Text selection background (`--primary`).
+
+Nothing else is indigo or indigo-tinted. In particular the sleeve grounds, hover washes, the About quote rule, the dialog panel, chips and the inverted band contain no `--primary` or `--accent` (they are neutral steps of `--text`, `--secondary` and `--background` only). An executor or reviewer can verify this with a search: `--primary` and `--accent` appear in component code only on the five items above.
 
 Focus ring is **ink** (`--focus-ring`, equals `--text`), 2 px, 2 px offset, on every focusable element, in both themes and inside the inverted band. It is never indigo.
 
@@ -122,14 +127,14 @@ Hover and press grounds: CTA flood uses `--text` ground with `--background` labe
 
 **Inverted band (Projects only):** `.band-invert` is implemented by giving the band the opposite theme's complete token block (all 14 colors), not by swapping `--text` and `--background` (derived tokens would not follow a swap; 03-RESEARCH Pitfall 1). The contrast gate must be extended first (parser, pairs file, tests; Pitfall 2) so band pairs are audited, not just present. The project dialog is rendered **outside** the band (sibling after the section), so it uses the page theme.
 
-**Sleeve grounds (D-09):** four derived tokens, each `color-mix(in oklch, ...)` of existing roles, defined inside the band's token block so they read correctly in both themes. Starting recipe (executor may tune the percentages to make the four distinguishable at a glance while every pair below passes):
+**Sleeve grounds (D-09):** four derived tokens, each `color-mix(in oklch, ...)` of `--text`, `--secondary` and `--background` only (no indigo, so the 10 percent accent share and the reserved list hold), defined inside the band's token block so they read correctly in both themes. The four contexts are told apart by four distinct neutral steps and by the context label printed on each sleeve, so the crate still reads as a sorted collection. Starting recipe (executor may tune the percentages so the four steps stay visibly different while every pair below passes; the ceiling is `--text` 24 percent, above which `--muted` falls below 4.5:1):
 
 | Token | Context | Starting recipe |
 |-------|---------|-----------------|
-| `--sleeve-personal` | RecipeCart, Smart Mirror | `--primary` 30% into `--background` |
-| `--sleeve-employer` | A.T.L.A.S, Suspect Genie | `--text` 16% into `--background` |
-| `--sleeve-hackathon` | MediaDash | `--accent` 22% into `--secondary` |
-| `--sleeve-course` | Full-Stack Library Simulator, FPGA-Based Stopwatch | `--secondary` 100% |
+| `--sleeve-personal` | RecipeCart, Smart Mirror | `--text` 8% into `--background` |
+| `--sleeve-employer` | A.T.L.A.S, Suspect Genie | `--text` 24% into `--background` |
+| `--sleeve-hackathon` | MediaDash | `--secondary` 100% |
+| `--sleeve-course` | Full-Stack Library Simulator, FPGA-Based Stopwatch | `--text` 16% into `--secondary` |
 
 **Contrast pairs the executor must add to `scripts/contrast-pairs.json` (all must pass in both themes, text 4.5, UI and focus 3.0):**
 
@@ -138,7 +143,7 @@ Hover and press grounds: CTA flood uses `--text` ground with `--background` labe
 | `--text` on each `--sleeve-*` | text | Sleeve title, label |
 | `--muted` on each `--sleeve-*` | text | Sleeve dates, stack |
 | `--focus-ring` on each `--sleeve-*` | focus | Sleeve focus ring |
-| Band: `--text`/`--background`, `--muted`/`--background`, `--link`/`--background`, `--focus-ring`/`--background`, `--border-strong`/`--background`, `--accent`/`--background` | mixed | Projects band heading, index, ring |
+| Band: `--text`/`--background`, `--muted`/`--background`, `--link`/`--background`, `--focus-ring`/`--background`, `--border-strong`/`--background` | mixed | Projects band heading, index, ring |
 | `--background` on `--text` | text | CTA flood label, toast, skip link, pill/dialog |
 | `--on-accent` on `--accent` | text | Active pill segment (already present; keep) |
 | `--text` on `--secondary` | text | Hover wash on experience rows (already present) |
@@ -210,7 +215,7 @@ Static HTML first: the shell in `index.html` and `Hero.tsx` must stay equivalent
 |------|------|-----|
 | h1 | "Aaron" over "Phan", `--t-mega`, columns 1 to 9, h1 stays "Aaron Phan" in both themes | same, fills about 80 percent of content width, two lines |
 | Role line | "Software engineer building cloud-native backends in Go." `--t-l`, ink, columns 1 to 6. **No text effect or fade on first paint** (D-04, pitfall 13: the role line is plain text from first paint; the TextEffect is Phase 5 SEC-04) | same, full width |
-| CTAs | stacked at columns 9 to 12: **Download resume** (filled `--primary`), **Copy email** (outlined). 44 px min-height, pill, `--t-s` weight 500, padding-inline 24 px, minimum width 200 px | stacked full width, 12 px apart |
+| CTAs | stacked at columns 9 to 12: **Download resume** (filled `--primary`), **Copy email** (outlined). 44 px min-height, pill, `--t-s` weight 500, padding-inline 24 px, minimum width 200 px | stacked full width, 16 px apart |
 | Corner facts | bottom-left "Graduating December 2026, UT Austin ECE" and bottom-right "Last role: Capital One, summer 2026", `--t-s`, `--muted`, tabular figures | two lines stacked under the CTAs, left aligned, 4 px apart |
 | Height | `min-height: calc(100svh - 64px)`, content distributed top (name), middle (role and CTAs), bottom (facts) | content height only: explicit `auto` rows, no `1fr` (no hole on tall phones). Top bar 64 + name about 172 + role about 56 + CTAs about 100 + facts about 40 + gaps fits above the pill in a 375 x 667 viewport |
 
@@ -227,7 +232,7 @@ Heading "Experience" (`--t-xl`, column 1). Then a `<ul>` of five rows, newest fi
 
 Logo slot: 24 px square before the company name, 8 px gap. Capital One, Spectrum and Symbotic draw their logo at 20 px (`alt=""`, decorative; the company name is adjacent text). OdderTech IT and The University of Texas at Austin have no asset, so they render a **monogram chip**: 24 px circle, 1 px `--border-strong`, letters "OT" and "UT" in `--t-xs` weight 500, `aria-hidden`. The slot is always present so company names align on one x position.
 
-Open content (below the summary, column 7 on desktop and tablet, column 1 on phones): location line when known (`--t-s`, `--muted`; omitted for OdderTech IT and UT Austin), then the three bullets as a `<ul>` at `--t-body`, 12 px apart, measure at most 62ch. Spectrum and Symbotic open states are identical in structure. Multiple rows may be open at once. All rows start closed except none (all collapsed on load). The 30 percent figure appears in the Spectrum bullet and (separately) the A.T.L.A.S bullet as on the resume; do not "fix" it (R-07).
+Open content (below the summary, column 7 on desktop and tablet, column 1 on phones): location line when known (`--t-s`, `--muted`; omitted for OdderTech IT and UT Austin), then the three bullets as a `<ul>` at `--t-body`, 16 px apart, measure at most 62ch. Spectrum and Symbotic open states are identical in structure. Multiple rows may be open at once. All rows start closed except none (all collapsed on load). The 30 percent figure appears in the Spectrum bullet and (separately) the A.T.L.A.S bullet as on the resume; do not "fix" it (R-07).
 
 ### Projects (`#projects`, D-08, D-09, inverted band)
 - The whole section carries `.band-invert`. Heading "Projects" (`--t-xl`, column 1) and, aligned right on the same baseline, the crate index "3 / 7" (`--t-s`, tabular, `aria-hidden`). The index shows the position of the leftmost sleeve fully in view; at rest "1 / 7".
@@ -251,7 +256,7 @@ Open content (below the summary, column 7 on desktop and tablet, column 1 on pho
 - Heading "About Me" (`--t-xl`, column 1), 160 px above.
 - Photo: columns 1 to 5, 4 px radius, the only photograph on the page, aspect ratio 539 / 800 with explicit `width`/`height`, `loading="lazy"`, `decoding="async"`, AVIF/WebP via `<picture>`, alt text verbatim: "Aaron Phan DJing at his UT Austin graduation". Container has a `--secondary` ground so layout holds if the image fails. On phones: full content width, cropped to 4 / 5 with `object-position: 50% 30%`; the executor confirms in the phone screenshot that the subject stays in frame.
 - Bio: columns 7 to 11, starting one third of the way down the photo (`padding-top: 128px` on desktop and tablet; below 768 it follows the photo with 32 px gap). Paragraph 1 at `--t-l` ("Hello there! My name is Aaron Phan, and I'm a software engineer by day, and aspiring artist by night."), paragraph 2 at `--t-body` ("In my spare time, I enjoy listening to EDM, cooking, and DJing under the pseudonym PHVNTM."), measure at most 62ch. These two paragraphs introduce the night side in plain words and stay verbatim (ABT-01, ABT-02). The apostrophe in "I'm" is typed as U+2019.
-- Quote (D-15): a single owner-supplied line at `--t-m` weight 600 with a 2 px `--accent` rule on its left and 16 px padding. **Until supplied the section renders without it.** Never the old proverb, never invented copy.
+- Quote (D-15): a single owner-supplied line at `--t-m` weight 600 with a 2 px `--border-strong` rule on its left and 16 px padding. **Until supplied the section renders without it.** Never the old proverb, never invented copy.
 
 ### Skills (`#skills`, D-10, statement)
 Heading "Skills" (`--t-xl`, column 1). Four statements in a `<ul>` across columns 1 to 10 at `--t-l`, each `<li>` a sentence: the group name in weight 750 followed by a colon, then the items in weight 500, alphabetical, official casing, ending with a period. Gap 24 px between statements.
@@ -329,7 +334,7 @@ One preference source (existing). Pill panel and indicator switch instantly; toa
 
 ## Toast (IX-09, NAV-03)
 - Persistent visually hidden `role="status"` (`aria-live="polite"`) region present at mount; the message text is written into it on activation. The visual toast is `aria-hidden` so it is not announced twice.
-- Visual toast: pill, ground `--text`, label `--background`, `--t-s` weight 500, padding 12 px 24 px, `--shadow-lg`, max-width `calc(100vw - 32px)`, z 80. Position: horizontally centered; phone bottom = pill height 56 + 16 + 16 + safe area (above the pill); desktop bottom 24 px. Never covers the button that triggered it.
+- Visual toast: pill, ground `--text`, label `--background`, `--t-s` weight 500, padding 8 px 24 px, `--shadow-lg`, max-width `calc(100vw - 32px)`, z 80. Position: horizontally centered; phone bottom = pill height 56 + 16 + 16 + safe area (above the pill); desktop bottom 24 px. Never covers the button that triggered it.
 - Timing: enter 220 ms (opacity 0 to 1, translateY 8 px to 0), stays 4 s, leaves 220 ms. Repeat activation replaces the message and restarts the 4 s timer; there is never a stack of toasts.
 - Copy path: `navigator.clipboard.writeText`, then `execCommand` fallback, then `mailto:` fallback (every "Copy email" element is a real `mailto:` link or button so JS-off still works). The hero element keeps the `<a href="mailto:...">` markup so the static shell matches; React `preventDefault`s and copies.
 
@@ -339,7 +344,7 @@ One preference source (existing). Pill panel and indicator switch instantly; toa
 
 | Element | Copy |
 |---------|------|
-| Primary CTA | Download resume (hero); Resume (nav, pill panel, contact link); Copy email (hero) |
+| Primary CTA | Download resume (hero); Resume (nav, pill panel, contact link: the short form is deliberate where space is tight and the context already says download, and it matches the IA nav copy); Copy email (hero) |
 | Skip link | Skip to main content |
 | Nav labels (desktop) | Experience, Projects, About, Skills, Education, Contact |
 | Pill labels | Experience, Projects, Menu; panel: Experience, Projects, About Me, Skills, Education, Contact Me, Theme, Resume; close: Close menu |
@@ -347,7 +352,7 @@ One preference source (existing). Pill panel and indicator switch instantly; toa
 | Contact lead | The fastest way to reach me is email. |
 | Copy success (toast and live region) | Email copied to clipboard |
 | Copy fallback (toast) | Couldn't copy the address. Opening your mail app instead. |
-| Dialog controls | Close project details; Previous; Next; index "03 / 07"; crate index "3 / 7" |
+| Dialog controls | Close project details; visible labels Previous and Next with accessible names "Previous project" and "Next project"; index "03 / 07"; crate index "3 / 7" |
 | Dialog link (only if URL supplied) | Code on GitHub |
 | Empty state heading | none: this phase is static, build-time content, so no list can be empty. A project without a URL shows no link row; a missing About quote renders nothing (no placeholder text) |
 | Empty state body | none (see above) |
@@ -463,8 +468,8 @@ The contract must be visible in `shoot.mjs` evidence. Per pass, in addition to t
 | Registry | Blocks Used | Safety Gate |
 |----------|-------------|-------------|
 | shadcn official | none (shadcn not initialized) | not applicable |
-| Third-party registries | none declared | not applicable |
-| motion-primitives (vendored, ADR-0007) | `text-effect` already present; no new block in this phase | not applicable (copy-in source already reviewed in Phase 2; Phase 3 adds none) |
+| motion-primitives (third-party registry, https://motion-primitives.com/c/\<name\>.json; vendored copy-in per ADR-0007) | `text-effect` only (already in `src/components/motion-primitives/text-effect.tsx`); **Phase 3 adds no new block from any third-party registry** | Vetted 2026-10-18 and recorded in `docs/adr/0007-vendored-motion-primitives.md`: copied byte for byte from the registry JSON with no local patches, sha256 `4b93c0ea6b9d747d69b7a244d5279f790a11a784e73713f3fe17a636abf53484`; file imports only `react`, `motion/react` and `@/lib/utils` and uses no network, storage or dynamic code (view passed, no flags, 2026-10-18). Any block added later must repeat this gate (fetch, scan for `fetch(`, `process.env`, `eval(`, dynamic imports; record hash and date) before entering this contract |
+| Other third-party registries | none declared | not applicable |
 
 ---
 
