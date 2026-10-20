@@ -60,6 +60,8 @@ Task IDs are assigned by the planner; this table is keyed by requirement until p
 | TBD | TBD | TBD | D-01 | — | N/A | e2e | `npx playwright test -g "wordmark" && npx playwright test -g "404"` | ❌ W0 | ⬜ pending |
 | TBD | TBD | TBD | D-08 | — | N/A | e2e | `npx playwright test -g "project dialog"` | ❌ W0 | ⬜ pending |
 | TBD | TBD | TBD | FND-03 | — | N/A | script | `npm run check:budget` | ✅ | ⬜ pending |
+| TBD | TBD | TBD | D-24 | — | N/A | script (audit) | `env -u VITE_BASE npm run build && mkdir -p .shots && node ~/.claude/skills/awwwards/scripts/audit.mjs dist > .shots/audit.txt` (exits 1 on any FAIL) | ✅ skill script | ⬜ pending |
+| TBD | TBD | TBD | D-24 | — | N/A | script (visual QA) | Serve with `node ~/.claude/skills/awwwards/scripts/serve.mjs dist --port 4400` in the background, then `node ~/.claude/skills/awwwards/scripts/shoot.mjs http://127.0.0.1:4400/ --crawl --nav`; pass when every page in `.shots/summary.json` has `mobileLcpMs` under 2500, `mobileCls` under 0.05, `axeSerious` 0 (null means axe was skipped and fails), `noVisibleFocus` 0, `invisibleFocus` 0, `noHoverChange` 0 | ⚠ needs axe-core (W0) | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
