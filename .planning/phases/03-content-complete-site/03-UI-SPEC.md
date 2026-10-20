@@ -1,7 +1,8 @@
 ---
 phase: "3"
 slug: "content-complete-site"
-status: draft
+status: approved
+reviewed_at: "2026-10-20"
 shadcn_initialized: false
 preset: none
 created: "2026-10-19"
@@ -374,28 +375,93 @@ Voice (DESIGN.md, design brief): plain, confident, short. Sentence case, no em d
 
 ## UI Considerations
 
-Applicable state considerations resolved: 13 covered, 3 backstop, 2 unresolved.
+Resolved by the post-verification UI-consideration probe (owner accepted the drafted set, 2026-10-20). 39 explicit, 5 backstop, 29 dismissed (static build-time content or fixed constants), 2 unresolved. Empty-state and error-state copy lives in the Copywriting Contract; rows here reference it.
 
-| Category | Element(s) | Status | Resolution / Reason |
-|----------|------------|--------|---------------------|
-| empty | project dialog links | ✅ covered | A project without a supplied URL renders no link row and no placeholder; title, dates, stack and bullets still render |
-| empty | About quote | ✅ covered | Renders nothing until the owner supplies a line (D-15); never the old proverb |
-| partial | experience logo slot | ✅ covered | The 24 px slot is constant; OdderTech IT and UT Austin show the monogram chip so company names align |
-| partial | experience location line | ✅ covered | Omitted for OdderTech IT and UT Austin (location not stated in either source); no guess |
-| overflow | project crate | ✅ covered | Horizontal scroll-snap row; the next sleeve peeks at least 24 px; page itself has zero horizontal overflow at 320, 390, 768, 1280, 1920 |
-| overflow | pill panel on short screens | ✅ covered | `max-height: 80dvh` with internal scroll; Resume stays reachable |
-| long-text | sleeve title "MediaDash: Content Recommendation Hub" | ✅ covered | Wraps up to five lines at `--t-l`; only descenders may crop; full title in the accessible name and in the dialog |
-| long-text | experience row "The University of Texas at Austin" | ✅ covered | Company may wrap to two lines below 1024; font-stretch change only at 1024 and up so hover cannot reflow neighbors |
-| long-text | contact email at 320 px | ✅ covered | `clamp(1.25rem, 6.6vw, var(--t-l))` keeps the address on one line |
-| zero-one-many | crate and dialog | ✅ covered | Seven fixed items; prev and next wrap 07 to 01; index always "n / 7" |
-| error | copy email | ✅ covered | Three-step fallback chain ending in `mailto:`; toast copy defined above |
-| loading | motion chunk | ✅ covered | Pill, panel and indicator work with instant state before the async chunk lands |
-| error | about photo fails to load | ✅ covered | Fixed aspect box on `--secondary` ground keeps layout; alt text present |
-| loading | font swap | 🧪 backstop | Fallback-metrics `@font-face` must hold CLS under 0.05; verified by `mobileCls` in the D-24 loop |
-| populated | experience list with 3 logos and 2 chips | 🧪 backstop | Visual check in the desktop and phone screenshots that names align and nothing crowds the dates |
-| populated | wordmark fit-to-width in both themes | 🧪 backstop | Measured 90 to 100 percent of container at 375, 768, 1280 in light and dark |
-| partial | D-14 featured write-ups (problem, approach, outcome) | ⚠ unresolved | Copy awaits owner approval; planner assumes the dialog body fits three short blocks in place of bullets without exceeding 80dvh |
-| partial | D-13 project URL count | ⚠ unresolved | Unknown how many of the seven will have a URL; layout must be correct for 0 to 7 |
+| Element | Category | Status | Resolution / Reason |
+|---------|----------|--------|---------------------|
+| E1 skip link | focus/keyboard | ✅ resolved (explicit) | First Tab stop on the page; visible on `:focus`; Enter moves focus to `main#main` |
+| E2 wordmark | theme | ✅ resolved (explicit) | Both PHAN and PHVNTM strings are in the DOM; `[data-theme]` CSS shows exactly one; the home link name is "Aaron Phan, home" in both themes |
+| E3 desktop nav | loading | ✅ resolved (explicit) | Before the motion chunk loads, the active bar renders under the active link without sliding |
+| E3 desktop nav | error | ➖ dismissed | Links are static anchors; a failed motion chunk behaves exactly like the loading state |
+| E3 desktop nav | overflow | 🧪 resolved (backstop) | No horizontal overflow at 768 and 1024 widths with six links, toggle and Resume (desktop/tablet screenshots) |
+| E3 desktop nav | long-text | ➖ dismissed | Labels are fixed one-word constants |
+| E4 pill nav | empty | ➖ dismissed | Fixed set of three segments and six panel links |
+| E4 pill nav | loading | ✅ resolved (explicit) | Before the motion chunk loads, Menu opens and closes the panel with an instant state change |
+| E4 pill nav | error | ✅ resolved (explicit) | If the motion chunk fails to load, the pill and panel keep working with instant state changes |
+| E4 pill nav | populated | ✅ resolved (explicit) | Collapsed: Experience, Projects, Menu segments, each at least 44 px tall and 96 px wide; the in-view segment has `aria-current="location"` |
+| E4 pill nav | partial | ➖ dismissed | No optional data in the pill |
+| E4 pill nav | overflow | ✅ resolved (explicit) | Expanded panel has `max-height: 80dvh` with internal scroll; Resume stays reachable on a 375 x 667 viewport |
+| E4 pill nav | zero-one-many | ➖ dismissed | Item count is fixed |
+| E4 pill nav | long-text | ➖ dismissed | Labels are fixed constants that fit the 96 px minimum segment |
+| E5 theme toggle | loading | ✅ resolved (explicit) | The inline theme script applies `data-theme` before first paint; no theme flash (existing Phase 2 test) |
+| E5 theme toggle | error | ✅ resolved (explicit) | Blocked storage falls back to the system preference without throwing (existing Phase 2 test); the three toggle instances stay in sync via one store |
+| E5 theme toggle | long-text | ➖ dismissed | Icon control with a fixed accessible name |
+| E6 hero | empty | ➖ dismissed | Static constant copy |
+| E6 hero | loading | ✅ resolved (explicit) | Name, role line and both CTAs are present in the static HTML with JavaScript disabled |
+| E6 hero | error | ➖ dismissed | No fetched data |
+| E6 hero | partial | ➖ dismissed | No optional fields |
+| E6 hero | overflow | 🧪 resolved (backstop) | h1 at the phone `--t-mega` clamp causes no horizontal overflow at 320 and 390 px (phone screenshots, overflow report) |
+| E6 hero | long-text | ➖ dismissed | Fixed copy |
+| E7 experience | empty | ➖ dismissed | Five fixed entries from the typed content module |
+| E7 experience | loading | ➖ dismissed | Static build-time content |
+| E7 experience | error | ✅ resolved (explicit) | A logo that fails to load leaves the 24 px slot at its size (`alt=""`), so company names stay aligned |
+| E7 experience | populated | 🧪 resolved (backstop) | Three logos and two monogram chips align company names on one x position without crowding the dates (desktop and phone screenshots) |
+| E7 experience | partial | ✅ resolved (explicit) | OdderTech IT and UT Austin render a monogram chip and omit the location line |
+| E7 experience | overflow | ✅ resolved (explicit) | Below 1024 px the company name may wrap to two lines; the font-stretch hover applies only at 1024 px and up |
+| E7 experience | zero-one-many | ✅ resolved (explicit) | Rows start collapsed; any number of rows may be open at once |
+| E7 experience | long-text | ✅ resolved (explicit) | "The University of Texas at Austin" wraps without overlapping the title or dates; below 768 px dates sit on line three |
+| E8 projects crate | empty | ➖ dismissed | Seven fixed projects |
+| E8 projects crate | loading | ➖ dismissed | Static build-time content |
+| E8 projects crate | error | ➖ dismissed | Sleeves contain no images or fetched data |
+| E8 projects crate | populated | ✅ resolved (explicit) | Crate index reads "1 / 7" at rest; the next sleeve peeks at least 24 px at 390 and 1280 |
+| E8 projects crate | partial | ✅ resolved (explicit) | A stack longer than three tools shows the first three then "+N more" |
+| E8 projects crate | overflow | ✅ resolved (explicit) | Horizontal scroll-snap inside the crate only; the page has zero horizontal overflow at 320, 390, 768, 1280, 1920 |
+| E8 projects crate | zero-one-many | ✅ resolved (explicit) | Exactly seven sleeves; accessible names "<title>, project n of 7" |
+| E8 projects crate | long-text | ✅ resolved (explicit) | "MediaDash: Content Recommendation Hub" wraps up to five lines; only descenders may crop |
+| E9 project dialog | loading | ➖ dismissed | Content is in the bundle; nothing loads on open |
+| E9 project dialog | error | ➖ dismissed | No network requests on open |
+| E9 project dialog | overflow | ✅ resolved (explicit) | Desktop panel `max-height: calc(100dvh - 64px)` and phone sheet `100dvh`, both with internal scroll; Previous/Next stay reachable |
+| E9 project dialog | long-text | ✅ resolved (explicit) | Long titles wrap at `--t-l`; the index stays "nn / 07" |
+| E9 project dialog | empty | ✅ resolved (explicit) | A project with no supplied URL renders no link row and no placeholder |
+| E10 about | empty | ✅ resolved (explicit) | Until the owner supplies the D-15 quote, the section renders without it (no placeholder, never the old proverb) |
+| E10 about | loading | ✅ resolved (explicit) | Photo is lazy-loaded inside a fixed 539 / 800 box, so no layout shift |
+| E10 about | error | ✅ resolved (explicit) | If the photo fails, the `--secondary` box keeps layout and the alt text is present |
+| E10 about | populated | 🧪 resolved (backstop) | On phones the 4 / 5 crop keeps the subject in frame (phone screenshot) |
+| E10 about | overflow | ➖ dismissed | Fixed-aspect image and text with a 62ch measure |
+| E10 about | long-text | ✅ resolved (explicit) | Bio paragraphs are capped at 62ch |
+| E11 skills | empty | ➖ dismissed | Four fixed statements |
+| E11 skills | loading | ➖ dismissed | Static build-time content |
+| E11 skills | error | ➖ dismissed | No fetched data |
+| E11 skills | partial | ➖ dismissed | No optional fields |
+| E11 skills | zero-one-many | ➖ dismissed | Fixed four groups |
+| E11 skills | populated | ✅ resolved (explicit) | Four `<li>` sentences, items alphabetical, group name in weight 750 |
+| E11 skills | overflow | ✅ resolved (explicit) | Sentences wrap naturally; no horizontal overflow at 320 px |
+| E12 education | content | ✅ resolved (explicit) | Text "GPA 3.2" and "GPA 3.911" render with tabular figures; graduation lead reads "December 2026" |
+| E13 contact | empty | ➖ dismissed | Fixed email and four links |
+| E13 contact | loading | ✅ resolved (explicit) | With JavaScript disabled, Copy email is a working `mailto:` link |
+| E13 contact | error | ✅ resolved (explicit) | Clipboard failure runs `execCommand`, then opens `mailto:` and shows the fallback toast copy |
+| E13 contact | partial | ➖ dismissed | No optional fields |
+| E13 contact | overflow | 🧪 resolved (backstop) | Finale wordmark measures 90 to 100 percent of its container at 375, 768, 1280 in both themes (Playwright after `document.fonts.ready`) |
+| E13 contact | long-text | ✅ resolved (explicit) | Email address stays on one line at 320 px via `clamp(1.25rem, 6.6vw, var(--t-l))` |
+| E14 toast | empty | ➖ dismissed | Shown only after an activation with a message |
+| E14 toast | loading | ➖ dismissed | Synchronous message |
+| E14 toast | error | ✅ resolved (explicit) | Failure copy "Couldn't copy the address. Opening your mail app instead." is written to the `role="status"` region |
+| E14 toast | partial | ✅ resolved (explicit) | Repeat activation replaces the message and restarts the 4 s timer; never more than one toast |
+| E14 toast | long-text | ✅ resolved (explicit) | `max-width: calc(100vw - 32px)`; the failure copy wraps inside the pill without covering the trigger |
+| E15 404 | overflow | ✅ resolved (explicit) | "Dead air." at the phone `--t-mega` clamp causes no horizontal overflow at 320 px; page works with JavaScript disabled |
+| E15 404 | long-text | ➖ dismissed | Fixed copy |
+| E16 resume | content | ✅ resolved (explicit) | The Resume link downloads a `%PDF-` file with `application/pdf`; the PDF gate rejects a phone-shaped string in text, annotations or metadata |
+| E16 resume | partial | ✅ resolved (explicit) | The 594-byte stand-in PDF fails the gate (requires a real resume text layer), so it can never ship |
+| E9 project dialog | partial | ⚠ unresolved — planner must treat as assumption | D-14 featured write-ups await owner approval; planner assumes three short Problem/Approach/Outcome blocks fit within the dialog max-height |
+| E9 project dialog | zero-one-many | ⚠ unresolved — planner must treat as assumption | D-13 URL count unknown; layout must be correct for 0 to 7 projects having a link |
+
+Backstop truths (for the plan-phase lift):
+
+- { statement: "E3 desktop nav: No horizontal overflow at 768 and 1024 widths with six links, toggle and Resume (desktop/tablet screenshots)", verification: backstop }
+- { statement: "E6 hero: h1 at the phone `--t-mega` clamp causes no horizontal overflow at 320 and 390 px (phone screenshots, overflow report)", verification: backstop }
+- { statement: "E7 experience: Three logos and two monogram chips align company names on one x position without crowding the dates (desktop and phone screenshots)", verification: backstop }
+- { statement: "E10 about: On phones the 4 / 5 crop keeps the subject in frame (phone screenshot)", verification: backstop }
+- { statement: "E13 contact: Finale wordmark measures 90 to 100 percent of its container at 375, 768, 1280 in both themes (Playwright after `document.fonts.ready`)", verification: backstop }
 
 ---
 
