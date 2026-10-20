@@ -130,63 +130,83 @@ Waves 4 to 8 run one plan each: every plan from 02-05 on builds into `dist/` and
   4. Only the images the page uses ship, as optimized AVIF/WebP with EXIF stripped.
   5. On a phone, a first-time visitor can find name, role, experience, projects, resume and contact within 10 seconds (the 10-second acceptance test).
 
-**Plans:** 14 plans
+**Plans:** 19 plans
 
 Plans:
 **Wave 1**
 
-- [ ] 03-01-PLAN.md — Tracer: palette D through tokens, contrast gate, matrix and pins; Archivo and the poster type ladder; owner legitimacy check for pdfjs-dist and axe-core (wave 1)
+- [ ] 03-01-PLAN.md — Tracer: palette D through tokens, contrast gate, matrix and pins; owner legitimacy check for pdfjs-dist and axe-core (wave 1)
 - [ ] 03-02-PLAN.md — Owner inputs: featured write-ups drafted from resume facts, then project links, write-up approval, the About line and the phone-free resume recorded in the inventory (wave 1)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 03-03-PLAN.md — Typed profile and contact modules, hero Copy email with live-region toast through LazyMotion, content rules and inventory parity test (wave 2)
+- [ ] 03-03-PLAN.md — Archivo Variable, the poster type ladder and the hold-versus-press radius rule, tuned metric fallback, tokens doc record (wave 2)
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 03-04-PLAN.md — Poster hero in shell and React, ink-flood CTAs, head metadata, inventory and IA amendments (wave 3)
+- [ ] 03-04-PLAN.md — Typed schema, profile and contact modules rendered into the hero, content rules and inventory parity test (wave 3)
 
 **Wave 4** *(blocked on Wave 3 completion)*
 
-- [ ] 03-05-PLAN.md — Desktop sticky nav with scroll-spy, sliding indicator, label roll, skip link (wave 4)
+- [ ] 03-05-PLAN.md — Hero Copy email with live-region toast through LazyMotion, mail fallback, reduced motion (wave 4)
 
 **Wave 5** *(blocked on Wave 4 completion)*
 
-- [ ] 03-06-PLAN.md — PHAN/PHVNTM wordmark, one theme store, phone top bar (wave 5)
+- [ ] 03-06-PLAN.md — Poster hero in shell and React, ink-flood CTAs, head metadata, inventory and IA amendments (wave 5)
 
 **Wave 6** *(blocked on Wave 5 completion)*
 
-- [ ] 03-07-PLAN.md — Mobile pill nav with in-place morph, mobile Playwright project, automated 10-second check (wave 6)
+- [ ] 03-07-PLAN.md — Desktop sticky nav with scroll-spy, sliding indicator, label roll, skip link (wave 6)
 
 **Wave 7** *(blocked on Wave 6 completion)*
 
-- [ ] 03-08-PLAN.md — Experience index list, image pipeline for the logos, check:images gate (wave 7)
+- [ ] 03-08-PLAN.md — PHAN/PHVNTM wordmark, one theme store, phone top bar (wave 7)
 
 **Wave 8** *(blocked on Wave 7 completion)*
 
-- [ ] 03-09-PLAN.md — Projects crate and native dialog, audited inverted band and sleeve grounds (wave 8)
+- [ ] 03-09-PLAN.md — Mobile pill nav with in-place morph, mobile Playwright project, automated 10-second check (wave 8)
 
 **Wave 9** *(blocked on Wave 8 completion)*
 
-- [ ] 03-10-PLAN.md — About photo and bio, Skills statement, Education facts, SEC-02/SEC-03 and IX-13/IX-14 amendments (wave 9)
+- [ ] 03-10-PLAN.md — Experience index list with native disclosure and row hover, Experience parity and section tests (wave 9)
 
 **Wave 10** *(blocked on Wave 9 completion)*
 
-- [ ] 03-11-PLAN.md — Contact finale, footer wordmark fit to width, 404 "Dead air." page (wave 10)
+- [ ] 03-11-PLAN.md — Image pipeline for the employer logos, check:images gate in the verify chain (wave 10)
 
 **Wave 11** *(blocked on Wave 10 completion)*
 
-- [ ] 03-12-PLAN.md — PDF text-layer phone gate and real-resume rule, Resume links, ADR-0009 and ADR-0010, docs catch-up (wave 11)
+- [ ] 03-12-PLAN.md — Projects crate and native dialog with prev, next, wrap and focus return, crate index, interim hover (wave 11)
 
 **Wave 12** *(blocked on Wave 11 completion)*
 
-- [ ] 03-13-PLAN.md — Awwwards QA loop on the production build: thresholds, extra dialog and dark frames, fresh critic, 03-QA.md (wave 12)
+- [ ] 03-13-PLAN.md — Audited inverted band on Projects and the four neutral sleeve grounds (wave 12)
 
 **Wave 13** *(blocked on Wave 12 completion)*
 
-- [ ] 03-14-PLAN.md — Owner-approved staging release, live checks including the Pages 404, real-phone 10-second test (wave 13)
+- [ ] 03-14-PLAN.md — About photo and bio, Skills statement, Education facts (wave 13)
 
-From wave 2 on, plans run one per wave: each builds into dist/ and runs the repo-wide verify chain in the one shared working tree.
+**Wave 14** *(blocked on Wave 13 completion)*
+
+- [ ] 03-15-PLAN.md — Contact finale, footer wordmark fit to width (wave 14)
+
+**Wave 15** *(blocked on Wave 14 completion)*
+
+- [ ] 03-16-PLAN.md — 404 "Dead air." page as a static second entry, theme script identity (wave 15)
+
+**Wave 16** *(blocked on Wave 15 completion)*
+
+- [ ] 03-17-PLAN.md — PDF text-layer phone gate and real-resume rule, Resume links, ADR-0009 and ADR-0010, docs catch-up, SEC-02/SEC-03 and IX-13/IX-14 amendments (wave 16)
+
+**Wave 17** *(blocked on Wave 16 completion)*
+
+- [ ] 03-18-PLAN.md — Awwwards QA loop on the production build: thresholds, extra dialog and dark frames, fresh critic, 03-QA.md (wave 17)
+
+**Wave 18** *(blocked on Wave 17 completion)*
+
+- [ ] 03-19-PLAN.md — Owner-approved staging release, live checks including the Pages 404, real-phone 10-second test (wave 18)
+
+From wave 2 on, plans run one per wave on purpose: worktrees are off (.planning/config.json), and each plan builds into dist/, serves the Playwright preview on port 4173 (strictPort, reused locally) and runs the repo-wide verify chain in the one shared working tree, so two code plans side by side would test each other's dist/ or fail on each other's half-written files. Each plan's objective states its own ordering reason.
 
 **UI hint**: yes
 
