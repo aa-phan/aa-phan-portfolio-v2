@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { ToastPresence } from '@/anim'
 import { ToastContext } from '@/components/ui/useToast'
 
 const TOAST_MS = 4000
@@ -42,14 +43,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       <div role="status" aria-live="polite" className="sr-only">
         {announced}
       </div>
-      {visible ? (
-        <div
-          aria-hidden="true"
-          className="fixed bottom-[calc(56px+16px+16px+env(safe-area-inset-bottom))] left-1/2 z-(--z-toast) w-max max-w-[calc(100vw-32px)] -translate-x-1/2 rounded-pill bg-text px-6 py-2 text-center text-s font-medium text-background shadow-lg md:bottom-6"
-        >
-          {message}
-        </div>
-      ) : null}
+      <ToastPresence
+        show={visible}
+        className="fixed bottom-[calc(56px+16px+16px+env(safe-area-inset-bottom))] left-1/2 z-(--z-toast) w-max max-w-[calc(100vw-32px)] -translate-x-1/2 rounded-pill bg-text px-6 py-2 text-center text-s font-medium text-background shadow-lg md:bottom-6"
+      >
+        {message}
+      </ToastPresence>
     </ToastContext.Provider>
   )
 }
