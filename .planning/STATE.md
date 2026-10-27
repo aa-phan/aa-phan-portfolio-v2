@@ -4,16 +4,16 @@ milestone: v2
 current_phase: 03
 current_phase_name: Content-Complete Site
 status: executing
-stopped_at: Completed 03-16-PLAN.md
-last_updated: "2026-10-27T19:47:36.720Z"
+stopped_at: Completed 03-17-PLAN.md
+last_updated: "2026-10-27T22:54:09.573Z"
 last_activity: 2026-10-27
 last_activity_desc: Phase 03 execution started
-state_head: 15b97541bd416263606df5b08710a6f50a5319ae
+state_head: e43ab742425dcaa30e8f5de3c3397c8cc4cc201a
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 35
-  completed_plans: 32
+  completed_plans: 33
   percent: 33
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-10-08)
 ## Current Position
 
 Phase: 03 (Content-Complete Site) — EXECUTING
-Plan: 17 of 19
+Plan: 18 of 19
 Status: Ready to execute
 Last activity: 2026-10-27 — Phase 03 execution started
 
@@ -92,6 +92,7 @@ Progress: [███░░░░░░░] 33%
 | Phase 03 P14 | 23 min | 2 tasks | 14 files |
 | Phase 03 P15 | 12 min | 2 tasks | 12 files |
 | Phase 03 P16 | 25 min | 2 tasks | 6 files |
+| Phase 03 P17 | resumed run | 3 tasks | 14 files |
 
 ## Accumulated Context
 
@@ -155,6 +156,7 @@ Recent decisions affecting current work:
 - [Phase 03]: 03-15: finale wordmark sized with per-string cqi constants (PHAN 32.4cqi, PHVNTM 17.1cqi, -0.07em start margin), no SVG textLength fallback needed
 - [Phase 03]: 03-15: Instagram link keeps exact aria-label 'Instagram, PHVNTM' with the new-tab note as aria-describedby
 - [Phase 03]: 03-16: 404 carries data-theme=light on html as its no-JavaScript default; the inline theme script (byte-identical to index.html's, unit-tested) overrides it; no prefers-color-scheme CSS fallback added
+- [Phase 03]: 03-17: dist/resume.pdf must hold the owner's name and 1500+ non-whitespace text characters; ADR-0009 closes OD-06 on the native dialog; ADR-0010 supersedes ADR-0005's UI-glyph bullet
 
 ### Pending Todos
 
@@ -187,6 +189,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-27T19:47:36.629Z
-Stopped at: Completed 03-16-PLAN.md
+Last session: 2026-10-27T22:54:09.480Z
+Stopped at: Completed 03-17-PLAN.md
 Resume file: None

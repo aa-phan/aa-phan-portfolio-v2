@@ -130,7 +130,7 @@ Waves 4 to 8 run one plan each: every plan from 02-05 on builds into `dist/` and
   4. Only the images the page uses ship, as optimized AVIF/WebP with EXIF stripped.
   5. On a phone, a first-time visitor can find name, role, experience, projects, resume and contact within 10 seconds (the 10-second acceptance test).
 
-**Plans:** 16/19 plans executed
+**Plans:** 17/19 plans executed
 
 Plans:
 **Wave 1**
@@ -196,7 +196,7 @@ Plans:
 
 **Wave 16** *(blocked on Wave 15 completion)*
 
-- [ ] 03-17-PLAN.md — PDF text-layer phone gate and real-resume rule, Resume links, ADR-0009 and ADR-0010, docs catch-up, SEC-02/SEC-03 and IX-13/IX-14 amendments (wave 16)
+- [x] 03-17-PLAN.md — PDF text-layer phone gate and real-resume rule, Resume links, ADR-0009 and ADR-0010, docs catch-up, SEC-02/SEC-03 and IX-13/IX-14 amendments (wave 16)
 
 **Wave 17** *(blocked on Wave 16 completion)*
 
@@ -268,7 +268,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Decisions and Documentation | 7/7 | Complete    | 2026-10-09 |
 | 2. Deployed Themed Skeleton | 9/9 | Complete    | 2026-10-26 |
-| 3. Content-Complete Site | 16/19 | In Progress | - |
+| 3. Content-Complete Site | 17/19 | In Progress | - |
 | 4. Motion System and Signature Rail | 0/0 | Not started | - |
 | 5. Section Treatments | 0/0 | Not started | - |
 | 6. Hardening and Cutover | 0/0 | Not started | - |
