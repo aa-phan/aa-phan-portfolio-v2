@@ -4,16 +4,16 @@ milestone: v2
 current_phase: 03
 current_phase_name: Content-Complete Site
 status: executing
-stopped_at: Completed 03-10-PLAN.md
-last_updated: "2026-10-27T18:44:15.644Z"
+stopped_at: Completed 03-11-PLAN.md
+last_updated: "2026-10-27T18:50:51.018Z"
 last_activity: 2026-10-27
 last_activity_desc: Phase 03 execution started
-state_head: 1434d1213a31c13d21a938058fc5f9d0f9ee9a8b
+state_head: 848e20331e9ad944f3a65ba8a44acd8d0cc013ed
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 35
-  completed_plans: 26
+  completed_plans: 27
   percent: 33
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-10-08)
 ## Current Position
 
 Phase: 03 (Content-Complete Site) — EXECUTING
-Plan: 11 of 19
+Plan: 12 of 19
 Status: Ready to execute
 Last activity: 2026-10-27 — Phase 03 execution started
 
@@ -86,6 +86,7 @@ Progress: [███░░░░░░░] 33%
 | Phase 03 P08 | 15 min | 2 tasks | 12 files |
 | Phase 03 P09 | 35 min | 3 tasks | 11 files |
 | Phase 03 P10 | 25 min | 2 tasks | 10 files |
+| Phase 03 P11 | 12 min | 2 tasks | 18 files |
 
 ## Accumulated Context
 
@@ -139,6 +140,8 @@ Recent decisions affecting current work:
 - [Phase 03]: 03-09: pill closes on a link or Resume tap via a 0 ms timeout so the jump and download still run
 - [Phase 03]: Experience company h3 holds the aria-hidden monogram chip inside the summary; the marker is sized to the first company line
 - [Phase 03]: Content ids stay unique per array, not globally, so later project and experience ids may share a slug
+- [Phase 03]: 03-11: image URL fields (logo/photo src, sources) excluded from the content phone-shape walk; bundler output, dist scanned by check-no-phone
+- [Phase 03]: 03-11: Spectrum 32 px source yields one width, so imagetools ships AVIF source plus WebP img fallback; check-images allows only AVIF/WebP in dist
 
 ### Pending Todos
 
@@ -171,6 +174,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-27T18:44:06.805Z
-Stopped at: Completed 03-10-PLAN.md
+Last session: 2026-10-27T18:50:50.932Z
+Stopped at: Completed 03-11-PLAN.md
 Resume file: None
