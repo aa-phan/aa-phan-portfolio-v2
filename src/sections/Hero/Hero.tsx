@@ -1,3 +1,4 @@
+import { CtaLink } from '@/components/ui/CtaLink'
 import { useCopyEmail } from '@/components/ui/useCopyEmail'
 import { Container } from '@/layout/Container'
 
@@ -27,20 +28,22 @@ export function Hero({ profile, email }: HeroProps) {
           {profile.tagline}
         </p>
         <div className="col-span-full flex flex-col gap-4 md:col-span-4 md:col-start-9 md:row-start-2 md:self-center">
-          <a
+          <CtaLink
             href={`${import.meta.env.BASE_URL}resume.pdf`}
+            variant="filled"
             download
-            className="inline-flex min-h-11 items-center justify-center rounded-pill bg-primary px-6 text-s font-medium text-on-primary hover:bg-primary-hover md:min-w-[200px]"
+            className="md:min-w-[200px]"
           >
             Download resume
-          </a>
-          <a
+          </CtaLink>
+          <CtaLink
             href={`mailto:${email}`}
+            variant="outlined"
             onClick={copyEmail}
-            className="inline-flex min-h-11 items-center justify-center rounded-pill border border-border-strong px-6 text-s font-medium text-text hover:bg-surface md:min-w-[200px]"
+            className="md:min-w-[200px]"
           >
             Copy email
-          </a>
+          </CtaLink>
         </div>
         <div className="col-span-full flex flex-col gap-1 text-s text-muted tabular-nums md:row-start-3 md:flex-row md:justify-between">
           <p>{leftFact}</p>

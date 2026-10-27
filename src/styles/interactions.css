@@ -14,3 +14,56 @@
     gap: clamp(1rem, 2vw, 2rem);
   }
 }
+
+/*
+ * Primary call to action (D-05): an ink flood rises from the bottom edge and the label lifts 2 px
+ * and turns to the page ground, the audited --background on --text pair. Hover is gated to
+ * devices that hover; keyboard focus and the touch press (:active) show the same flood so
+ * every input has an equivalent. The base reduced-motion guard makes the flood instant; the
+ * lift is dropped here.
+ */
+.cta-flood {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--text);
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 280ms var(--ease-out);
+}
+
+.cta-label {
+  position: relative;
+  transition:
+    translate 220ms var(--ease-out),
+    color 220ms var(--ease-out);
+}
+
+@media (hover: hover) {
+  .cta:hover .cta-flood {
+    clip-path: inset(0);
+  }
+
+  .cta:hover .cta-label {
+    translate: 0 -2px;
+    color: var(--background);
+  }
+}
+
+.cta:focus-visible .cta-flood,
+.cta:active .cta-flood {
+  clip-path: inset(0);
+}
+
+.cta:focus-visible .cta-label,
+.cta:active .cta-label {
+  translate: 0 -2px;
+  color: var(--background);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta:hover .cta-label,
+  .cta:focus-visible .cta-label,
+  .cta:active .cta-label {
+    translate: none;
+  }
+}
