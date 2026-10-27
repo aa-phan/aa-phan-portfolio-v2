@@ -71,6 +71,25 @@ describe('content rules', () => {
     }
   })
 
+  it('keeps experience start dates non-increasing in array order (ties allowed)', () => {
+    const starts = siteContent.experience.map((entry) => entry.dates.start)
+    expect(starts).toHaveLength(5)
+    for (let i = 1; i < starts.length; i++) {
+      // ISO year-month strings sort lexically in date order.
+      const newer = starts[i - 1] ?? ''
+      const older = starts[i] ?? ''
+      expect(newer >= older, `entry ${i - 1} starts before entry ${i}`).toBe(true)
+    }
+  })
+
+  it('writes experience date labels with an en dash and ISO year-months', () => {
+    for (const { dates } of siteContent.experience) {
+      expect(dates.start).toMatch(/^\d{4}-\d{2}$/)
+      expect(dates.end).toMatch(/^(\d{4}-\d{2}|present)$/)
+      expect(dates.label).toContain(' – ')
+    }
+  })
+
   it('gives every image with a src a defined alt (empty string means decorative)', () => {
     for (const { path, value } of visits) {
       if (value === null || typeof value !== 'object' || Array.isArray(value)) continue

@@ -148,6 +148,53 @@ describe('contacts parity with the inventory', () => {
   })
 })
 
+describe('experience parity with the inventory', () => {
+  const ids = ['EXP-01', 'EXP-02', 'EXP-03', 'EXP-04', 'EXP-05']
+  const { experience } = siteContent
+
+  it('has five entries, one per EXP block', () => {
+    expect(experience).toHaveLength(5)
+    expect(ids).toHaveLength(5)
+  })
+
+  it.each(ids.map((id, index) => [id, index] as const))(
+    '%s equals the module entry at its position: role, org, location, dates and bullets',
+    (id, index) => {
+      const entry = experience[index]
+      if (!entry) throw new Error(`module has no entry at position ${index}`)
+      expect(sameCopy(label(id, 'Title'), entry.role), `${id} role`).toBe(true)
+      expect(sameCopy(label(id, 'Organization'), entry.org), `${id} org`).toBe(true)
+      const location = label(id, 'Location')
+      const entryLocation =
+        'location' in entry ? (entry as { location?: string }).location : undefined
+      if (/^not stated\b/i.test(location)) {
+        expect(entryLocation, `${id} location`).toBeUndefined()
+      } else {
+        expect(sameCopy(location, entryLocation ?? ''), `${id} location`).toBe(true)
+      }
+      expect(sameCopy(label(id, 'Dates'), entry.dates.label), `${id} dates`).toBe(true)
+      const bullets = block(id).bullets
+      expect(bullets).toHaveLength(entry.bullets.length)
+      bullets.forEach((text, i) => {
+        expect(sameCopy(text, entry.bullets[i] ?? ''), `${id} bullet ${i + 1}`).toBe(true)
+      })
+    },
+  )
+
+  it('keeps the Spectrum less-than-or-equal sign and the 30% figure (R-07)', () => {
+    expect(experience[1]?.bullets[0]).toContain('≤')
+    expect(experience[1]?.bullets[1]).toContain('30%')
+  })
+
+  it('self-check: a swapped en dash in a date label is detected', () => {
+    const entry = experience[0]
+    expect(entry).toBeDefined()
+    expect(sameCopy(label('EXP-01', 'Dates'), (entry?.dates.label ?? '').replace('–', '-'))).toBe(
+      false,
+    )
+  })
+})
+
 describe('write-up rule (03-02, permanent)', () => {
   const figure = /\d+(?:\.\d+)?%?/g
 
