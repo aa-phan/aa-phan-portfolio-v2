@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { siteContent } from '@/content'
+import type { Writeup } from '@/content'
 
 const INVENTORY_PATH = path.resolve(
   import.meta.dirname,
@@ -192,6 +193,88 @@ describe('experience parity with the inventory', () => {
     expect(sameCopy(label('EXP-01', 'Dates'), (entry?.dates.label ?? '').replace('–', '-'))).toBe(
       false,
     )
+  })
+})
+
+describe('project parity with the inventory', () => {
+  const ids = ['PRJ-01', 'PRJ-02', 'PRJ-03', 'PRJ-04', 'PRJ-05', 'PRJ-06', 'PRJ-07']
+  const { projects, experience } = siteContent
+
+  it('has seven entries, one per PRJ block, in inventory order', () => {
+    expect(projects).toHaveLength(7)
+    expect(projects.map((project) => project.title)).toEqual(ids.map((id) => label(id, 'Title')))
+  })
+
+  it.each(ids.map((id, index) => [id, index] as const))(
+    '%s equals the module entry at its position',
+    (id, index) => {
+      const entry = projects[index]
+      if (!entry) throw new Error(`module has no project at position ${index}`)
+      expect(sameCopy(label(id, 'Title'), entry.title), `${id} title`).toBe(true)
+
+      // "Context: kind, label": the label may not contain the kind separator.
+      const [kind, ...rest] = label(id, 'Context').split(', ')
+      expect(kind, `${id} context kind`).toBe(entry.context.kind)
+      expect(sameCopy(rest.join(', '), entry.context.label), `${id} context label`).toBe(true)
+
+      expect(sameCopy(label(id, 'Dates'), entry.dates.label), `${id} dates`).toBe(true)
+      expect(label(id, 'Stack').split(', '), `${id} stack`).toEqual([...entry.stack])
+
+      const bullets = block(id).bullets
+      expect(bullets).toHaveLength(entry.bullets.length)
+      bullets.forEach((text, i) => {
+        expect(sameCopy(text, entry.bullets[i] ?? ''), `${id} bullet ${i + 1}`).toBe(true)
+      })
+
+      expect(/^yes\b/i.test(label(id, 'Featured')), `${id} featured`).toBe(entry.featured)
+
+      const links = label(id, 'Links')
+      const code =
+        'links' in entry ? (entry as { links?: { code?: string } }).links?.code : undefined
+      if (/^Code /.test(links)) {
+        expect(code, `${id} code link`).toBe(links.slice('Code '.length).trim())
+        expect(code?.startsWith('https://'), `${id} code link is https`).toBe(true)
+      } else {
+        expect(links, `${id} links line`).toMatch(/^none\b/i)
+        expect(code, `${id} code link`).toBeUndefined()
+      }
+
+      const related = label(id, 'Related experience')
+      const relatedId = 'relatedExperienceId' in entry ? entry.relatedExperienceId : undefined
+      if (/^EXP-\d+/.test(related)) {
+        const expectedId = experience[Number(related.slice(4, 6)) - 1]?.id
+        expect(relatedId, `${id} related experience`).toBe(expectedId)
+      } else {
+        expect(relatedId, `${id} related experience`).toBeUndefined()
+      }
+
+      const writeup = 'writeup' in entry ? (entry as { writeup?: Writeup }).writeup : undefined
+      const key = [...block(id).labels.keys()].find((k) =>
+        /^Write-up \(.*(approved|edited)/.test(k),
+      )
+      if (key === undefined) {
+        expect(writeup, `${id} write-up`).toBeUndefined()
+      } else {
+        const lines = block(id).children.get(key) ?? []
+        const part = (name: string) =>
+          lines.find((line) => line.startsWith(`${name}: `))?.slice(name.length + 2) ?? ''
+        expect(sameCopy(part('Problem'), writeup?.problem ?? ''), `${id} problem`).toBe(true)
+        expect(sameCopy(part('Approach'), writeup?.approach ?? ''), `${id} approach`).toBe(true)
+        expect(sameCopy(part('Outcome'), writeup?.outcome ?? ''), `${id} outcome`).toBe(true)
+      }
+    },
+  )
+
+  it('keeps the 30% figure in both the EXP-02 and the PRJ-02 bullets (R-07)', () => {
+    expect(block('EXP-02').bullets.join(' ')).toContain('30%')
+    expect(block('PRJ-02').bullets.join(' ')).toContain('30%')
+    expect(experience[1]?.bullets.join(' ')).toContain('30%')
+    expect(projects[1]?.bullets.join(' ')).toContain('30%')
+  })
+
+  it('self-check: a changed stack item is detected', () => {
+    const stack = label('PRJ-01', 'Stack').split(', ')
+    expect(stack).not.toEqual([...(projects[0]?.stack ?? [])].map((item) => item.toLowerCase()))
   })
 })
 

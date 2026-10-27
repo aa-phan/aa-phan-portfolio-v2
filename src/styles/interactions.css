@@ -430,3 +430,189 @@
     font-stretch: 100%;
   }
 }
+
+/*
+ * Project crate sleeves (D-05, interim). This rise is a CSS stand-in: IX-03 replaces it in
+ * Phase 4 when react-spring takes over the sleeve, and the rule is deleted then so the sleeve
+ * keeps one owner. Hover is gated to devices that hover; keyboard focus shows it everywhere.
+ * Reduced motion drops the translate and marks the state with a 2 px --text outline instead.
+ */
+.sleeve {
+  transition:
+    translate 220ms var(--ease-out),
+    box-shadow 220ms var(--ease-out);
+}
+
+@media (hover: hover) {
+  .sleeve:hover {
+    translate: 0 -8px;
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.sleeve:focus-visible {
+  translate: 0 -8px;
+  box-shadow: var(--shadow-md);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sleeve:focus-visible {
+    translate: none;
+    box-shadow: none;
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) and (hover: hover) {
+  .sleeve:hover {
+    translate: none;
+    box-shadow: none;
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
+  }
+}
+
+/*
+ * Project dialog (D-08, ADR-0006 native path). The dialog element is the panel, so it keeps no
+ * padding of its own: the padding sits on .project-panel and a click that lands on the dialog
+ * element itself is a backdrop click. The page scroll is locked while one is open. Nothing
+ * animates on open or close; Phase 4 adds the morph to the inner panel only.
+ */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
+.project-dialog {
+  width: 100%;
+  max-width: 720px;
+  max-height: calc(100dvh - 64px);
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-hold);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-lg);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.project-dialog::backdrop {
+  background: var(--scrim);
+  backdrop-filter: blur(12px);
+}
+
+.project-panel {
+  padding: 2rem;
+}
+
+.project-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.project-nav {
+  display: inline-flex;
+  min-height: 2.75rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding-inline: 1rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-s);
+  font-weight: 500;
+  transition: background-color 220ms var(--ease-out);
+}
+
+.project-nav-icon {
+  transition: translate 220ms var(--ease-out);
+}
+
+.project-close {
+  transition: background-color 220ms var(--ease-out);
+}
+
+/* Hover answers only on devices that hover; focus and press show the fill everywhere. */
+@media (hover: hover) {
+  .project-nav:hover,
+  .project-close:hover {
+    background: var(--secondary);
+  }
+
+  .project-nav-prev:hover .project-nav-icon {
+    translate: -4px 0;
+  }
+
+  .project-nav-next:hover .project-nav-icon {
+    translate: 4px 0;
+  }
+}
+
+.project-nav:focus-visible,
+.project-nav:active,
+.project-close:focus-visible,
+.project-close:active {
+  background: var(--secondary);
+}
+
+.project-nav-prev:focus-visible .project-nav-icon {
+  translate: -4px 0;
+}
+
+.project-nav-next:focus-visible .project-nav-icon {
+  translate: 4px 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-nav,
+  .project-close,
+  .project-nav-icon {
+    transition: none;
+  }
+
+  .project-nav-prev:hover .project-nav-icon,
+  .project-nav-next:hover .project-nav-icon,
+  .project-nav-prev:focus-visible .project-nav-icon,
+  .project-nav-next:focus-visible .project-nav-icon {
+    translate: none;
+  }
+}
+
+/*
+ * Phone sheet: the dialog fills the viewport with internal scroll. The panel is a column whose
+ * footer is pinned to the bottom edge of the scrollport, so Previous and Next stay in the thumb
+ * zone however long the project is, and the safe-area insets keep it clear of the home bar.
+ */
+@media (max-width: 767.98px) {
+  .project-dialog {
+    max-width: none;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+  }
+
+  .project-panel {
+    display: flex;
+    min-height: 100%;
+    flex-direction: column;
+    padding: calc(1.5rem + env(safe-area-inset-top)) 1.5rem 0;
+  }
+
+  .project-footer {
+    position: sticky;
+    bottom: 0;
+    margin-top: auto;
+    padding-top: 1rem;
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+    background: var(--surface);
+  }
+
+  .project-footer > .project-nav {
+    flex: 1;
+  }
+}
