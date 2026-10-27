@@ -232,6 +232,33 @@ test('motion: role line stays readable when the effect chunk fails to load', asy
   await context.close()
 })
 
+test('motion: role line fades in on its own when the entry script never loads', async ({
+  browser,
+}) => {
+  const context = await browser.newContext({
+    colorScheme: 'light',
+    reducedMotion: 'no-preference',
+  })
+  const page = await context.newPage()
+  let aborted = 0
+  await page.route('**/assets/*.js', (route) => {
+    aborted += 1
+    return route.abort()
+  })
+
+  await page.goto('./', { waitUntil: 'domcontentloaded' })
+  const opacity = () =>
+    page.evaluate(() => getComputedStyle(document.querySelector('#hero p')!).opacity)
+
+  // Computed opacity, not toBeVisible(): Playwright counts an element at opacity 0 as visible.
+  expect(await opacity()).toBe('0')
+  // The static shell's own 3 s animation is the only thing that can reveal it.
+  await expect.poll(opacity, { timeout: 6000 }).toBe('1')
+  expect(aborted).toBeGreaterThan(0)
+  await expect(page.locator('#hero p')).toHaveText(ROLE_SENTENCE)
+  await context.close()
+})
+
 test('reduced motion: every hero element and section heading is visible with no running animations', async ({
   browser,
 }) => {
