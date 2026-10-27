@@ -1,3 +1,4 @@
+import { aboutPhoto } from './images'
 import type { Profile } from './schema'
 
 export const profile = {
@@ -8,4 +9,5 @@ export const profile = {
     'Hello there! My name is Aaron Phan, and I’m a software engineer by day, and aspiring artist by night.',
     'In my spare time, I enjoy listening to EDM, cooking, and DJing under the pseudonym PHVNTM.',
   ],
+  photo: aboutPhoto,
 } as const satisfies Profile

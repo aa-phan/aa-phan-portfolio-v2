@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+import path from 'node:path'
 import { expect, test } from '@playwright/test'
 import type { Page } from '@playwright/test'
 
@@ -208,4 +210,95 @@ test.describe('experience logos', () => {
       .evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().left)))
     expect(new Set(nameXs).size).toBe(1)
   })
+})
+
+const INVENTORY = readFileSync(
+  path.resolve(
+    import.meta.dirname,
+    '../../.planning/phases/01-decisions-and-documentation/01-CONTENT-INVENTORY.md',
+  ),
+  'utf8',
+)
+
+/** The "- Value:" line of an inventory block, for example ABT-01. */
+function inventoryValue(id: string): string {
+  const start = INVENTORY.indexOf(`### ${id} `)
+  if (start === -1) throw new Error(`inventory has no ${id} block`)
+  const rest = INVENTORY.slice(start)
+  const match = /^- Value: (.*)$/m.exec(rest)
+  if (!match?.[1]) throw new Error(`${id} has no Value line`)
+  return match[1].trim()
+}
+
+const ALT = 'Aaron Phan DJing at his UT Austin graduation'
+
+test.describe('about me', () => {
+  test('the photo has the exact alt text and loads as AVIF', async ({ page }) => {
+    await open(page)
+    const photo = page.locator('#about img')
+    await expect(photo).toHaveCount(1)
+    await photo.scrollIntoViewIfNeeded()
+    await expect(photo).toHaveAttribute('alt', ALT)
+    await expect(photo).toHaveAttribute('loading', 'lazy')
+    await expect(photo).toHaveAttribute('decoding', 'async')
+    await expect(photo).toHaveAttribute('width', '539')
+    await expect(photo).toHaveAttribute('height', '800')
+    await expect
+      .poll(() => photo.evaluate((el: HTMLImageElement) => el.currentSrc))
+      .toMatch(/\.avif$/)
+    await expect
+      .poll(() => photo.evaluate((el: HTMLImageElement) => el.naturalWidth))
+      .toBeGreaterThan(0)
+  })
+
+  test('with image requests aborted the photo box keeps its shape and the alt stays', async ({
+    page,
+  }) => {
+    await page.route(/\.(avif|webp|jpe?g)(\?.*)?$/, (route) => route.abort())
+    await open(page)
+    const photo = page.locator('#about img')
+    await expect(photo).toHaveAttribute('alt', ALT)
+    const box = await page.locator('#about picture').locator('..').boundingBox()
+    if (!box) throw new Error('photo box missing')
+    expect(box.width).toBeGreaterThan(300)
+    expect(Math.abs(box.height - (box.width * 800) / 539)).toBeLessThanOrEqual(1)
+  })
+
+  test('both bio paragraphs equal the inventory text', async ({ page }) => {
+    await open(page)
+    const paragraphs = page.locator('#about p')
+    await expect(paragraphs).toHaveCount(2)
+    await expect(paragraphs.nth(0)).toHaveText(inventoryValue('ABT-01'))
+    await expect(paragraphs.nth(1)).toHaveText(inventoryValue('ABT-02'))
+    expect(await paragraphs.nth(0).textContent()).toContain('I\u2019m')
+  })
+
+  test('the bio starts 128 px down beside the photo at 1280 px', async ({ page }) => {
+    await open(page, 1280)
+    const photo = await page.locator('#about picture').locator('..').boundingBox()
+    const bio = await page.locator('#about p').first().boundingBox()
+    if (!photo || !bio) throw new Error('boxes missing')
+    expect(Math.round(bio.y - photo.y)).toBe(128)
+    expect(bio.x).toBeGreaterThan(photo.x + photo.width)
+  })
+
+  test('no quote renders while the inventory says the owner line is pending', async ({ page }) => {
+    await open(page)
+    const value = inventoryValue('ABT-03')
+    const quotes = page.locator('#about blockquote')
+    if (/^none\b/i.test(value)) {
+      await expect(quotes).toHaveCount(0)
+      await expect(page.locator('#about')).not.toContainText('The best time to start')
+    } else {
+      await expect(quotes).toHaveText(value)
+    }
+  })
+
+  for (const width of [390, 320]) {
+    test(`no horizontal overflow at ${width} px`, async ({ page }) => {
+      await open(page, width)
+      const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth)
+      expect(scrollWidth).toBeLessThanOrEqual(width)
+    })
+  }
 })
