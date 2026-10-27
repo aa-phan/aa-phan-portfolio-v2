@@ -1,4 +1,4 @@
-import { defineConfig } from '@playwright/test'
+import { defineConfig, devices } from '@playwright/test'
 
 const BASE = process.env.VITE_BASE || '/'
 // Tests navigate with page.goto('./'), which resolves against the base URL. Without a trailing
@@ -20,5 +20,9 @@ export default defineConfig({
           reuseExistingServer: !process.env.CI,
         },
       }),
-  projects: [{ name: 'chromium', use: { browserName: 'chromium' } }],
+  projects: [
+    { name: 'chromium', use: { browserName: 'chromium' }, testIgnore: /mobile\// },
+    // Pixel 7 is Chromium, so CI needs no extra browser. Only the phone specs run here.
+    { name: 'mobile', use: { ...devices['Pixel 7'] }, testMatch: /mobile\/.*\.spec\.ts/ },
+  ],
 })

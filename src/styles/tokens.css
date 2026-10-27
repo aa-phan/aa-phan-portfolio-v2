@@ -20,6 +20,9 @@
   --elevation-sm: 0 1px 2px color-mix(in oklch, var(--text) 10%, transparent);
   --elevation-md: 0 4px 12px color-mix(in oklch, var(--text) 12%, transparent);
   --elevation-lg: 0 12px 32px color-mix(in oklch, var(--text) 16%, transparent);
+
+  --surface-frost: color-mix(in oklch, var(--surface) 92%, transparent);
+  --scrim: color-mix(in oklch, var(--text) 40%, transparent);
 }
 
 [data-theme='dark'] {
@@ -43,6 +46,9 @@
   --elevation-sm: 0 1px 2px oklch(0 0 0 / 0.5);
   --elevation-md: 0 4px 12px oklch(0 0 0 / 0.55);
   --elevation-lg: 0 12px 32px oklch(0 0 0 / 0.65);
+
+  --surface-frost: color-mix(in oklch, var(--surface) 92%, transparent);
+  --scrim: color-mix(in oklch, var(--text) 40%, transparent);
 }
 
 :root {
@@ -56,6 +62,8 @@
   --z-skip-link: 90;
 
   --nav-h: 4rem;
+  /* Pill height + its 16 px bottom offset + 16 px of air, plus the home-indicator inset. */
+  --pill-reserve: calc(56px + 16px + 16px + env(safe-area-inset-bottom));
 
   --dur-fast: 120ms;
   --dur-base: 220ms;

@@ -177,3 +177,25 @@
     transition: none;
   }
 }
+
+/*
+ * Phone pill (D-19): body keeps room for the pill below 768 px so it never covers the footer.
+ * The frosted ground is solid where backdrop-filter is missing, so labels never sit on a
+ * see-through bar. Segments press to a --secondary fill; an active segment keeps its accent
+ * fill (the audited --on-accent on --accent pair), so the press state only shows on the rest.
+ */
+@media (max-width: 767.98px) {
+  body {
+    padding-bottom: var(--pill-reserve);
+  }
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .pill-nav {
+    background: var(--surface);
+  }
+}
+
+.pill-segment:active:not([aria-current]) {
+  background: var(--secondary);
+}

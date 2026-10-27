@@ -81,13 +81,16 @@ test.describe('nav', () => {
 })
 
 test.describe('landmarks', () => {
-  test('exactly one navigation landmark at 1280 and none at 375', async ({ page }) => {
+  test('exactly one navigation landmark at 1280 (Primary) and at 375 (Sections)', async ({
+    page,
+  }) => {
     await open(page)
     await expect(page.getByRole('navigation')).toHaveCount(1)
 
     await page.setViewportSize({ width: 375, height: 667 })
     await expect(primaryNav(page)).toHaveCount(0)
-    await expect(page.getByRole('navigation')).toHaveCount(0)
+    await expect(page.getByRole('navigation')).toHaveCount(1)
+    await expect(page.getByRole('navigation', { name: 'Sections' })).toBeVisible()
   })
 })
 
