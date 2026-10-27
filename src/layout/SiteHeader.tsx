@@ -1,3 +1,4 @@
+import { NavIndicator } from '@/anim'
 import { CtaLink } from '@/components/ui/CtaLink'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { Container } from '@/layout/Container'
@@ -38,9 +39,17 @@ export function SiteHeader({ activeId, onNavigate }: SiteHeaderProps) {
                     href={`#${item.id}`}
                     aria-current={activeId === item.id ? 'location' : undefined}
                     onClick={() => onNavigate(item.id)}
-                    className="inline-flex min-h-11 items-center text-s font-medium whitespace-nowrap"
+                    className="nav-link inline-flex min-h-11 items-center text-s font-medium whitespace-nowrap"
                   >
-                    {item.label}
+                    <span className="relative inline-block">
+                      <span className="nav-roll">
+                        <span className="nav-roll-a">{item.label}</span>
+                        <span className="nav-roll-b" aria-hidden="true">
+                          {item.label}
+                        </span>
+                      </span>
+                      {activeId === item.id ? <NavIndicator /> : null}
+                    </span>
                   </a>
                 </li>
               ))}

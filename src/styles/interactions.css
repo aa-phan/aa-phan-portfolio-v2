@@ -67,3 +67,61 @@
     translate: none;
   }
 }
+
+/*
+ * Desktop nav label roll (D-05): each link holds two copies of its label in a clipped line. On
+ * hover and keyboard focus both copies move up one line, so the duplicate (aria-hidden, so the
+ * accessible name stays single) turns in from below. Hover is gated to devices that hover;
+ * keyboard focus gets the roll everywhere. Reduced motion swaps the roll for a 2 px underline.
+ */
+.nav-roll {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  line-height: 1.45;
+}
+
+.nav-roll-a,
+.nav-roll-b {
+  display: block;
+  transition: transform 220ms var(--ease-out);
+}
+
+.nav-roll-b {
+  position: absolute;
+  top: 100%;
+  left: 0;
+}
+
+@media (hover: hover) {
+  .nav-link:hover .nav-roll-a,
+  .nav-link:hover .nav-roll-b {
+    transform: translateY(-100%);
+  }
+}
+
+.nav-link:focus-visible .nav-roll-a,
+.nav-link:focus-visible .nav-roll-b {
+  transform: translateY(-100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-link:hover .nav-roll-a,
+  .nav-link:hover .nav-roll-b,
+  .nav-link:focus-visible .nav-roll-a,
+  .nav-link:focus-visible .nav-roll-b {
+    transform: none;
+  }
+
+  .nav-link:focus-visible .nav-roll-a {
+    text-decoration: underline 2px;
+    text-underline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) and (hover: hover) {
+  .nav-link:hover .nav-roll-a {
+    text-decoration: underline 2px;
+    text-underline-offset: 2px;
+  }
+}

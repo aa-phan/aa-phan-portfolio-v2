@@ -61,7 +61,8 @@ test.describe('hero CTAs', () => {
     await page.goto('./')
     await page.waitForLoadState('networkidle')
 
-    for (let i = 0; i < 8; i++) {
+    // The skip link, home link, six nav links, theme toggle and nav Resume come first.
+    for (let i = 0; i < 16; i++) {
       await page.keyboard.press('Tab')
       const onResume = await page.evaluate(
         () => document.activeElement?.textContent?.trim() === 'Download resume',
