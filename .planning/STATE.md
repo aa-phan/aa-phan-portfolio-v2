@@ -4,16 +4,16 @@ milestone: v2
 current_phase: 03
 current_phase_name: Content-Complete Site
 status: executing
-stopped_at: Completed 03-03-PLAN.md
-last_updated: "2026-10-27T17:45:10.446Z"
+stopped_at: Completed 03-04-PLAN.md
+last_updated: "2026-10-27T17:48:58.836Z"
 last_activity: 2026-10-27
 last_activity_desc: Phase 03 execution started
-state_head: 1332d217bfed2cf257de72e7a7e2046684b8e406
+state_head: 5141c5ea150b9741bdce6de2063f7fcfdfc2cfb7
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 35
-  completed_plans: 19
+  completed_plans: 20
   percent: 33
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-10-08)
 ## Current Position
 
 Phase: 03 (Content-Complete Site) — EXECUTING
-Plan: 4 of 19
+Plan: 5 of 19
 Status: Ready to execute
 Last activity: 2026-10-27 — Phase 03 execution started
 
@@ -79,6 +79,7 @@ Progress: [███░░░░░░░] 33%
 | Phase 03 P01 | n/a | 2 tasks | 6 files |
 | Phase 03 P03-02 | n/a | 3 tasks | 1 files |
 | Phase 03 P03 | 25 min | 2 tasks | 12 files |
+| Phase 03 P04 | 7 min | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -118,6 +119,8 @@ Recent decisions affecting current work:
 - [Phase 03]: T-03-SC: owner approved pdfjs-dist@6.3.289 and axe-core@4.13.0 as devDependencies
 - [Phase 03]: D-13/D-14/D-15 answered by owner (2026-10-27): PRJ-01 link only, three write-ups approved, About quote removed; D-16 resume export pending owner action before 03-17 phone gate
 - [Phase 03]: D-03/D-06: Archivo Variable with poster ladder and 4/9999/28 px radius rule; Archivo Fallback is two measured faces (Arial 100.9%, Arial Bold 103.1%); cn() registers custom text and radius utilities with tailwind-merge
+- [Phase 03]: 03-04: Hero takes a local structural props type; content stays importable only by Page.tsx (lint boundary)
+- [Phase 03]: 03-04: profile omits quote because ABT-03 is none; parity test asserts undefined while inventory says none
 
 ### Pending Todos
 
@@ -150,6 +153,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-27T17:45:10.372Z
-Stopped at: Completed 03-03-PLAN.md
+Last session: 2026-10-27T17:48:58.752Z
+Stopped at: Completed 03-04-PLAN.md
 Resume file: None
