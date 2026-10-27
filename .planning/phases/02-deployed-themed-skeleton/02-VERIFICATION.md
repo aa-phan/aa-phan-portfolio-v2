@@ -1,7 +1,7 @@
 ---
 phase: 02-deployed-themed-skeleton
-verified: 2026-10-26T00:00:00Z
-status: human_needed
+verified: 2026-10-27T05:00:00Z
+status: passed
 score: 5/5 must-haves verified
 covered_files:
   - ".github/workflows/ci.yml"
@@ -26,41 +26,54 @@ covered_files:
   - ".planning/phases/02-deployed-themed-skeleton/02-09-PLAN.md"
   - ".planning/phases/02-deployed-themed-skeleton/02-09-SUMMARY.md"
   - "docs/contrast-matrix.md"
+  - "docs/deploy-runbook.md"
   - "index.html"
   - "package.json"
+  - "playwright.config.ts"
+  - "scripts/check-colors.mjs"
   - "scripts/check-contrast.mjs"
   - "scripts/check-js-budget.mjs"
   - "scripts/check-no-phone.mjs"
+  - "scripts/lib/tokens.mjs"
   - "src/anim/MotionPreferenceProvider.tsx"
   - "src/anim/declarative/TextReveal.tsx"
   - "src/anim/useMotionPreference.ts"
   - "src/components/ui/ThemeToggle.tsx"
+  - "src/layout/Container.tsx"
+  - "src/layout/Section.tsx"
   - "src/lib/theme.ts"
+  - "src/lib/useTheme.ts"
   - "src/main.tsx"
   - "src/styles/base.css"
   - "src/styles/index.css"
   - "src/styles/tokens.css"
+  - "tests/e2e/motion.spec.ts"
+  - "tests/e2e/smoke.spec.ts"
+  - "tests/e2e/theme.spec.ts"
+  - "tests/unit/gates.test.ts"
+  - "tests/unit/layout.test.tsx"
+  - "tests/unit/theme-script.test.ts"
+  - "tests/unit/theme.test.ts"
+  - "tests/unit/tokens.test.ts"
   - "vite.config.ts"
-covered_digest: "v3:sha256:180aada00640cdff8fa8401c6f01ee25daea66da8cc3bafc0241a64520bc77aa"
+covered_digest: "v3:sha256:31e82a51f57507314d5bcc8e8b0be0e276d6eb0a0e79f6c8794e2815a85bbd61"
 behavior_unverified: 0
 overrides_applied: 0
-human_verification:
-  - test: "D5 - Real-device smoke test on a phone against https://aa-phan.github.io/aa-phan-portfolio-v2/ (runbook smoke section): hero renders at phone width, theme toggle switches and survives reload, Download resume opens the stand-in PDF, Copy email hands off to the mail app, no console errors or 404s"
-    expected: "Hero (name, role, 3 CTAs) readable without horizontal scroll; toggle persists across reload in both light and dark; resume.pdf shows only 'Resume coming soon.'; mailto opens the mail app"
-    why_human: "Phone feel, mail-app hand-off and real-device console inspection are outside headless Chromium (plan 02-09 Task 3 human-check, coverage item D5)"
-  - test: "Role-line re-reveal at 375 px (Research Open Question 2, backstop prohibition in plan 02-07): load the live site on a 375 px viewport (or phone) with reduce-motion off and watch the tagline"
-    expected: "The brief (about 0.35 s) hide-then-word-by-word reveal when the lazy TextEffect chunk lands reads as intentional, not as a flicker. Code review WR-02 flags that the text is visible, then hidden, then revealed"
-    why_human: "Perceived quality of a sub-second transition is a judgment; plan 02-07 explicitly deferred it to the end-of-phase review"
+re_verification:
+  previous_status: human_needed
+  previous_score: 5/5
+  gaps_closed:
+    - "Both human items (real-device smoke test; role-line re-reveal) passed in 02-UAT.md on 2026-10-26"
+  gaps_remaining: []
+  regressions: []
 ---
 
 # Phase 2: Deployed Themed Skeleton Verification Report
 
 **Phase Goal:** As a visitor, I want to open the deployed project URL and see a fast, themed hero in light or dark, so that hosting, CI, theming and motion risks are retired before content is built.
-**Verified:** 2026-10-26
-**Status:** human_needed (all automated checks pass; two judgment items remain)
-**Re-verification:** No, initial verification
-
-All evidence below was re-run in this verification (branch `gsd/phase-02-deployed-themed-skeleton`, HEAD `c01f67d`; code since the deployed tip `2080f79` is unchanged except the Phase 3 `DESIGN.md`). SUMMARY claims were not relied on.
+**Verified:** 2026-10-27T05:00:00Z
+**Status:** passed
+**Re-verification:** Yes. The earlier report went stale when 46 commits of code-review fixes landed after the deployed tip `2080f79`. Everything below was re-run at HEAD `fc03728` on branch `gsd/phase-02-deployed-themed-skeleton`. SUMMARY claims were not relied on.
 
 ## Goal Achievement
 
@@ -68,123 +81,121 @@ All evidence below was re-run in this verification (branch `gsd/phase-02-deploye
 
 | # | Truth | Status | Evidence |
 |---|-------|--------|----------|
-| 1 | Push builds on Linux CI (typecheck, lint, build, path-case) and deploys via Actions to the project URL with correct asset paths from env-driven `base` | VERIFIED | `ci.yml` and `deploy.yml` on `ubuntu-latest`, `VITE_BASE=/aa-phan-portfolio-v2/`, both run `npm run verify` (typecheck, lint, format, test, check:case, colors, contrast, build, budget, no-phone); `gh run list` shows latest CI and Deploy runs on main (2080f79) `success`. Live curl: HTTP 200, `text/html`; `/aa-phan-portfolio-v2/assets/index-*.js`, `rolldown-runtime-*.js`, `index-*.css`, `favicon.svg`, `resume.pdf` all under the base and all return 200; no root-absolute asset URLs. Actions pinned to full SHAs |
-| 2 | Hero visible with JS disabled; initial JS <= 150 kB gz; CI fails the build when exceeded | VERIFIED | Live HTML contains exactly one `<h1>`, the role line "Software engineer building cloud-native backends in Go.", resume link, mailto and `#contact` in static markup. Playwright "JS disabled" tests pass locally and against the live URL. `check:budget`: 86,937 B gz of 150,000 B; `JS_BUDGET_BYTES=1000` exits 1 (checked). Budget gate is inside `verify`, which both workflows run |
-| 3 | Toggle light/dark, first visit follows system, no theme flash, Phase 1 palette, at most 2 self-hosted font families | VERIFIED | Inline classic script in `<head>` sets `data-theme` before paint (localStorage then matchMedia, both try/catch, invalid values ignored); `tokens.css` carries palette A (light and dark blocks, oklch values match Phase 1); `ThemeToggle` is a native button with `aria-pressed`. Playwright theme tests (toggle plus reload, system preference, stored wins, no flash with app JS blocked, blocked storage) pass. Only `Inter Variable` via `@fontsource-variable/inter`; fonts e2e asserts same-origin only and at most 2 families; no `fonts.googleapis` reference |
-| 4 | Every text, UI and focus pair in both themes passes WCAG 2.2 AA per committed matrix, checked against real token files | VERIFIED | `npm run check:contrast` reads the shipped `src/styles/tokens.css`: `RESULT: PASS checks=40` (20 pairs x 2 themes; lowest ratios 3.25 focus on primary, 4.58 border on surface). `docs/contrast-matrix.md` is generated and staleness-checked; `tests/unit/tokens.test.ts` includes negative runs (lightened primary fails) |
-| 5 | With OS reduce-motion on, a motion-primitives component and the page show all content with no animation, one preference source; lint fails animation imports outside `anim/` and vendored primitives | VERIFIED | `useMotionPreference` (single `matchMedia` source via `useSyncExternalStore`) feeds `MotionConfig reducedMotion always/never`, `Globals.assign({skipAnimation})` and `TextReveal`; CSS guard in `base.css` is the third consumer and is in the built CSS. e2e "reduced motion" tests (thumb snaps, role line is static with no per-word spans, all hero elements and 7 headings opacity 1 with no running animations) pass. `oxlint -c .oxlintrc.json --no-ignore tests/fixtures/sections/Imports.tsx` reports `motion/react`, `@react-spring/web`, deep `@/anim/*` and content imports as errors; `boundaries.test.ts` passes |
+| 1 | A push builds on Linux CI (typecheck, lint, build, path-case) and deploys through GitHub Actions to the project URL with correct asset paths from the env-driven `base` | VERIFIED | `ci.yml` and `deploy.yml` run on `ubuntu-latest` with `VITE_BASE=/aa-phan-portfolio-v2/` and call `npm run verify`, which chains typecheck, lint, format:check, test, check:case, check:colors, check:contrast, build, check:budget and check:no-phone. `vite.config.ts` reads `base` from `VITE_BASE` (default `/`). All actions are pinned to full commit SHAs. `gh api` shows the latest CI and Deploy runs on `2080f79` concluded `success`. The live URL returns 200 and `resume.pdf` returns 200. The live e2e run passed the JS-off, CTA and font tests, which resolve assets under the base. |
+| 2 | Hero visible with JS disabled; initial JS at most 150 kB gz; CI fails the build when exceeded | VERIFIED | `index.html` holds the static shell: one `h1` "Aaron Phan", the role line, and the three CTAs (`resume.pdf` download, `mailto:`, `#contact`). Playwright "JS disabled" tests pass locally and on the live URL. `check:budget` reported 95,722 B gz of 150,000 B. `JS_BUDGET_BYTES=1000 node scripts/check-js-budget.mjs` exits 1 (checked). The budget gate sits inside `verify`, which both workflows run. The text-effect chunk (42 kB gz) is lazy and not counted as initial. |
+| 3 | Toggle light/dark; first visit follows system; no theme flash; Phase 1 palette; at most 2 self-hosted font families | VERIFIED | The inline classic `<head>` script sets `data-theme` from localStorage, then matchMedia, with try/catch around both and invalid values ignored. `tokens.css` holds palette A (checked by `tokens.test.ts`). `ThemeToggle` is a native button with `aria-pressed` and a constant label. The review fixes in `theme.ts` and `useTheme.ts` keep the toggle in step with OS and cross-tab changes, and an explicit choice persists for the session when storage is blocked. All 6 theme e2e tests pass locally. Fonts are `@fontsource-variable/inter` only (`main.tsx`), and the fonts e2e asserts same-origin requests and at most 2 families. |
+| 4 | Every text, UI and focus pair in both themes passes WCAG 2.2 AA per the committed matrix, checked against the real token files | VERIFIED | `npm run check:contrast` parses the shipped `src/styles/tokens.css` and printed `RESULT: PASS checks=40` (20 pairs x 2 themes; lowest ratios 3.25 focus ring on primary in light, 4.58 border on surface in dark). `docs/contrast-matrix.md` is generated and staleness-checked by the same gate. `tokens.test.ts` includes the negative run. |
+| 5 | With OS reduce-motion on, a motion-primitives component and the page show all content with no animation, driven by one preference source; lint fails animation imports outside `anim/` and vendored primitives | VERIFIED | `useMotionPreference` is the single `matchMedia` source (`useSyncExternalStore`). It feeds `MotionConfig reducedMotion='always'/'never'`, `Globals.assign({skipAnimation})` and `TextReveal`. The CSS guard in `base.css` is the third consumer. Reduced-motion e2e tests pass: the thumb snaps, the role line is static with no per-word spans, and every hero element and all seven headings are visible with no running animations. Probe: `import { motion } from 'motion/react'` in `src/sections/Hero/__probe.tsx` produced two `no-restricted-imports` errors from oxlint (probe file removed afterwards, tree clean). `boundaries.test.ts` passes. |
 
-**Score:** 5/5 truths verified. 0 present-but-behavior-unverified (every behavior-dependent truth has a passing named e2e or unit test).
+**Score:** 5/5 truths verified. 0 present-but-behavior-unverified: each behavior-dependent truth (theme persistence, no flash, reduced-motion snap, chunk-failure fallback, role-line reveal) has a passing named e2e or unit test.
 
-### Plan-level must-haves spot-checked
+### Required Local Evidence (run at HEAD)
 
-| Must-have | Status | Evidence |
-|-----------|--------|----------|
-| Hero CTA order Download resume, Copy email (mailto), Contact (#contact); 44 px targets | VERIFIED | Static shell in `index.html`; e2e "CTA targets are at least 44px and resolve" passes |
-| Shell and React hero cannot drift | VERIFIED | `tests/unit/hero-parity.test.tsx` passes (part of 72 unit tests) |
-| Seven anchors, no nav element in JS-off HTML | VERIFIED | e2e "all seven section anchors exist with headings" passes; no nav added (Phase 3) |
-| Stand-in resume: 200, `application/pdf`, `%PDF-`, no phone | VERIFIED | Live `resume.pdf`: HTTP/2 200, `content-type: application/pdf`, first bytes `%PDF-1.4`; `check:no-phone` over `dist` OK |
-| No phone number or `tel:` served | VERIFIED | `check:no-phone: OK`; live HTML has zero `tel:`. No digits printed in this report |
-| Lazy TextEffect keeps initial JS small, falls back if chunk fails | VERIFIED | Build: `text-effect-*.js` 50.7 kB gz is a separate chunk, not in initial 86.9 kB; e2e "role line stays readable when the effect chunk fails to load" passes |
-| Vendored primitive is the only source exempt from boundary lint | VERIFIED | `.oxlintrc.json` override for `**/motion-primitives/**` only; `.oxlintignore` not used to hide source (green lint with `--deny-warnings`) |
-| Pages source is Actions; repo public | VERIFIED | Deploy runs use `deploy-pages`; live URL serves; 02-09 records `build_type workflow` |
+| Command | Result |
+|---------|--------|
+| `npm run verify` | exit 0. Vitest 8 files, 164 tests passed. oxlint with `--deny-warnings` clean. Prettier clean. check:case, check:colors and check:contrast pass. Build succeeded. Budget 95,722 B gz. check:no-phone OK. |
+| `npm run test:e2e` | exit 0. 20 passed (10.8 s). |
+| `E2E_BASE_URL=https://aa-phan.github.io/aa-phan-portfolio-v2/ npx playwright test` | 17 passed, 3 failed (see next section). |
+
+### Live Site Run (pre-fix build at `2080f79`) Against Current Tests
+
+The live build predates the review-fix commits. `main` and `origin/main` are both `2080f79`, and HEAD is 46 commits ahead. The 3 failures are tests for behavior added after that deploy, so they are expected and not gaps.
+
+| Failing test | Added by | Why the live build fails it |
+|--------------|----------|----------------------------|
+| `motion.spec.ts:165` "role line never flashes visible, then hidden, before it is revealed" | WR-02 (`2bca9fc`) and iteration 2 WR-02 (`3631b09` area): `.reveal-pending` hide-until-mount CSS | The live build has no `reveal-pending` rule. The first opacity sample is not 0. |
+| `motion.spec.ts:235` "role line fades in on its own when the entry script never loads" | IN-01 iteration 2 (`4e55301`), which tests the `reveal-pending-show` 3 s safety-net animation | The live build lacks the class and the animation. The initial opacity is not `'0'`. |
+| `theme.spec.ts:132` "follows an OS scheme change while no choice is stored, then stops once chosen" | IN-02 (`1a40e87`): theme follows the OS scheme | The live build has no OS-change listener. `data-theme` stays `light`. |
+
+The other 17 tests passed on the live URL: JS-off hero and anchors, Contact jump, React mount, CTA size and targets, fonts, the three core theme tests, the no-flash test, blocked-storage fallback, reduced-motion thumb and hero visibility, thumb animation, text effect running, and chunk-failure fallback. The live pre-fix build therefore still meets every Phase 2 success criterion.
+
+### Notes (not gaps)
+
+- **Fixes not yet live.** The WR-02 tagline reveal CSS, the theme fixes and the other review fixes are proven only locally and in 02-UAT. UAT was run against the live site, which is the pre-fix build. They go live on the next push to `main`.
+- **`deploy.yml` job graph is untested on the runner.** The new `build` -> `e2e` -> `deploy` split (deploy needs both, build uploads the artifact once, scoped Pages permissions, no cancel-in-progress) has not run on GitHub yet. The first push after this phase is its first real exercise. Locally, the YAML is consistent: `deploy` needs `[build, e2e]`, the e2e job installs Chromium and runs `npm run test:e2e`, and the smoke curl uses a captured body to avoid the pipefail flake. Treat the first CI run as the confirmation.
+- `ci.yml` still runs the same tests on every push and PR, so e2e remains gated on pull requests.
+- The one earlier CI `failure` in the run history (`7014714`) predates the fixes and was followed by successes.
 
 ### Required Artifacts
 
-| Artifact | Status | Details |
-|----------|--------|---------|
-| `index.html` (static shell, theme-init script, `%BASE_URL%` hrefs) | VERIFIED | Present, substantive, rewritten under base in live HTML |
-| `src/styles/tokens.css`, `index.css`, `base.css` | VERIFIED | Palette A tokens, `@theme inline` map, focus ring and reduced-motion guard |
-| `src/anim/*` (hook, provider, TextReveal, ThemeThumb, tokens, barrel) | VERIFIED | Wired: provider in `Providers`, Hero imports `TextReveal` from `@/anim`, toggle imports `ThemeThumb` from `@/anim` |
-| `src/components/motion-primitives/text-effect.tsx` | VERIFIED | Vendored, lazy-loaded, ADR-0007 present |
-| `.github/workflows/ci.yml`, `deploy.yml` | VERIFIED | SHA-pinned, `npm run verify` in both, deploy curl check |
-| `scripts/check-*.mjs`, `scripts/lib/*`, `contrast-pairs.json`, `docs/contrast-matrix.md` | VERIFIED | All gates execute and pass; negative-proof tests in `gates.test.ts` and `tokens.test.ts` |
-| `.oxlintrc.json`, `tests/unit/boundaries.test.ts`, 4 fixtures | VERIFIED | Negative and positive proofs |
-| `docs/adr/0007`, `0008`, `docs/deploy-runbook.md`, `docs/adr/README.md` | VERIFIED | Present |
+| Artifact | Expected | Status | Details |
+|----------|----------|--------|---------|
+| `.github/workflows/ci.yml`, `deploy.yml` | SHA-pinned CI and Pages deploy | VERIFIED | Both read; actions pinned to commit SHAs; `deploy.yml` job graph noted above |
+| `index.html` | Static JS-off shell and pre-paint theme script | VERIFIED | h1, role line, 3 CTAs, 7 anchored sections; parity test `hero-parity.test.tsx` passes |
+| `src/styles/tokens.css`, `docs/contrast-matrix.md` | Palette A, light and dark, plus matrix | VERIFIED | Gate passes 40/40 |
+| `src/anim/useMotionPreference.ts`, `MotionPreferenceProvider.tsx`, `declarative/TextReveal.tsx` | One preference source and its consumers | VERIFIED | Wired through `@/anim` barrel; `Providers.tsx` mounts the provider |
+| `src/lib/theme.ts`, `useTheme.ts`, `src/components/ui/ThemeToggle.tsx` | Theme store, hook and toggle | VERIFIED | Substantive; used by the toggle; e2e passes |
+| `scripts/check-*.mjs`, `scripts/lib/tokens.mjs` | Budget, case, color, contrast and phone gates | VERIFIED | All run inside `verify`; unit tests include negative cases |
+| `.oxlintrc.json` | Import boundary rules | VERIFIED | Probe import rejected |
+| `public/resume.pdf` | Stand-in resume | VERIFIED | Live returns 200; `check:no-phone` passes on `dist` |
 
 ### Key Link Verification
 
-| From | To | Status | Details |
-|------|----|--------|---------|
-| `vite.config.ts` VITE_BASE | `index.html` / built assets | WIRED | Live URLs are under `/aa-phan-portfolio-v2/` |
-| `ThemeToggle` | `@/anim` `ThemeThumb`, `lib/theme` `applyTheme` | WIRED | Imports confirmed; e2e toggle test passes |
-| `TextReveal` | vendored `text-effect` | WIRED | `lazy()` dynamic import, separate chunk in build |
-| `MotionPreferenceProvider` | `useMotionPreference` | WIRED | `reduced` drives `MotionConfig` and `Globals.assign` |
-| `package.json verify` | both workflows | WIRED | `npm run verify` appears once in each workflow |
-| `check-contrast` | `src/styles/tokens.css` and `docs/contrast-matrix.md` | WIRED | Reads real file; stale matrix fails |
+| From | To | Via | Status |
+|------|----|-----|--------|
+| `index.html` theme script | `html[data-theme]` | `setAttribute` before paint | WIRED |
+| `ThemeToggle` | `applyTheme` / `useTheme` | `src/lib/theme.ts` | WIRED |
+| `useMotionPreference` | `MotionConfig`, react-spring `Globals`, `TextReveal` | `MotionPreferenceProvider` and direct hook use | WIRED |
+| `TextReveal` | vendored `text-effect` | `React.lazy` with `ChunkBoundary` fallback | WIRED |
+| `npm run verify` | both workflows | `run: npm run verify` | WIRED |
+| `check-contrast.mjs` | `src/styles/tokens.css` | real-file parse | WIRED |
 
 ### Data-Flow Trace (Level 4)
 
-Not applicable beyond static content: the phase renders fixed hero copy and theme state. Theme state flows localStorage/matchMedia to `data-theme` to CSS tokens, verified by e2e.
+Not applicable: Phase 2 renders static strings and theme state. There is no dynamic data source. Theme state flows from `html[data-theme]` through `useSyncExternalStore` to the toggle. Verified by the e2e toggle and reload tests.
 
 ### Behavioral Spot-Checks
 
 | Behavior | Command | Result | Status |
 |----------|---------|--------|--------|
-| Full unit suite | `npm run test` | 7 files, 72 tests passed | PASS |
-| Path case / raw colors / contrast | `check:case`, `check:colors`, `check:contrast` | OK / OK / PASS checks=40 | PASS |
-| Build + budget + no-phone | `npm run build`, `check:budget`, `check:no-phone` | 86,937 B of 150,000 B; OK | PASS |
-| Budget gate fails when exceeded | `JS_BUDGET_BYTES=1000 node scripts/check-js-budget.mjs` | exit 1 | PASS |
-| Local e2e (preview under base) | `npx playwright test` | 17 passed | PASS |
-| Live-URL e2e | `E2E_BASE_URL=https://aa-phan.github.io/aa-phan-portfolio-v2/ npx playwright test` | 17 passed | PASS |
-| Boundary lint rejects bad imports | `oxlint -c .oxlintrc.json --no-ignore tests/fixtures/sections/Imports.tsx` | errors for motion/react, @react-spring/web, deep anim, content | PASS |
+| Budget gate fails over budget | `JS_BUDGET_BYTES=1000 node scripts/check-js-budget.mjs` | exit 1 | PASS |
+| Boundary lint rejects `motion/react` in a section | oxlint on a probe file | 2 errors | PASS |
+| Live URL serves the page | `curl` the project URL and `resume.pdf` | 200 and 200 | PASS |
 
 ### Probe Execution
 
-No `probe-*.sh` scripts declared or present: SKIPPED.
+No `scripts/*/tests/probe-*.sh` files exist and no plan declares one. Skipped.
 
 ### Requirements Coverage
 
-All 10 phase IDs appear in PLAN frontmatter and in REQUIREMENTS.md (Traceability: Phase 2, Complete). No orphans: REQUIREMENTS.md maps exactly FND-01..04, DSN-01..04, MOT-01, NAV-01 to Phase 2 and every one is claimed by at least one plan.
+All 10 IDs in the phase requirement list appear in at least one PLAN's `requirements:` frontmatter, are marked `[x]` and "Complete" in `.planning/REQUIREMENTS.md`, and map to Phase 2 there. No orphaned requirements.
 
 | Requirement | Source Plans | Status | Evidence |
 |-------------|--------------|--------|----------|
-| FND-01 | 02-01, 02-03, 02-09 | SATISFIED | Vite 8 + React 19 + TS 6 + Tailwind v4; live deploy via Actions with env-driven base |
-| FND-02 | 02-03, 02-04, 02-06, 02-09 | SATISFIED | Linux CI runs typecheck, lint, build, `check:case`; green runs on main |
-| FND-03 | 02-06, 02-09 | SATISFIED | 86.9 kB vs 150 kB; gate in `verify`; exit 1 on overrun |
-| FND-04 | 02-04 | SATISFIED | `.oxlintrc.json` boundaries with negative-fixture proofs |
-| DSN-01 | 02-01, 02-08 | SATISFIED | Palette A light/dark token sets; test reproduces Phase 1 swatches and ratios |
-| DSN-02 | 02-08 | SATISFIED | 40 checks PASS against shipped tokens; generated matrix, staleness-gated |
-| DSN-03 | 02-05 | SATISFIED | Toggle, system default, pre-paint script, 5 e2e theme tests |
-| DSN-04 | 02-02 | SATISFIED | Inter Variable only, same-origin |
-| MOT-01 | 02-02, 02-07 | SATISFIED | One hook, three consumers, content visible with motion off |
-| NAV-01 | 02-01, 02-02, 02-04 | SATISFIED | Static shell with name, role and CTAs visible without JS, parity-tested |
+| FND-01 Vite+React+TS+Tailwind v4, Actions deploy, env-driven base | 02-01, 02-03, 02-09 | SATISFIED | Truth 1; live site up |
+| FND-02 Linux CI runs typecheck, lint, build, path-case | 02-03, 02-04, 02-06, 02-09 | SATISFIED | Truth 1; `check:case` in `verify` |
+| FND-03 Initial JS at most 150 kB gz, CI-enforced | 02-06, 02-09 | SATISFIED | Truth 2; 95.7 kB, gate exits 1 when exceeded |
+| FND-04 Layered imports enforced by lint | 02-04 | SATISFIED | Truth 5; probe and `boundaries.test.ts` |
+| DSN-01 Palette and type via realtimecolors, light and dark token sets | 02-01, 02-08 | SATISFIED | `tokens.css` and `tokens.test.ts` (palette A) |
+| DSN-02 Contrast matrix meets WCAG 2.2 AA | 02-08 | SATISFIED | Truth 4 |
+| DSN-03 Toggle, system default, no flash | 02-05 | SATISFIED | Truth 3 |
+| DSN-04 Self-hosted fonts, at most 2 families | 02-02 | SATISFIED | Truth 3 fonts e2e |
+| MOT-01 One motion-preference source drives motion, react-spring and CSS guard | 02-02, 02-07 | SATISFIED | Truth 5 |
+| NAV-01 Static hero with name, role, CTAs visible without JS | 02-01, 02-02, 02-04 | SATISFIED | Truth 2 |
 
 ### Anti-Patterns Found
 
-| File | Line | Pattern | Severity | Impact |
-|------|------|---------|----------|--------|
-| `DESIGN.md` | n/a | `prettier --check .` fails on this Phase 3 file (added in 32216f7 "docs(03): capture phase context") | Warning | Not a Phase 2 artifact and not on deployed `main` (which is green). But `npm run verify` exits 1 at `format:check` on this branch, so merging the branch to `main` would fail CI and block deploy until DESIGN.md is formatted or ignored. All other verify steps pass when run individually |
-| `src/anim/declarative/TextReveal.tsx` | 36-54 | Visible, then hidden, then revealed (REVIEW WR-02) | Warning (advisory) | Feeds the human role-line item below |
-| debt markers | n/a | No `TBD`, `FIXME`, `XXX` found as blockers in scanned phase sources | none | n/a |
+| Scan | Result |
+|------|--------|
+| `TBD`, `FIXME`, `XXX`, `TODO`, `HACK` in `src`, `scripts`, `tests`, `.github`, `index.html`, `docs` (excluding ADR text) | None. The only `XXX` hit is the `\uXXXX` escape documented in `check-no-phone.mjs` and `docs/deploy-runbook.md`, which is not a marker. |
+| Stub or empty-implementation patterns in phase source | None found. The hero shell is intentionally static and the section stubs are the planned Phase 3 placeholders. |
+| Phone numbers | `check:no-phone` passes on `dist`. No digits were printed or recorded in this report. |
 
-### Code Review (02-REVIEW.md) - Advisory, does not gate
+### Review, Security and UAT Cross-Check
 
-`02-REVIEW.md` reports 0 critical, 6 warnings (WR-01 no-phone gate misses space-separated numbers and PDF internals; WR-02 role-line flash; WR-03 deploy not gated on e2e and over-permissive/cancellable; WR-04 typecheck skips tests/scripts; WR-05 "thumb animates" e2e can't fail if animation is missing; WR-06 check-colors misses directional palette utilities) and 7 info (IN-01 "Copy email" is a mailto, not a copy; IN-02 theme does not follow OS after load; IN-03 to IN-07 minor). `02-REVIEW-DISPOSITION.md` lists all 13 as open. Noted, not blocking. WR-01 is worth fixing before Phase 3 introduces the real resume, since the phone rule is a hard constraint.
-
-### Deferred Items
-
-None filtered. IN-01 (real copy-to-clipboard with toast) is covered by NAV-03 in Phase 3.
+- **Code review:** 02-REVIEW-DISPOSITION.md shows all iteration 1 findings (WR-01 to WR-06, IN-02 to IN-07) fixed. IN-01 is deferred to Phase 3 (NAV-03 copy-to-clipboard), where the Copy email behavior belongs. All iteration 2 findings (WR-01 to WR-04, IN-01 to IN-03) are fixed, each with a commit present in `git log`.
+- **Security:** 02-SECURITY.md has `status: verified` and `threats_open: 0`.
+- **UAT:** 02-UAT.md is `status: complete`, 2 passed and 0 issues (real-device smoke test on the live site; role-line re-reveal at 375 px). These were the only human items. None remain.
 
 ### Human Verification Required
 
-#### 1. D5 - Real-device smoke test
-
-**Test:** On a phone, open https://aa-phan.github.io/aa-phan-portfolio-v2/ and follow the runbook smoke test: hero at phone width, toggle light/dark and reload, Download resume, Copy email (mail app hand-off), check for console errors or 404s.
-**Expected:** No horizontal scroll; theme persists across reload; the PDF shows only "Resume coming soon."; mailto opens the mail app.
-**Why human:** Phone feel, mail app hand-off and device console inspection cannot be covered by headless Chromium.
-
-#### 2. Role-line re-reveal at 375 px
-
-**Test:** At 375 px (or on the phone) with reduce-motion off, reload and watch the tagline.
-**Expected:** The roughly 0.35 s re-reveal (7 words) after the lazy chunk arrives reads as intentional rather than a flicker (see REVIEW WR-02).
-**Why human:** Subjective perceptual judgment, explicitly deferred to the end-of-phase review by plan 02-07.
+None. The two judgment items from the earlier report are closed by 02-UAT.md.
 
 ### Gaps Summary
 
-No gaps. All five roadmap success criteria and all 10 requirement IDs are verified against the actual code, local gates, the CI run history and the live site. The status is `human_needed` solely because of the two judgment items above. One non-gating note for the orchestrator: `DESIGN.md` (Phase 3) fails Prettier, which will fail the `verify` chain on any push of this branch to `main` until it is formatted.
+No gaps. All 5 ROADMAP success criteria are verified at HEAD with fresh command output, all 10 requirement IDs are satisfied, and the working tree was clean after verification. The 3 live-run failures are tests for post-deploy review fixes, as expected. The only open item is the first CI run of the new `deploy.yml` job graph, which cannot be exercised before the next push to `main`.
 
 ---
 
-_Verified: 2026-10-26_
+_Verified: 2026-10-27T05:00:00Z_
 _Verifier: Claude (gsd-verifier)_
