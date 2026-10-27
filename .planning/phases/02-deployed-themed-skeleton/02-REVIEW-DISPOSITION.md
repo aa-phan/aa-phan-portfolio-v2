@@ -17,3 +17,15 @@ Ledger for `02-REVIEW.md`. Fixes are on branch `gsd/phase-02-deployed-themed-ske
 | IN-05 | Info | fixed | 29d2a1d |
 | IN-06 | Info | fixed | f2e0e42 |
 | IN-07 | Info | fixed | 94c9fd4 |
+
+## Iteration 2 (re-review `02-REVIEW.md`; iteration 1 findings are in `02-REVIEW-iter1.md`)
+
+| Finding | Severity | Disposition | Commit |
+|---------|----------|-------------|--------|
+| WR-01 | Warning | fixed | 2ef608e |
+| WR-02 | Warning | fixed | 3631b09 |
+| WR-03 | Warning | fixed | 3631b09 |
+| WR-04 | Warning | fixed | b34a99d |
+| IN-01 | Info | fixed | 4e55301 |
+| IN-02 | Info | fixed | 35cdb0d |
+| IN-03 | Info | fixed | 9f1ce4b |
