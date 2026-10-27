@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { PillMorph } from '@/anim'
 import { CtaLink } from '@/components/ui/CtaLink'
 import { CloseIcon } from '@/components/ui/icons/CloseIcon'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
@@ -65,13 +66,14 @@ export function PillNav({ activeId, onNavigate }: PillNavProps) {
           className="fixed inset-0 z-(--z-sticky-nav) bg-(--scrim) md:hidden"
         />
       ) : null}
-      <nav
+      <PillMorph
+        open={open}
         aria-label="Sections"
+        contentClassName={open ? undefined : 'flex h-full items-center gap-1 px-1.5'}
+        rootClassName="pointer-events-none fixed inset-x-0 bottom-[calc(16px+env(safe-area-inset-bottom))] z-(--z-pill-nav) flex h-14 items-end justify-center md:hidden"
         className={cn(
-          'pill-nav fixed inset-x-0 bottom-[calc(16px+env(safe-area-inset-bottom))] z-(--z-pill-nav) mx-auto border border-border-strong bg-(--surface-frost) shadow-lg backdrop-blur-lg md:hidden',
-          open
-            ? 'max-h-[80dvh] w-[min(calc(100vw-32px),360px)] overflow-y-auto rounded-panel'
-            : 'flex h-14 w-fit items-center gap-1 rounded-pill px-1.5',
+          'pill-nav pointer-events-auto border border-border-strong bg-(--surface-frost) shadow-lg backdrop-blur-lg',
+          open ? 'max-h-[80dvh] w-[min(calc(100vw-32px),360px)] overflow-y-auto' : 'h-14 w-fit',
         )}
       >
         {open ? (
@@ -146,7 +148,7 @@ export function PillNav({ activeId, onNavigate }: PillNavProps) {
             </button>
           </>
         )}
-      </nav>
+      </PillMorph>
     </>
   )
 }
