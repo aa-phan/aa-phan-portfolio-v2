@@ -46,14 +46,25 @@ test('motion: theme thumb animates with no preference', async ({ browser }) => {
     'false',
   )
 
-  const first = await page.evaluate(() => {
-    const button = document.querySelector<HTMLButtonElement>('button[aria-pressed]')
-    const thumb = document.querySelector<HTMLElement>('[data-part="theme-thumb"]')
-    if (!button || !thumb) throw new Error('toggle not found')
-    button.click()
-    return getComputedStyle(thumb).transform
-  })
-  expect(first).not.toBe(END_MATRIX)
+  // Sample the thumb's x translation on every frame after the click. A spring passes through
+  // values strictly between its start and end; an instant snap (animation stuck off) never does.
+  const travel = await page.evaluate(
+    () =>
+      new Promise<number[]>((resolve) => {
+        const button = document.querySelector<HTMLButtonElement>('button[aria-pressed]')
+        const thumb = document.querySelector<HTMLElement>('[data-part="theme-thumb"]')
+        if (!button || !thumb) throw new Error('toggle not found')
+        button.click()
+        const xs: number[] = []
+        const tick = () => {
+          xs.push(new DOMMatrix(getComputedStyle(thumb).transform).m41)
+          if (xs.length < 40) requestAnimationFrame(tick)
+          else resolve(xs)
+        }
+        requestAnimationFrame(tick)
+      }),
+  )
+  expect(travel.some((x) => x > 0.5 && x < 19.5)).toBe(true)
 
   await expect
     .poll(
