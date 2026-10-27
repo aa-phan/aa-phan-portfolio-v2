@@ -7,7 +7,8 @@ import { Sleeve } from './Sleeve'
 /**
  * Projects as a crate (D-08): seven typographic sleeves in a sideways scroll-snap row that scrolls
  * inside itself only, so vertical page scroll is never captured. Activating a sleeve opens the
- * native dialog, which is a sibling after the section (outside any band plan 03-13 adds).
+ * native dialog, which is a sibling after the section, outside the inverted band (D-02), so it keeps
+ * the page theme. The section itself wears band-invert: the opposite theme's complete token block.
  */
 export function Projects({ projects }: { projects: readonly ProjectRow[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
@@ -47,6 +48,7 @@ export function Projects({ projects }: { projects: readonly ProjectRow[] }) {
         id="projects"
         title="Projects"
         mood="tight"
+        className="band-invert bg-background text-text"
         aside={
           <p aria-hidden="true" className="text-s tabular-nums">
             {leftmost} / {projects.length}

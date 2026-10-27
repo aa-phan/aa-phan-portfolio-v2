@@ -2,8 +2,8 @@
 //
 // Reads the token file the site ships, resolves every color token per theme with
 // the ported color math, and checks every pair in scripts/contrast-pairs.json in
-// both themes against WCAG 2.2 AA: text 4.5, large text 3, UI components 3, focus
-// indicators 3. Ratios are compared unrounded, and a color outside the sRGB gamut
+// four themes (light, dark, and the inverted band on each page theme) against WCAG 2.2 AA:
+// text 4.5, large text 3, UI components 3, focus indicators 3. Ratios are compared unrounded, and a color outside the sRGB gamut
 // counts as a failure.
 //
 // Flags: --tokens PATH (default src/styles/tokens.css)
@@ -24,7 +24,7 @@ import { THRESHOLDS, contrast } from './lib/color.mjs'
 import { COLOR_TOKENS, TokenError, parseTokensCss, resolveTheme } from './lib/tokens.mjs'
 
 const ROOT = path.resolve(import.meta.dirname, '..')
-const THEMES = ['light', 'dark']
+const THEMES = ['light', 'dark', 'band-on-light', 'band-on-dark']
 const DEFAULT_TOKENS = path.join(ROOT, 'src/styles/tokens.css')
 const DEFAULT_PAIRS = path.join(ROOT, 'scripts/contrast-pairs.json')
 const DEFAULT_MATRIX = path.join(ROOT, 'docs/contrast-matrix.md')
@@ -92,7 +92,7 @@ function loadPairs(file) {
   return pairs
 }
 
-// One result per theme and pair: light rows first, then dark, in pair order.
+// One result per theme and pair: light rows first, then dark, then the band themes, in pair order.
 function evaluate(themes, pairs) {
   const results = []
   for (const theme of THEMES) {
@@ -161,7 +161,12 @@ function matrixIsStale(opts, expected) {
 function main(argv) {
   const opts = parseArgs(argv)
   const raw = parseTokensCss(readText(opts.tokens))
-  const themes = { light: resolveTheme(raw.light), dark: resolveTheme(raw.dark) }
+  const themes = {
+    light: resolveTheme(raw.light),
+    dark: resolveTheme(raw.dark),
+    'band-on-light': resolveTheme(raw.bandOnLight),
+    'band-on-dark': resolveTheme(raw.bandOnDark),
+  }
   const pairs = loadPairs(opts.pairs)
   const results = evaluate(themes, pairs)
 

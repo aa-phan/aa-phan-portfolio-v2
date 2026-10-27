@@ -118,5 +118,17 @@
     "bg": "--surface",
     "category": "ui",
     "usedBy": "theme toggle thumb on its track"
+  },
+  {
+    "fg": "--background",
+    "bg": "--text",
+    "category": "text",
+    "usedBy": "CTA flood label, toast, skip link, pill and dialog inverted labels"
+  },
+  {
+    "fg": "--muted",
+    "bg": "--secondary",
+    "category": "text",
+    "usedBy": "#experience dates on the row hover wash"
   }
 ]

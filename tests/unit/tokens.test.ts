@@ -15,6 +15,10 @@ type ThemeName = 'light' | 'dark'
 
 const raw = parseTokensCss(readFileSync(TOKENS, 'utf8'))
 const themes = { light: resolveTheme(raw.light), dark: resolveTheme(raw.dark) }
+const bandThemes = {
+  bandOnLight: resolveTheme(raw.bandOnLight),
+  bandOnDark: resolveTheme(raw.bandOnDark),
+}
 
 // The chosen system: five role tokens, then the nine derived tokens, as hex.
 const HEX: Record<string, { light: string; dark: string }> = {
@@ -160,6 +164,23 @@ describe('parseTokensCss and resolveTheme', () => {
     expect(() => parseTokensCss(css)).toThrow(/uses @/)
   })
 
+  it('files .band-invert blocks into their own maps and never into the page themes', () => {
+    const css = `
+      :root, [data-theme='light'] { --text: oklch(0.2 0 0); --muted: oklch(0.4 0 0); }
+      [data-theme='dark'] { --text: oklch(0.9 0 0); --muted: oklch(0.7 0 0); }
+      [data-theme='light'] .band-invert { --text: oklch(0.91 0 0); --muted: oklch(0.71 0 0); }
+      [data-theme='dark'] .band-invert { --text: oklch(0.21 0 0); --muted: oklch(0.41 0 0) }
+    `
+    const parsed = parseTokensCss(css)
+    expect(parsed.light).toEqual({ '--text': 'oklch(0.2 0 0)', '--muted': 'oklch(0.4 0 0)' })
+    expect(parsed.dark).toEqual({ '--text': 'oklch(0.9 0 0)', '--muted': 'oklch(0.7 0 0)' })
+    expect(parsed.bandOnLight).toEqual({
+      '--text': 'oklch(0.91 0 0)',
+      '--muted': 'oklch(0.71 0 0)',
+    })
+    expect(parsed.bandOnDark).toEqual({ '--text': 'oklch(0.21 0 0)', '--muted': 'oklch(0.41 0 0)' })
+  })
+
   it('names the token when a required one is missing or malformed', () => {
     const { '--surface': _dropped, ...withoutSurface } = raw.light
     expect(() => resolveTheme(withoutSurface)).toThrow('--surface')
@@ -176,14 +197,61 @@ describe('parseTokensCss and resolveTheme', () => {
   })
 })
 
+describe('inverted band in src/styles/tokens.css', () => {
+  it('gives the band the opposite theme complete token block', () => {
+    for (const token of COLOR_TOKENS) {
+      expect(bandThemes.bandOnLight[token].hex, `band on light ${token}`).toBe(
+        themes.dark[token].hex,
+      )
+      expect(bandThemes.bandOnDark[token].hex, `band on dark ${token}`).toBe(
+        themes.light[token].hex,
+      )
+    }
+  })
+
+  it('keeps the page theme maps free of band declarations', () => {
+    expect(raw.light['--text']).toBe('oklch(0.1491 0.0128 292.39)')
+    expect(raw.dark['--text']).toBe('oklch(0.9696 0.003 290)')
+  })
+})
+
 describe('check-contrast gate', () => {
+  it('audits the band in both themes and fails when the band --muted drops below AA', () => {
+    const dir = makeTemp()
+    const css = readFileSync(TOKENS, 'utf8')
+    const block = /(\[data-theme='light'\] \.band-invert \{[^}]*?--muted:)[^;]+;/
+    expect(css).toMatch(block)
+    writeFileSync(
+      path.join(dir, 'tokens.css'),
+      css.replace(block, '$1 color-mix(in oklch, var(--text) 30%, var(--background));'),
+    )
+    const run = runGate(['--tokens', path.join(dir, 'tokens.css')])
+    expect(run.status).toBe(1)
+    expect(run.out).toMatch(/^band-on-light --muted on --background text .* FAIL/m)
+    expect(run.out).toMatch(/^band-on-dark --muted on --background text .* PASS/m)
+    expect(run.out.trimEnd().split('\n').at(-1)).toMatch(/^RESULT: FAIL/)
+  })
+
+  it('exits 2 when a band block lacks a token', () => {
+    const dir = makeTemp()
+    const css = readFileSync(TOKENS, 'utf8').replace(
+      /(\[data-theme='dark'\] \.band-invert \{[^}]*?)--surface:[^;]+;/,
+      '$1',
+    )
+    writeFileSync(path.join(dir, 'tokens.css'), css)
+    const run = runGate(['--tokens', path.join(dir, 'tokens.css')])
+    expect(run.status).toBe(2)
+    expect(run.out).toContain('--surface')
+  })
+
   it('fails the build when light --primary is lightened below AA', () => {
     const dir = makeTemp()
     const tampered = readFileSync(TOKENS, 'utf8').replace(
       '--primary: oklch(0.5113 0.2298',
       '--primary: oklch(0.75 0.1',
     )
-    expect(tampered).not.toContain('oklch(0.5113')
+    // Only the page theme is tampered; the dark page's band keeps its own copy of the value.
+    expect(tampered.split('oklch(0.5113')).toHaveLength(2)
     writeFileSync(path.join(dir, 'tokens.css'), tampered)
     const run = runGate(['--tokens', path.join(dir, 'tokens.css')])
     expect(run.status).toBe(1)

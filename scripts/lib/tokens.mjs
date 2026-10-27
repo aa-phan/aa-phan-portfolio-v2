@@ -32,9 +32,11 @@ const DECLARATION = /(--[A-Za-z0-9-]+)\s*:\s*([^;]+)(?:;|$)/g
 const MIX =
   /^color-mix\(\s*in\s+oklch\s*,\s*var\(\s*(--[A-Za-z0-9-]+)\s*\)\s+([0-9]+(?:\.[0-9]+)?)%\s*,\s*var\(\s*(--[A-Za-z0-9-]+)\s*\)\s*\)$/
 
-// A block whose selector names data-theme dark is the dark theme. Every other block
-// (":root", the light selector, a shared ":root" block) is the light theme. Later
-// declarations win, matching the cascade for equal specificity.
+// A block whose selector names .band-invert is a band block and never touches the page
+// themes: with data-theme dark in the selector it is the band on the dark page, otherwise the
+// band on the light page. Of the rest, a block naming data-theme dark is the dark theme and
+// every other block (":root", the light selector, a shared ":root" block) is the light theme.
+// Later declarations win, matching the cascade for equal specificity.
 export function parseTokensCss(cssText) {
   const css = cssText.replace(/\/\*[\s\S]*?\*\//g, '')
   // BLOCK matches flat rules only. A wrapper such as @media or @layer would make its inner
@@ -49,14 +51,20 @@ export function parseTokensCss(cssText) {
   const light = {}
   /** @type {Record<string, string>} */
   const dark = {}
+  /** @type {Record<string, string>} */
+  const bandOnLight = {}
+  /** @type {Record<string, string>} */
+  const bandOnDark = {}
   for (const block of css.matchAll(BLOCK)) {
     const selector = block[1].trim()
-    const target = /data-theme\s*=\s*['"]?dark['"]?/.test(selector) ? dark : light
+    const isBand = /\.band-invert\b/.test(selector)
+    const isDark = /data-theme\s*=\s*['"]?dark['"]?/.test(selector)
+    const target = isBand ? (isDark ? bandOnDark : bandOnLight) : isDark ? dark : light
     for (const decl of block[2].matchAll(DECLARATION)) {
       target[decl[1]] = decl[2].trim().replace(/\s+/g, ' ')
     }
   }
-  return { light, dark }
+  return { light, dark, bandOnLight, bandOnDark }
 }
 
 // Resolve every COLOR_TOKENS name in one theme's raw map to a color from makeColor.

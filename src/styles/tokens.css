@@ -51,6 +51,50 @@
   --scrim: color-mix(in oklch, var(--text) 40%, transparent);
 }
 
+/*
+ * The one inverted band (D-02): the Projects section wears the opposite theme's complete token
+ * block, never a two-variable swap, because derived tokens resolve where they are declared and
+ * would not follow a swap. Keep these two blocks identical to the page theme blocks above. The
+ * contrast gate audits both as band-on-light and band-on-dark.
+ */
+[data-theme='light'] .band-invert {
+  color-scheme: dark;
+  --text: oklch(0.9696 0.003 290);
+  --background: oklch(0.1491 0.0128 292.39);
+  --primary: oklch(0.6383 0.1988 281.11);
+  --secondary: oklch(0.2274 0.0173 290.04);
+  --accent: oklch(0.7288 0.1457 283.95);
+
+  --surface: color-mix(in oklch, var(--secondary) 60%, var(--background));
+  --muted: color-mix(in oklch, var(--text) 72%, var(--background));
+  --border: color-mix(in oklch, var(--text) 16%, var(--background));
+  --border-strong: color-mix(in oklch, var(--text) 55%, var(--background));
+  --link: color-mix(in oklch, var(--accent) 100%, var(--background));
+  --on-primary: color-mix(in oklch, var(--background) 100%, var(--text));
+  --on-accent: color-mix(in oklch, var(--background) 100%, var(--text));
+  --primary-hover: color-mix(in oklch, var(--primary) 94%, var(--background));
+  --focus-ring: color-mix(in oklch, var(--text) 100%, var(--background));
+}
+
+[data-theme='dark'] .band-invert {
+  color-scheme: light;
+  --text: oklch(0.1491 0.0128 292.39);
+  --background: oklch(0.9696 0.003 290);
+  --primary: oklch(0.5113 0.2298 277.28);
+  --secondary: oklch(0.9355 0.0066 286.27);
+  --accent: oklch(0.5143 0.2729 272.97);
+
+  --surface: color-mix(in oklch, var(--secondary) 30%, var(--background));
+  --muted: color-mix(in oklch, var(--text) 70%, var(--background));
+  --border: color-mix(in oklch, var(--text) 14%, var(--background));
+  --border-strong: color-mix(in oklch, var(--text) 55%, var(--background));
+  --link: color-mix(in oklch, var(--primary) 80%, var(--text));
+  --on-primary: color-mix(in oklch, var(--background) 100%, var(--text));
+  --on-accent: color-mix(in oklch, var(--background) 100%, var(--text));
+  --primary-hover: color-mix(in oklch, var(--primary) 85%, var(--text));
+  --focus-ring: color-mix(in oklch, var(--text) 100%, var(--background));
+}
+
 :root {
   --z-base: 0;
   --z-rail-lift: 10;
