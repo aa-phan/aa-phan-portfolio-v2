@@ -1,10 +1,10 @@
 :root,
 [data-theme='light'] {
   color-scheme: light;
-  --text: oklch(0.119 0.0436 285.36);
-  --background: oklch(0.9889 0.0039 286.33);
+  --text: oklch(0.1491 0.0128 292.39);
+  --background: oklch(0.9696 0.003 290);
   --primary: oklch(0.5113 0.2298 277.28);
-  --secondary: oklch(0.907 0.0475 288.03);
+  --secondary: oklch(0.9355 0.0066 286.27);
   --accent: oklch(0.5143 0.2729 272.97);
 
   --surface: color-mix(in oklch, var(--secondary) 30%, var(--background));
@@ -24,10 +24,10 @@
 
 [data-theme='dark'] {
   color-scheme: dark;
-  --text: oklch(0.9889 0.0039 286.33);
-  --background: oklch(0.119 0.0436 285.36);
+  --text: oklch(0.9696 0.003 290);
+  --background: oklch(0.1491 0.0128 292.39);
   --primary: oklch(0.6383 0.1988 281.11);
-  --secondary: oklch(0.2561 0.0973 279.44);
+  --secondary: oklch(0.2274 0.0173 290.04);
   --accent: oklch(0.7288 0.1457 283.95);
 
   --surface: color-mix(in oklch, var(--secondary) 60%, var(--background));

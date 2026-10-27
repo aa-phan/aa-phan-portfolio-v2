@@ -32,7 +32,7 @@ test.describe('JS disabled', () => {
     await expect(contact).toHaveAttribute('href', '#contact')
 
     const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor)
-    expect(bg).toBe('oklch(0.9889 0.0039 286.33)')
+    expect(bg).toBe('oklch(0.9696 0.003 290)')
   })
 
   test('JS disabled: all seven section anchors exist with headings', async ({ page }) => {

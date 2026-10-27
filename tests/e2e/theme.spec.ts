@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 
-const LIGHT_BG = 'oklch(0.9889 0.0039 286.33)'
-const DARK_BG = 'oklch(0.119 0.0436 285.36)'
+const LIGHT_BG = 'oklch(0.9696 0.003 290)'
+const DARK_BG = 'oklch(0.1491 0.0128 292.39)'
 const BACKGROUNDS = { light: LIGHT_BG, dark: DARK_BG } as const
 const SCHEMES = ['light', 'dark'] as const
 

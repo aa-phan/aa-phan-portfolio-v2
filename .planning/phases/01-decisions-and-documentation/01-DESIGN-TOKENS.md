@@ -2,7 +2,7 @@
 
 Status: Accepted
 
-Chosen palette: A
+Chosen palette: D
 
 Phase 1 plan 01-01 created this file with candidate A and the Contact Me slice of the contrast matrix. Plan 01-04 added candidates B and C, the full 19-pair list for every section, the type pairing per candidate, and, after the user picked candidate A (tuned seed indigo, Inter only), the chosen system below.
 
@@ -50,7 +50,7 @@ Derived tokens (D-06), all `mix()` of roles, defined once for every candidate in
 
 ## Candidate A — Tuned seed indigo
 
-Chosen.
+Chosen in Phase 1; superseded by candidate D in Phase 3 (D-02). Kept here as the recorded fallback.
 
 Continuity with the realtimecolors seed (050315 / fbfbfe / 2f27ce / dedcff / 433bff). Dark roles are authored for dark, not inverted: the text and background swap ends, primary and accent lift to the 5.66:1 and 8.19:1 class on `050315`, and secondary becomes a dark indigo tint. One tune from the seed in light: `--primary` moves from `2f27ce` to `5046e5` (plan 01-01 had first tuned it to `281fb4`; the full 19-pair set forces a second move). Reason: a focus ring must hold 3:1 against the page, a card, the secondary tint and a filled primary button. With `281fb4` no ring color does all four: a mid-tone ring clears the button but gives 2.50:1 on the secondary tint, and a near-black ring gives 1.89:1 on the button. A primary lighter than the seed's (relative luminance about 0.11 to 0.18) opens the band: a near-black ring then reads on the button (3.2:1 or better) and on every light surface, while the white label on the button still holds 4.5:1. Cost: primary `5046e5` and accent `433bff` are now close in light, so color alone never separates them (Pitfall 5); state uses shape and weight too.
 
@@ -265,9 +265,68 @@ Contrast results:
 | --focus-ring on --primary | focus | 3.09 | 3.12 |
 | --focus-ring on --secondary | focus | 13.66 | 11.71 |
 
+## Candidate D — Neutral grounds, indigo as signal
+
+Chosen (Phase 3, D-02). Supersedes candidate A, which stays recorded above.
+
+Palette A's indigo is kept (the owner's pick), but the grounds and tints become hue-matched neutrals. Only `--text`, `--background` and `--secondary` change in both themes; `--primary` and `--accent` are identical to A, and the shared derived block applies unchanged. Hue-matched neutral grounds at hue about 290 keep the derived `--surface` and `--muted` neutral through the `color-mix` hue arc (a first attempt at hue 106 pushed `--surface` toward green and `--muted` toward pink). Indigo is kept only for the filled CTA, inline links, the active nav mark and the theme thumb, never as an ambient wash.
+
+Type pairing: Archivo Variable (`@fontsource-variable/archivo`, `wdth.css`), one family, arrives with plan 03-03. This palette edit does not touch type.
+
+Swatches (hex of the OKLCH roles below, for reference):
+
+| Role | Light | Dark |
+|------|-------|------|
+| --text | #0b0a10 | #f5f5f7 |
+| --background | #f5f5f7 | #0b0a10 |
+| --primary | #5046e5 | #7b75ff |
+| --secondary | #e9e9ee | #1c1b24 |
+| --accent | #433bff | #9d99ff |
+
+```palette D
+light --text oklch(0.1491 0.0128 292.39)
+light --background oklch(0.9696 0.0030 290.00)
+light --primary oklch(0.5113 0.2298 277.28)
+light --secondary oklch(0.9355 0.0066 286.27)
+light --accent oklch(0.5143 0.2729 272.97)
+dark --text oklch(0.9696 0.0030 290.00)
+dark --background oklch(0.1491 0.0128 292.39)
+dark --primary oklch(0.6383 0.1988 281.11)
+dark --secondary oklch(0.2274 0.0173 290.04)
+dark --accent oklch(0.7288 0.1457 283.95)
+```
+
+Derived overrides: none. The shared derived block applies.
+
+Rationale: The concept is one person with two modes, and the page should read as a decision about where color goes, not a lavender template. Neutral hue-matched ground and ink let a single indigo carry the call to action, links and the active mark, which makes each of them findable in the ten-second recruiter pass.
+
+Contrast results:
+
+| Pair | Category | Light | Dark |
+|------|----------|-------|------|
+| --text on --background | text | 18.11 | 18.11 |
+| --text on --surface | text | 17.49 | 16.79 |
+| --text on --secondary | text | 16.29 | 15.66 |
+| --muted on --background | text | 8.62 | 8.52 |
+| --muted on --surface | text | 8.32 | 7.90 |
+| --link on --background | text | 7.76 | 7.92 |
+| --link on --surface | text | 7.50 | 7.34 |
+| --on-primary on --primary | text | 5.76 | 5.47 |
+| --on-primary on --primary-hover | text | 7.17 | 4.86 |
+| --on-accent on --accent | text | 5.83 | 7.92 |
+| --border-strong on --background | ui | 5.09 | 5.01 |
+| --border-strong on --surface | ui | 4.92 | 4.65 |
+| --primary on --background | ui | 5.76 | 5.47 |
+| --accent on --background | ui | 5.83 | 7.92 |
+| --accent on --surface | ui | 5.63 | 7.34 |
+| --focus-ring on --background | focus | 18.11 | 18.11 |
+| --focus-ring on --surface | focus | 17.49 | 16.79 |
+| --focus-ring on --primary | focus | 3.14 | 3.31 |
+| --focus-ring on --secondary | focus | 16.29 | 15.66 |
+
 ## Contrast pairs
 
-Nineteen pairs cover everything the seven sections paint. Every pair is evaluated for every palette in both themes (3 palettes x 2 themes x 19 pairs = 114 checks). The six Contact pairs from plan 01-01 are included (rows tagged `#contact`); USED-BY names the section anchors.
+Nineteen pairs cover everything the seven sections paint. Every pair is evaluated for every palette in both themes (4 palettes x 2 themes x 19 pairs = 152 checks). The six Contact pairs from plan 01-01 are included (rows tagged `#contact`); USED-BY names the section anchors.
 
 ```pairs
 --text on --background text #hero #experience #projects #about #skills #education #contact body copy
@@ -299,71 +358,71 @@ Nineteen pairs cover everything the seven sections paint. Every pair is evaluate
 
 ## Chosen system
 
-Candidate A, tuned seed indigo. Five role tokens plus nine derived tokens per theme; values copied from the checker's TOKEN lines for palette A. Light `--primary` is `5046e5` (the retuned value documented in Candidate A, not the earlier `281fb4`). Where Defined as lists two formulas, the first is light and the second is dark; a single formula applies to both themes. Dark `--link` equals the dark `--accent` value because blending the dark primary toward near-white leaves the sRGB gamut.
+Candidate D, neutral grounds with the tuned seed indigo as signal (Phase 3, D-02; the Phase 1 pick was candidate A, which stays recorded above). Five role tokens plus nine derived tokens per theme; values copied from the checker's TOKEN lines for palette D. Light `--primary` is `5046e5` (the retuned value documented in Candidate A, not the earlier `281fb4`), unchanged in D. Where Defined as lists two formulas, the first is light and the second is dark; a single formula applies to both themes. Dark `--link` equals the dark `--accent` value because blending the dark primary toward near-white leaves the sRGB gamut.
 
 | Token | Light oklch | Light hex | Dark oklch | Dark hex | Defined as |
 |-------|-------------|-----------|------------|----------|------------|
-| `--text` | oklch(0.1190 0.0436 285.36) | #050315 | oklch(0.9889 0.0039 286.33) | #fbfbfe | role |
-| `--background` | oklch(0.9889 0.0039 286.33) | #fbfbfe | oklch(0.1190 0.0436 285.36) | #050315 | role |
+| `--text` | oklch(0.1491 0.0128 292.39) | #0b0a10 | oklch(0.9696 0.0030 290.00) | #f5f5f7 | role |
+| `--background` | oklch(0.9696 0.0030 290.00) | #f5f5f7 | oklch(0.1491 0.0128 292.39) | #0b0a10 | role |
 | `--primary` | oklch(0.5113 0.2298 277.28) | #5046e5 | oklch(0.6383 0.1988 281.11) | #7b75ff | role |
-| `--secondary` | oklch(0.9070 0.0475 288.03) | #dedcff | oklch(0.2561 0.0973 279.44) | #1c1950 | role |
+| `--secondary` | oklch(0.9355 0.0066 286.27) | #e9e9ee | oklch(0.2274 0.0173 290.04) | #1c1b24 | role |
 | `--accent` | oklch(0.5143 0.2729 272.97) | #433bff | oklch(0.7288 0.1457 283.95) | #9d99ff | role |
-| `--surface` | oklch(0.9643 0.0170 286.84) | #f2f2ff | oklch(0.2013 0.0758 281.81) | #130e37 | mix(--secondary 30%, --background) light, mix(--secondary 60%, --background) dark |
-| `--muted` | oklch(0.3800 0.0317 285.65) | #404053 | oklch(0.7453 0.0150 286.06) | #ababb6 | mix(--text 70%, --background) light, mix(--text 72%, --background) dark |
-| `--border` | oklch(0.8671 0.0095 286.19) | #d2d2d9 | oklch(0.2582 0.0372 285.52) | #222135 | mix(--text 14%, --background) light, mix(--text 16%, --background) dark |
-| `--border-strong` | oklch(0.5105 0.0257 285.80) | #646475 | oklch(0.5974 0.0218 285.89) | #7e7e8c | mix(--text 55%, --background) |
-| `--link` | oklch(0.4328 0.1926 278.90) | #4236b6 | oklch(0.7288 0.1457 283.95) | #9d99ff | mix(--primary 80%, --text) light, mix(--accent 100%, --background) dark |
-| `--on-primary` | oklch(0.9889 0.0039 286.33) | #fbfbfe | oklch(0.1190 0.0436 285.36) | #050315 | mix(--background 100%, --text) |
-| `--on-accent` | oklch(0.9889 0.0039 286.33) | #fbfbfe | oklch(0.1190 0.0436 285.36) | #050315 | mix(--background 100%, --text) |
-| `--primary-hover` | oklch(0.4525 0.2019 278.49) | #453ac1 | oklch(0.6071 0.1895 281.37) | #736def | mix(--primary 85%, --text) light, mix(--primary 94%, --background) dark |
-| `--focus-ring` | oklch(0.1190 0.0436 285.36) | #050315 | oklch(0.9889 0.0039 286.33) | #fbfbfe | mix(--text 100%, --background) |
+| `--surface` | oklch(0.9594 0.0041 288.88) | #f1f1f4 | oklch(0.1961 0.0155 290.98) | #15141c | mix(--secondary 30%, --background) light, mix(--secondary 60%, --background) dark |
+| `--muted` | oklch(0.3953 0.0099 291.67) | #46464b | oklch(0.7399 0.0057 290.67) | #aaaaae | mix(--text 70%, --background) light, mix(--text 72%, --background) dark |
+| `--border` | oklch(0.8547 0.0044 290.33) | #cfcfd2 | oklch(0.2804 0.0112 292.01) | #29282e | mix(--text 14%, --background) light, mix(--text 16%, --background) dark |
+| `--border-strong` | oklch(0.5183 0.0084 291.31) | #68686d | oklch(0.6004 0.0074 291.08) | #808084 | mix(--text 55%, --background) |
+| `--link` | oklch(0.4389 0.1864 280.30) | #4638b4 | oklch(0.7288 0.1457 283.95) | #9d99ff | mix(--primary 80%, --text) light, mix(--accent 100%, --background) dark |
+| `--on-primary` | oklch(0.9696 0.0030 290.00) | #f5f5f7 | oklch(0.1491 0.0128 292.39) | #0b0a10 | mix(--background 100%, --text) |
+| `--on-accent` | oklch(0.9696 0.0030 290.00) | #f5f5f7 | oklch(0.1491 0.0128 292.39) | #0b0a10 | mix(--background 100%, --text) |
+| `--primary-hover` | oklch(0.4570 0.1973 279.55) | #493cc0 | oklch(0.6089 0.1876 281.79) | #756dee | mix(--primary 85%, --text) light, mix(--primary 94%, --background) dark |
+| `--focus-ring` | oklch(0.1491 0.0128 292.39) | #0b0a10 | oklch(0.9696 0.0030 290.00) | #f5f5f7 | mix(--text 100%, --background) |
 
 Swapping the palette later means editing only the ten role lines (five light, five dark) and, if a candidate needs it, one derived override line (D-06).
 
 ## Contrast matrix
 
-Standard: WCAG 2.2 AA. 1.4.3 text 4.5:1 (large text 3:1); 1.4.11 non-text contrast and focus indicators 3:1. Rows are copied from `contrast-check.mjs --require-chosen` output for palette A: 19 pairs, light then dark, 38 rows, all PASS. Phase 2 re-checks the real token files against this matrix.
+Standard: WCAG 2.2 AA. 1.4.3 text 4.5:1 (large text 3:1); 1.4.11 non-text contrast and focus indicators 3:1. Rows are copied from `contrast-check.mjs --require-chosen` output for palette D: 19 pairs, light then dark, 38 rows, all PASS. Phase 2 re-checks the real token files against this matrix; the shipped `docs/contrast-matrix.md` is regenerated from them.
 
 | Theme | Foreground | Background | Category | Ratio | Min | Result | Used by |
 |-------|------------|------------|----------|-------|-----|--------|---------|
-| light | --text | --background | text | 19.73 | 4.5 | PASS | #hero #experience #projects #about #skills #education #contact body copy |
-| light | --text | --surface | text | 18.36 | 4.5 | PASS | #projects #contact cards, toast, overlay panel |
-| light | --text | --secondary | text | 15.32 | 4.5 | PASS | #skills #education tinted bands and chips |
-| light | --muted | --background | text | 9.79 | 4.5 | PASS | #experience #education dates, captions, secondary copy |
-| light | --muted | --surface | text | 9.11 | 4.5 | PASS | #projects #about card metadata |
-| light | --link | --background | text | 8.35 | 4.5 | PASS | #about #contact inline links |
-| light | --link | --surface | text | 7.77 | 4.5 | PASS | #projects #contact links in cards and overlay |
-| light | --on-primary | --primary | text | 6.07 | 4.5 | PASS | #hero #contact filled button labels |
-| light | --on-primary | --primary-hover | text | 7.74 | 4.5 | PASS | #hero #contact hovered or pressed button labels |
-| light | --on-accent | --accent | text | 6.15 | 4.5 | PASS | #skills #projects accent chip and active pill labels |
-| light | --border-strong | --background | ui | 5.61 | 3.0 | PASS | #contact control boundaries |
-| light | --border-strong | --surface | ui | 5.22 | 3.0 | PASS | #projects control boundaries on cards |
-| light | --primary | --background | ui | 6.07 | 3.0 | PASS | #hero #contact filled control against page |
-| light | --accent | --background | ui | 6.15 | 3.0 | PASS | #experience #projects scroll-spy and active nav indicator |
-| light | --accent | --surface | ui | 5.72 | 3.0 | PASS | #projects active indicators on cards and pill nav |
-| light | --focus-ring | --background | focus | 19.73 | 3.0 | PASS | #hero #contact focus ring on page |
-| light | --focus-ring | --surface | focus | 18.36 | 3.0 | PASS | #projects #contact focus ring on cards |
-| light | --focus-ring | --primary | focus | 3.25 | 3.0 | PASS | #hero #contact ring adjacent to filled button |
-| light | --focus-ring | --secondary | focus | 15.32 | 3.0 | PASS | #skills #education ring on tinted bands |
-| dark | --text | --background | text | 19.73 | 4.5 | PASS | #hero #experience #projects #about #skills #education #contact body copy |
-| dark | --text | --surface | text | 17.75 | 4.5 | PASS | #projects #contact cards, toast, overlay panel |
-| dark | --text | --secondary | text | 15.59 | 4.5 | PASS | #skills #education tinted bands and chips |
-| dark | --muted | --background | text | 8.96 | 4.5 | PASS | #experience #education dates, captions, secondary copy |
-| dark | --muted | --surface | text | 8.06 | 4.5 | PASS | #projects #about card metadata |
-| dark | --link | --background | text | 8.19 | 4.5 | PASS | #about #contact inline links |
-| dark | --link | --surface | text | 7.36 | 4.5 | PASS | #projects #contact links in cards and overlay |
-| dark | --on-primary | --primary | text | 5.66 | 4.5 | PASS | #hero #contact filled button labels |
-| dark | --on-primary | --primary-hover | text | 5.01 | 4.5 | PASS | #hero #contact hovered or pressed button labels |
-| dark | --on-accent | --accent | text | 8.19 | 4.5 | PASS | #skills #projects accent chip and active pill labels |
-| dark | --border-strong | --background | ui | 5.10 | 3.0 | PASS | #contact control boundaries |
-| dark | --border-strong | --surface | ui | 4.58 | 3.0 | PASS | #projects control boundaries on cards |
-| dark | --primary | --background | ui | 5.66 | 3.0 | PASS | #hero #contact filled control against page |
-| dark | --accent | --background | ui | 8.19 | 3.0 | PASS | #experience #projects scroll-spy and active nav indicator |
-| dark | --accent | --surface | ui | 7.36 | 3.0 | PASS | #projects active indicators on cards and pill nav |
-| dark | --focus-ring | --background | focus | 19.73 | 3.0 | PASS | #hero #contact focus ring on page |
-| dark | --focus-ring | --surface | focus | 17.75 | 3.0 | PASS | #projects #contact focus ring on cards |
-| dark | --focus-ring | --primary | focus | 3.49 | 3.0 | PASS | #hero #contact ring adjacent to filled button |
-| dark | --focus-ring | --secondary | focus | 15.59 | 3.0 | PASS | #skills #education ring on tinted bands |
+| light | --text | --background | text | 18.11 | 4.5 | PASS | #hero #experience #projects #about #skills #education #contact body copy |
+| light | --text | --surface | text | 17.49 | 4.5 | PASS | #projects #contact cards, toast, overlay panel |
+| light | --text | --secondary | text | 16.29 | 4.5 | PASS | #skills #education tinted bands and chips |
+| light | --muted | --background | text | 8.62 | 4.5 | PASS | #experience #education dates, captions, secondary copy |
+| light | --muted | --surface | text | 8.32 | 4.5 | PASS | #projects #about card metadata |
+| light | --link | --background | text | 7.76 | 4.5 | PASS | #about #contact inline links |
+| light | --link | --surface | text | 7.50 | 4.5 | PASS | #projects #contact links in cards and overlay |
+| light | --on-primary | --primary | text | 5.76 | 4.5 | PASS | #hero #contact filled button labels |
+| light | --on-primary | --primary-hover | text | 7.17 | 4.5 | PASS | #hero #contact hovered or pressed button labels |
+| light | --on-accent | --accent | text | 5.83 | 4.5 | PASS | #skills #projects accent chip and active pill labels |
+| light | --border-strong | --background | ui | 5.09 | 3.0 | PASS | #contact control boundaries |
+| light | --border-strong | --surface | ui | 4.92 | 3.0 | PASS | #projects control boundaries on cards |
+| light | --primary | --background | ui | 5.76 | 3.0 | PASS | #hero #contact filled control against page |
+| light | --accent | --background | ui | 5.83 | 3.0 | PASS | #experience #projects scroll-spy and active nav indicator |
+| light | --accent | --surface | ui | 5.63 | 3.0 | PASS | #projects active indicators on cards and pill nav |
+| light | --focus-ring | --background | focus | 18.11 | 3.0 | PASS | #hero #contact focus ring on page |
+| light | --focus-ring | --surface | focus | 17.49 | 3.0 | PASS | #projects #contact focus ring on cards |
+| light | --focus-ring | --primary | focus | 3.14 | 3.0 | PASS | #hero #contact ring adjacent to filled button |
+| light | --focus-ring | --secondary | focus | 16.29 | 3.0 | PASS | #skills #education ring on tinted bands |
+| dark | --text | --background | text | 18.11 | 4.5 | PASS | #hero #experience #projects #about #skills #education #contact body copy |
+| dark | --text | --surface | text | 16.79 | 4.5 | PASS | #projects #contact cards, toast, overlay panel |
+| dark | --text | --secondary | text | 15.66 | 4.5 | PASS | #skills #education tinted bands and chips |
+| dark | --muted | --background | text | 8.52 | 4.5 | PASS | #experience #education dates, captions, secondary copy |
+| dark | --muted | --surface | text | 7.90 | 4.5 | PASS | #projects #about card metadata |
+| dark | --link | --background | text | 7.92 | 4.5 | PASS | #about #contact inline links |
+| dark | --link | --surface | text | 7.34 | 4.5 | PASS | #projects #contact links in cards and overlay |
+| dark | --on-primary | --primary | text | 5.47 | 4.5 | PASS | #hero #contact filled button labels |
+| dark | --on-primary | --primary-hover | text | 4.86 | 4.5 | PASS | #hero #contact hovered or pressed button labels |
+| dark | --on-accent | --accent | text | 7.92 | 4.5 | PASS | #skills #projects accent chip and active pill labels |
+| dark | --border-strong | --background | ui | 5.01 | 3.0 | PASS | #contact control boundaries |
+| dark | --border-strong | --surface | ui | 4.65 | 3.0 | PASS | #projects control boundaries on cards |
+| dark | --primary | --background | ui | 5.47 | 3.0 | PASS | #hero #contact filled control against page |
+| dark | --accent | --background | ui | 7.92 | 3.0 | PASS | #experience #projects scroll-spy and active nav indicator |
+| dark | --accent | --surface | ui | 7.34 | 3.0 | PASS | #projects active indicators on cards and pill nav |
+| dark | --focus-ring | --background | focus | 18.11 | 3.0 | PASS | #hero #contact focus ring on page |
+| dark | --focus-ring | --surface | focus | 16.79 | 3.0 | PASS | #projects #contact focus ring on cards |
+| dark | --focus-ring | --primary | focus | 3.31 | 3.0 | PASS | #hero #contact ring adjacent to filled button |
+| dark | --focus-ring | --secondary | focus | 15.66 | 3.0 | PASS | #skills #education ring on tinted bands |
 
 ## Typography
 
