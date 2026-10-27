@@ -58,6 +58,77 @@ function pdfWithStream(content: string): Buffer {
   ])
 }
 
+interface PdfOptions {
+  /** Text drawn on the page. */
+  text?: string
+  /** Draw the text in two Tj operators, splitting after this many characters. */
+  splitAt?: number
+  /** Flate-compress the content stream. */
+  compressed?: boolean
+  /** A link annotation whose action is a URI. */
+  annotationUri?: string
+  /** Entries of the document Info dictionary, as plain strings. */
+  info?: Record<string, string>
+  /** A raw content stream, used instead of the drawn text. */
+  content?: string
+}
+
+const pdfString = (value: string): string => `(${value.replace(/[\\()]/g, '\\$&')})`
+
+// A well-formed one-page PDF assembled at runtime: catalog, pages, a page with a Helvetica
+// Type1 resource, one content stream, an optional link annotation and Info dictionary, and an
+// xref table whose byte offsets are computed. No committed file holds a phone-shaped literal.
+function makePdf(options: PdfOptions = {}): Buffer {
+  const { text = 'Hello', splitAt, compressed = false, annotationUri, info, content } = options
+  const shown =
+    splitAt === undefined
+      ? `${pdfString(text)} Tj`
+      : `${pdfString(text.slice(0, splitAt))} Tj ${pdfString(text.slice(splitAt))} Tj`
+  const stream = Buffer.from(content ?? `BT /F1 12 Tf 72 700 Td ${shown} ET`, 'latin1')
+  const body = compressed ? zlib.deflateSync(stream) : stream
+  const filter = compressed ? ' /Filter /FlateDecode' : ''
+  const objects: Array<Buffer | string> = [
+    '<< /Type /Catalog /Pages 2 0 R >>',
+    '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
+    `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R${annotationUri === undefined ? '' : ' /Annots [6 0 R]'} >>`,
+    Buffer.concat([
+      Buffer.from(`<< /Length ${body.length}${filter} >>\nstream\n`, 'latin1'),
+      body,
+      Buffer.from('\nendstream', 'latin1'),
+    ]),
+    '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>',
+  ]
+  if (annotationUri !== undefined) {
+    objects.push(
+      `<< /Type /Annot /Subtype /Link /Rect [72 690 200 710] /Border [0 0 0] /A << /S /URI /URI ${pdfString(annotationUri)} >> >>`,
+    )
+  }
+  const infoNumber = info === undefined ? undefined : objects.length + 1
+  if (info !== undefined) {
+    const entries = Object.entries(info).map(([key, value]) => `/${key} ${pdfString(value)}`)
+    objects.push(`<< ${entries.join(' ')} >>`)
+  }
+
+  const parts: Buffer[] = [Buffer.from('%PDF-1.7\n', 'latin1')]
+  const offsets: number[] = []
+  let length = parts[0].length
+  objects.forEach((object, i) => {
+    offsets.push(length)
+    const chunk = Buffer.concat([
+      Buffer.from(`${i + 1} 0 obj\n`, 'latin1'),
+      typeof object === 'string' ? Buffer.from(object, 'latin1') : object,
+      Buffer.from('\nendobj\n', 'latin1'),
+    ])
+    parts.push(chunk)
+    length += chunk.length
+  })
+  const xref = ['xref', `0 ${objects.length + 1}`, '0000000000 65535 f ']
+  for (const offset of offsets) xref.push(`${String(offset).padStart(10, '0')} 00000 n `)
+  const trailer = `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R${infoNumber === undefined ? '' : ` /Info ${infoNumber} 0 R`} >>\nstartxref\n${length}\n%%EOF\n`
+  parts.push(Buffer.from(`${xref.join('\n')}\n${trailer}`, 'latin1'))
+  return Buffer.concat(parts)
+}
+
 afterEach(() => {
   while (tempRoots.length > 0) {
     rmSync(tempRoots.pop() as string, { recursive: true, force: true })
@@ -519,7 +590,11 @@ describe('check-no-phone', () => {
       const root = makeRoot()
       // A move with a three-decimal x and a four-digit y reads like a separated number.
       const coords = `${['123', '456'].join('.')} ${['12', '34'].join('')} m ${['150', '250'].join('.')} ${['3000'].join('')} l S`
-      write(root, 'dist/resume.pdf', pdfWithStream(`${coords}\nBT (Hello) Tj ET`))
+      write(
+        root,
+        'dist/resume.pdf',
+        makePdf({ compressed: true, content: `${coords}\nBT /F1 12 Tf (Hello) Tj ET` }),
+      )
       const run = runGate(script, ['--root', root])
       expect(run.status).toBe(0)
       expect(run.out).toContain('no-phone: OK')
@@ -528,11 +603,7 @@ describe('check-no-phone', () => {
     it('does not flag drawing operands in an uncompressed content stream', () => {
       const root = makeRoot()
       const coords = `${['123', '456'].join('.')} ${['12', '34'].join('')} m ${['150', '250'].join('.')} ${['3000'].join('')} l S`
-      write(
-        root,
-        'dist/resume.pdf',
-        `%PDF-1.4\nstream\n${coords}\nBT (Hello) Tj ET\nendstream\n%%EOF\n`,
-      )
+      write(root, 'dist/resume.pdf', makePdf({ content: `${coords}\nBT /F1 12 Tf (Hello) Tj ET` }))
       expect(runGate(script, ['--root', root]).status).toBe(0)
     })
 
@@ -579,19 +650,16 @@ describe('check-no-phone', () => {
 
     it('passes a PDF whose compressed text holds no phone shape', () => {
       const root = makeRoot()
-      write(root, 'dist/resume.pdf', pdfWithStream('BT (Aaron Phan 2019 2024) Tj ET'))
+      write(root, 'dist/resume.pdf', makePdf({ text: 'Aaron Phan 2019 2024', compressed: true }))
       const run = runGate(script, ['--root', root])
       expect(run.status).toBe(0)
       expect(run.out).toContain('no-phone: OK')
     })
 
     it('flags a contiguous ten-digit run in PDF text but not in xref offsets', () => {
+      // Every well-formed PDF carries ten-digit xref offsets.
       const clean = makeRoot()
-      write(
-        clean,
-        'dist/resume.pdf',
-        `%PDF-1.4\nxref\n0 1\n${['00000', '00015'].join('')} 00000 n\n%%EOF\n`,
-      )
+      write(clean, 'dist/resume.pdf', makePdf({ text: 'Aaron Phan' }))
       expect(runGate(script, ['--root', clean]).status).toBe(0)
 
       const dirty = makeRoot()
@@ -601,8 +669,104 @@ describe('check-no-phone', () => {
 
     it('tolerates a PDF with a stream that is not Flate', () => {
       const root = makeRoot()
-      write(root, 'dist/resume.pdf', '%PDF-1.4\nstream\nnot compressed at all\nendstream\n')
+      write(root, 'dist/resume.pdf', makePdf({ text: 'Aaron Phan', compressed: false }))
       expect(runGate(script, ['--root', root]).status).toBe(0)
+    })
+  })
+
+  // The pdfjs pass: text of every page, link annotations and document metadata.
+  describe('PDF read with pdfjs', () => {
+    const probe = groups(' ', '555', '010', '0123')
+    const noDigits = (out: string) => {
+      for (const digits of ['555', '010', '0123']) expect(out).not.toContain(digits)
+    }
+
+    it('flags a number in page text without printing its digits', () => {
+      const root = makeRoot()
+      write(root, 'dist/resume.pdf', makePdf({ text: `Contact ${probe} today` }))
+      const run = runGate(script, ['--root', root])
+      expect(run.status).toBe(1)
+      expect(run.out).toMatch(/dist\/resume\.pdf page 1 \(/)
+      noDigits(run.out)
+    })
+
+    it('flags the same text inside a FlateDecode stream', () => {
+      const root = makeRoot()
+      write(root, 'dist/resume.pdf', makePdf({ text: `Contact ${probe}`, compressed: true }))
+      const run = runGate(script, ['--root', root])
+      expect(run.status).toBe(1)
+      expect(run.out).toMatch(/dist\/resume\.pdf page 1 \(/)
+      noDigits(run.out)
+    })
+
+    it('flags a number split across two text-show operators', () => {
+      const root = makeRoot()
+      write(root, 'dist/resume.pdf', makePdf({ text: probe, splitAt: 5 }))
+      const run = runGate(script, ['--root', root])
+      expect(run.status).toBe(1)
+      expect(run.out).toMatch(/dist\/resume\.pdf page 1 \(/)
+      noDigits(run.out)
+    })
+
+    it('flags a link annotation that uses the telephone scheme', () => {
+      const root = makeRoot()
+      write(root, 'dist/resume.pdf', makePdf({ annotationUri: ['tel', '+1'].join(':') }))
+      const run = runGate(script, ['--root', root])
+      expect(run.status).toBe(1)
+      expect(run.out).toContain('dist/resume.pdf (link annotation)')
+    })
+
+    it('does not flag mailto and https link annotations', () => {
+      const root = makeRoot()
+      const mail = makePdf({ annotationUri: 'mailto:someone@example.com' })
+      write(root, 'dist/resume.pdf', mail)
+      expect(runGate(script, ['--root', root]).status).toBe(0)
+      write(root, 'dist/resume.pdf', makePdf({ annotationUri: 'https://example.com/' }))
+      expect(runGate(script, ['--root', root]).status).toBe(0)
+    })
+
+    it('flags a number in the Info dictionary and names only the key', () => {
+      const root = makeRoot()
+      write(root, 'dist/resume.pdf', makePdf({ info: { Author: probe } }))
+      const run = runGate(script, ['--root', root])
+      expect(run.status).toBe(1)
+      expect(run.out).toContain('dist/resume.pdf (metadata Author)')
+      noDigits(run.out)
+    })
+
+    it('passes a clean PDF with ordinary text and lists the metadata key names', () => {
+      const root = makeRoot()
+      write(
+        root,
+        'dist/resume.pdf',
+        makePdf({
+          text: 'Aaron Phan, design engineer',
+          info: { Title: 'Resume', Author: 'Aaron' },
+        }),
+      )
+      const run = runGate(script, ['--root', root])
+      expect(run.status).toBe(0)
+      expect(run.out).toContain('no-phone: OK')
+      expect(run.out).toContain('dist/resume.pdf metadata keys: Title, Author')
+      expect(run.out).not.toContain('Aaron,')
+    })
+
+    it('fails closed on a file that starts like a PDF and is garbage', () => {
+      const root = makeRoot()
+      write(root, 'dist/resume.pdf', '%PDF-1.7\nthis is not a pdf at all\n')
+      const run = runGate(script, ['--root', root])
+      expect(run.status).toBe(1)
+      expect(run.out).toContain('dist/resume.pdf could not be read')
+    })
+
+    it('scans every PDF in dist, not only resume.pdf', () => {
+      const root = makeRoot()
+      write(root, 'dist/resume.pdf', makePdf({ text: 'Aaron Phan' }))
+      write(root, 'dist/docs/extra.pdf', makePdf({ text: probe }))
+      const run = runGate(script, ['--root', root])
+      expect(run.status).toBe(1)
+      expect(run.out).toContain('dist/docs/extra.pdf')
+      noDigits(run.out)
     })
   })
 
