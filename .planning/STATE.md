@@ -4,16 +4,16 @@ milestone: v2
 current_phase: 03
 current_phase_name: Content-Complete Site
 status: executing
-stopped_at: Completed 03-05-PLAN.md
-last_updated: "2026-10-27T17:58:38.876Z"
+stopped_at: Completed 03-06-PLAN.md
+last_updated: "2026-10-27T18:08:01.751Z"
 last_activity: 2026-10-27
 last_activity_desc: Phase 03 execution started
-state_head: 7c41eff205e77739ab4b98e255d49f6ac4e2d885
+state_head: 28ccd5f60267d7a1e74b618b0576d42c57ba6ea5
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 35
-  completed_plans: 21
+  completed_plans: 22
   percent: 33
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-10-08)
 ## Current Position
 
 Phase: 03 (Content-Complete Site) — EXECUTING
-Plan: 6 of 19
+Plan: 7 of 19
 Status: Ready to execute
 Last activity: 2026-10-27 — Phase 03 execution started
 
@@ -81,6 +81,7 @@ Progress: [███░░░░░░░] 33%
 | Phase 03 P03 | 25 min | 2 tasks | 12 files |
 | Phase 03 P04 | 7 min | 2 tasks | 9 files |
 | Phase 03 P05 | 8 min | 2 tasks | 13 files |
+| Phase 03 P06 | 30 min | 3 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -124,6 +125,8 @@ Recent decisions affecting current work:
 - [Phase 03]: 03-04: profile omits quote because ABT-03 is none; parity test asserts undefined while inventory says none
 - [Phase 03]: 03-05: import m from motion/react-m (not the motion/react barrel) to keep the motion feature bundle out of the initial chunk; initial JS 113,348 B gz
 - [Phase 03]: 03-05: reduced-motion visitors never load the motion features chunk; toast is static until the chunk loads
+- [Phase 03]: 03-06: hero role line is plain text from first paint; TextReveal stays exported for Phase 5 SEC-04
+- [Phase 03]: 03-06: primary CTA ink flood is CSS-owned (clip-path), hover gated by (hover: hover) with focus-visible and :active equivalents
 
 ### Pending Todos
 
@@ -156,6 +159,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-27T17:58:38.794Z
-Stopped at: Completed 03-05-PLAN.md
+Last session: 2026-10-27T18:08:01.672Z
+Stopped at: Completed 03-06-PLAN.md
 Resume file: None
