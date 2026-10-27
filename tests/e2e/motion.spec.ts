@@ -117,52 +117,15 @@ test('reduced motion: role line is static text with no per-word spans', async ({
   // Give a lazy chunk, had one been requested, time to arrive and replace the paragraph.
   await page.waitForTimeout(500)
 
-  const role = page.locator('#hero p')
+  const role = page.locator('#hero h1 + p')
   await expect(role).toBeVisible()
   await expect(role).toHaveText(ROLE_SENTENCE)
-  await expect(page.locator('#hero p span')).toHaveCount(0)
+  await expect(page.locator('#hero h1 + p span')).toHaveCount(0)
   expect(scripts.filter((p) => !allowed.has(p))).toEqual([])
   await context.close()
 })
 
-test('motion: role line text effect runs and name and CTAs never animate', async ({ browser }) => {
-  const context = await browser.newContext({
-    colorScheme: 'light',
-    reducedMotion: 'no-preference',
-  })
-  const page = await context.newPage()
-
-  const steady = () =>
-    page.evaluate(() =>
-      Array.from(document.querySelectorAll<HTMLElement>('#hero h1, #hero a')).map((el) => ({
-        tag: el.tagName,
-        opacity: getComputedStyle(el).opacity,
-        animations: el.getAnimations({ subtree: true }).length,
-      })),
-    )
-
-  await page.goto('./', { waitUntil: 'domcontentloaded' })
-  const atFirstPaint = await steady()
-  expect(atFirstPaint).toHaveLength(4)
-  for (const item of atFirstPaint) {
-    expect(item.opacity).toBe('1')
-    expect(item.animations).toBe(0)
-  }
-
-  const role = page.locator('#hero p')
-  await expect(page.locator('#hero p span').first()).toBeAttached({ timeout: 2000 })
-  await expect(role).toContainText(ROLE_SENTENCE)
-
-  const afterEffect = await steady()
-  expect(afterEffect).toHaveLength(4)
-  for (const item of afterEffect) {
-    expect(item.opacity).toBe('1')
-    expect(item.animations).toBe(0)
-  }
-  await context.close()
-})
-
-test('motion: role line never flashes visible, then hidden, before it is revealed', async ({
+test('motion: role line is plain text from first paint and name and CTAs never animate', async ({
   browser,
 }) => {
   const context = await browser.newContext({
@@ -170,39 +133,54 @@ test('motion: role line never flashes visible, then hidden, before it is reveale
     reducedMotion: 'no-preference',
   })
   const page = await context.newPage()
-  // Sample the role line's opacity on every frame from the start of the document.
+  // Sample the role line on every frame from the start of the document until 1.5 s after load.
+  // IX-01 is not run in Phase 3: the line must be opaque and span-free in every sampled frame.
   await page.addInitScript(() => {
-    const samples: number[] = []
-    ;(window as unknown as { __roleOpacity: number[] }).__roleOpacity = samples
+    const w = window as unknown as { __role: { opacity: number; spans: number }[]; __done: boolean }
+    w.__role = []
+    w.__done = false
     const tick = () => {
       const el = document.querySelector('#hero p')
-      if (el) samples.push(Number(getComputedStyle(el).opacity))
-      requestAnimationFrame(tick)
+      if (el) {
+        w.__role.push({
+          opacity: Number(getComputedStyle(el).opacity),
+          spans: el.querySelectorAll('span').length,
+        })
+      }
+      if (!w.__done) requestAnimationFrame(tick)
     }
     requestAnimationFrame(tick)
+    window.addEventListener('load', () => setTimeout(() => (w.__done = true), 1500))
   })
 
   await page.goto('./')
-  await expect(page.locator('#hero p span').first()).toBeAttached({ timeout: 2000 })
-  await expect
-    .poll(() => page.evaluate(() => getComputedStyle(document.querySelector('#hero p')!).opacity))
-    .toBe('1')
-  await page.waitForTimeout(500)
+  await page.waitForFunction(() => (window as unknown as { __done: boolean }).__done, undefined, {
+    timeout: 5000,
+  })
 
   const samples = await page.evaluate(
-    () => (window as unknown as { __roleOpacity: number[] }).__roleOpacity,
+    () => (window as unknown as { __role: { opacity: number; spans: number }[] }).__role,
   )
-  expect(samples.length).toBeGreaterThan(0)
-  // Hidden from the first frame it exists, and never dimmer than an earlier frame afterwards.
-  expect(samples[0]).toBe(0)
-  for (let i = 1; i < samples.length; i++) {
-    expect(samples[i], `frame ${i}`).toBeGreaterThanOrEqual(samples[i - 1]!)
+  expect(samples.length).toBeGreaterThan(10)
+  for (const [i, sample] of samples.entries()) {
+    expect(sample, `frame ${i}`).toEqual({ opacity: 1, spans: 0 })
   }
-  expect(samples.at(-1)).toBe(1)
+
+  const steady = await page.evaluate(() =>
+    Array.from(document.querySelectorAll<HTMLElement>('#hero h1, #hero a')).map((el) => ({
+      opacity: getComputedStyle(el).opacity,
+      animations: el.getAnimations({ subtree: true }).length,
+    })),
+  )
+  expect(steady).toHaveLength(3)
+  for (const item of steady) {
+    expect(item.opacity).toBe('1')
+    expect(item.animations).toBe(0)
+  }
   await context.close()
 })
 
-test('motion: role line stays readable when the effect chunk fails to load', async ({
+test('motion: role line stays readable when lazy chunks fail to load', async ({
   browser,
   baseURL,
 }) => {
@@ -226,36 +204,9 @@ test('motion: role line stays readable when the effect chunk fails to load', asy
 
   expect(aborted).toBeGreaterThan(0)
   await expect(page.locator('#hero h1')).toBeVisible()
-  await expect(page.locator('#hero p')).toHaveText(ROLE_SENTENCE)
-  await expect(page.locator('#hero p')).toBeVisible()
+  await expect(page.locator('#hero h1 + p')).toHaveText(ROLE_SENTENCE)
+  await expect(page.locator('#hero h1 + p')).toBeVisible()
   await expect(page.getByRole('button', { name: 'Dark theme' })).toBeVisible()
-  await context.close()
-})
-
-test('motion: role line fades in on its own when the entry script never loads', async ({
-  browser,
-}) => {
-  const context = await browser.newContext({
-    colorScheme: 'light',
-    reducedMotion: 'no-preference',
-  })
-  const page = await context.newPage()
-  let aborted = 0
-  await page.route('**/assets/*.js', (route) => {
-    aborted += 1
-    return route.abort()
-  })
-
-  await page.goto('./', { waitUntil: 'domcontentloaded' })
-  const opacity = () =>
-    page.evaluate(() => getComputedStyle(document.querySelector('#hero p')!).opacity)
-
-  // Computed opacity, not toBeVisible(): Playwright counts an element at opacity 0 as visible.
-  expect(await opacity()).toBe('0')
-  // The static shell's own 3 s animation is the only thing that can reveal it.
-  await expect.poll(opacity, { timeout: 6000 }).toBe('1')
-  expect(aborted).toBeGreaterThan(0)
-  await expect(page.locator('#hero p')).toHaveText(ROLE_SENTENCE)
   await context.close()
 })
 
@@ -269,10 +220,9 @@ test('reduced motion: every hero element and section heading is visible with no 
 
   const content = [
     page.locator('#hero h1'),
-    page.locator('#hero p'),
+    page.locator('#hero h1 + p'),
     page.getByRole('link', { name: 'Download resume' }),
     page.getByRole('link', { name: 'Copy email' }),
-    page.getByRole('link', { name: 'Contact', exact: true }),
     ...['experience', 'projects', 'about', 'skills', 'education', 'contact'].map((id) =>
       page.locator(`#${id} h2`),
     ),

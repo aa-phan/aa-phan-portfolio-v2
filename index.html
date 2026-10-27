@@ -26,32 +26,45 @@
   <body class="bg-background font-sans text-text antialiased">
     <div id="root">
       <main id="main">
-        <section id="hero" aria-labelledby="hero-heading" class="pt-24 pb-16">
-          <div class="mx-auto max-w-5xl px-5 md:px-8">
-            <h1 id="hero-heading" class="text-mega">Aaron Phan</h1>
-            <p class="reveal-pending mt-4 max-w-2xl text-l text-muted">
+        <section
+          id="hero"
+          aria-labelledby="hero-heading"
+          class="py-8 md:flex md:min-h-[calc(100svh-64px)] md:py-10"
+        >
+          <div
+            class="poster-grid mx-auto w-full max-w-[1680px] px-[clamp(1rem,2vw,2rem)] md:grid-rows-[auto_1fr_auto]"
+          >
+            <h1
+              id="hero-heading"
+              class="col-span-full -ms-[0.055em] text-mega text-balance md:col-span-9 md:row-start-1"
+            >
+              <span class="block">Aaron</span> <span class="block">Phan</span>
+            </h1>
+            <p class="col-span-full text-l text-text md:col-span-6 md:row-start-2 md:self-center">
               Software engineer building cloud-native backends in Go.
             </p>
-            <div class="mt-8 flex flex-col gap-3 md:flex-row md:items-center">
+            <div
+              class="col-span-full flex flex-col gap-4 md:col-span-4 md:col-start-9 md:row-start-2 md:self-center"
+            >
               <a
                 href="%BASE_URL%resume.pdf"
                 download
-                class="inline-flex min-h-11 items-center justify-center rounded-pill bg-primary px-6 font-medium text-on-primary hover:bg-primary-hover"
+                class="inline-flex min-h-11 items-center justify-center rounded-pill bg-primary px-6 text-s font-medium text-on-primary hover:bg-primary-hover md:min-w-[200px]"
               >
                 Download resume
               </a>
               <a
                 href="mailto:aaron.phan240@gmail.com"
-                class="inline-flex min-h-11 items-center justify-center rounded-pill border border-border-strong px-6 font-medium text-text hover:bg-surface"
+                class="inline-flex min-h-11 items-center justify-center rounded-pill border border-border-strong px-6 text-s font-medium text-text hover:bg-surface md:min-w-[200px]"
               >
                 Copy email
               </a>
-              <a
-                href="#contact"
-                class="inline-flex min-h-11 items-center px-2 font-medium text-link underline underline-offset-4"
-              >
-                Contact
-              </a>
+            </div>
+            <div
+              class="col-span-full flex flex-col gap-1 text-s text-muted tabular-nums md:row-start-3 md:flex-row md:justify-between"
+            >
+              <p>Graduating December 2026, UT Austin ECE</p>
+              <p>Last role: Capital One, summer 2026</p>
             </div>
           </div>
         </section>
@@ -60,7 +73,7 @@
           aria-labelledby="experience-heading"
           class="min-h-[40svh] scroll-mt-6 py-16"
         >
-          <div class="mx-auto max-w-5xl px-5 md:px-8">
+          <div class="mx-auto max-w-[1680px] px-[clamp(1rem,2vw,2rem)]">
             <h2 id="experience-heading" class="text-xl">Experience</h2>
           </div>
         </section>
@@ -69,12 +82,12 @@
           aria-labelledby="projects-heading"
           class="min-h-[40svh] scroll-mt-6 py-16"
         >
-          <div class="mx-auto max-w-5xl px-5 md:px-8">
+          <div class="mx-auto max-w-[1680px] px-[clamp(1rem,2vw,2rem)]">
             <h2 id="projects-heading" class="text-xl">Projects</h2>
           </div>
         </section>
         <section id="about" aria-labelledby="about-heading" class="min-h-[40svh] scroll-mt-6 py-16">
-          <div class="mx-auto max-w-5xl px-5 md:px-8">
+          <div class="mx-auto max-w-[1680px] px-[clamp(1rem,2vw,2rem)]">
             <h2 id="about-heading" class="text-xl">About Me</h2>
           </div>
         </section>
@@ -83,7 +96,7 @@
           aria-labelledby="skills-heading"
           class="min-h-[40svh] scroll-mt-6 py-16"
         >
-          <div class="mx-auto max-w-5xl px-5 md:px-8">
+          <div class="mx-auto max-w-[1680px] px-[clamp(1rem,2vw,2rem)]">
             <h2 id="skills-heading" class="text-xl">Skills</h2>
           </div>
         </section>
@@ -92,7 +105,7 @@
           aria-labelledby="education-heading"
           class="min-h-[40svh] scroll-mt-6 py-16"
         >
-          <div class="mx-auto max-w-5xl px-5 md:px-8">
+          <div class="mx-auto max-w-[1680px] px-[clamp(1rem,2vw,2rem)]">
             <h2 id="education-heading" class="text-xl">Education</h2>
           </div>
         </section>
@@ -101,7 +114,7 @@
           aria-labelledby="contact-heading"
           class="min-h-[40svh] scroll-mt-6 py-16"
         >
-          <div class="mx-auto max-w-5xl px-5 md:px-8">
+          <div class="mx-auto max-w-[1680px] px-[clamp(1rem,2vw,2rem)]">
             <h2 id="contact-heading" class="text-xl">Contact Me</h2>
           </div>
         </section>

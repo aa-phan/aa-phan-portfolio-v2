@@ -16,6 +16,6 @@ describe('layout class merging', () => {
     const { container } = render(<Container className="max-w-3xl">hi</Container>)
     const classes = container.firstElementChild!.className.split(/\s+/)
     expect(classes).toContain('max-w-3xl')
-    expect(classes).not.toContain('max-w-5xl')
+    expect(classes).not.toContain('max-w-[1680px]')
   })
 })

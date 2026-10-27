@@ -1,0 +1,16 @@
+/*
+ * Poster grid (D-04): four columns with a 16 px gap on phones, twelve columns with the fluid
+ * gutter from 768 px. The page Container supplies the 1680 px frame and the outer margin.
+ */
+.poster-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .poster-grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: clamp(1rem, 2vw, 2rem);
+  }
+}

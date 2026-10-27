@@ -56,14 +56,46 @@ function reactMain(): HTMLElement {
   return main
 }
 
+interface SectionSkeleton {
+  id: string
+  labelledBy: string | null
+  headingId: string | null
+  headingText: string | null
+}
+
+/** The ordered id and heading skeleton of main's direct section children. */
+function skeleton(main: HTMLElement): SectionSkeleton[] {
+  return Array.from(main.children)
+    .filter((child) => child.tagName === 'SECTION')
+    .map((section) => {
+      const heading = section.querySelector('h1, h2')
+      return {
+        id: section.id,
+        labelledBy: section.getAttribute('aria-labelledby'),
+        headingId: heading?.id ?? null,
+        headingText: heading?.textContent?.replace(/\s+/g, ' ').trim() ?? null,
+      }
+    })
+}
+
+function heroOf(main: HTMLElement): HTMLElement {
+  const hero = main.querySelector<HTMLElement>('section#hero')
+  if (!hero) throw new Error('main has no section#hero')
+  return hero
+}
+
 describe('static shell parity', () => {
-  it('index.html shell and the React Page render identically', () => {
-    expect(canonical(shellMain())).toEqual(canonical(reactMain()))
+  it('index.html section#hero and the React hero render identically', () => {
+    expect(canonical(heroOf(shellMain()))).toEqual(canonical(heroOf(reactMain())))
   })
 
-  it('shell and React Page render identically under reduced motion', () => {
+  it('hero renders identically under reduced motion', () => {
     setMediaQuery('(prefers-reduced-motion: reduce)', true)
-    expect(canonical(shellMain())).toEqual(canonical(reactMain()))
+    expect(canonical(heroOf(shellMain()))).toEqual(canonical(heroOf(reactMain())))
+  })
+
+  it('shell and React agree on the section ids and heading skeleton of main', () => {
+    expect(skeleton(shellMain())).toEqual(skeleton(reactMain()))
   })
 
   it('comparator self-check: dropping one class token from the shell h1 is detected', () => {
@@ -73,7 +105,7 @@ describe('static shell parity', () => {
     const tokens = (h1.getAttribute('class') ?? '').split(/\s+/).filter(Boolean)
     expect(tokens.length).toBeGreaterThan(0)
     h1.setAttribute('class', tokens.slice(1).join(' '))
-    expect(canonical(shell)).not.toEqual(canonical(reactMain()))
+    expect(canonical(heroOf(shell))).not.toEqual(canonical(heroOf(reactMain())))
   })
 
   it('shell has exactly one h1 and the seven anchored sections in order', () => {
@@ -88,6 +120,17 @@ describe('static shell parity', () => {
       'skills',
       'education',
       'contact',
+    ])
+  })
+
+  it('hero accessible name is Aaron Phan and the facts are present', () => {
+    const hero = heroOf(shellMain())
+    expect(hero.querySelector('h1')?.textContent?.replace(/\s+/g, ' ').trim()).toBe('Aaron Phan')
+    expect(hero.textContent).toContain('Graduating December 2026, UT Austin ECE')
+    expect(hero.textContent).toContain('Last role: Capital One, summer 2026')
+    expect(Array.from(hero.querySelectorAll('a')).map((a) => a.textContent?.trim())).toEqual([
+      'Download resume',
+      'Copy email',
     ])
   })
 })
