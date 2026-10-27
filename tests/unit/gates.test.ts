@@ -152,6 +152,70 @@ describe('check-colors', () => {
     expect(run.out).toContain('text-red-500')
   })
 
+  it.each([
+    ['border-t-red-500'],
+    ['border-x-blue-500'],
+    ['divide-y-red-500'],
+    ['ring-offset-white'],
+    ['placeholder-gray-400'],
+    ['inset-ring-red-500'],
+    ['md:hover:border-b-black'],
+    ['bg-[red]'],
+    ['text-[color:tomato]'],
+    ['ring-[Navy]'],
+  ])('flags the directional, prefixed or arbitrary utility %s', (utility) => {
+    const root = makeRoot()
+    write(root, 'src/Bad.tsx', `export const B = () => <div className="p-2 ${utility}" />\n`)
+    const run = runGate(script, ['--root', root])
+    expect(run.status).toBe(1)
+    expect(run.out).toContain('src/Bad.tsx:1')
+    expect(run.out).toContain(utility.replace(/^md:hover:/, ''))
+  })
+
+  it.each([
+    ['a style object', 'src/Bad.tsx', "export const s = { color: 'red' }\n"],
+    ['a camelCase border', 'src/Bad.tsx', "export const s = { border: '1px solid tomato' }\n"],
+    ['an svg attribute', 'src/Bad.tsx', 'export const B = () => <path fill="teal" />\n'],
+    ['a CSS property', 'src/styles/extra.css', '.a {\n  background-color: rebeccapurple;\n}\n'],
+  ])('flags a raw named color in %s', (_name, file, content) => {
+    const root = makeRoot()
+    write(root, file, content)
+    const run = runGate(script, ['--root', root])
+    expect(run.status).toBe(1)
+    expect(run.out).toContain('raw color')
+  })
+
+  it('scans the root index.html shell', () => {
+    const root = makeRoot()
+    write(root, 'src/Good.tsx', 'export const G = 1\n')
+    write(root, 'index.html', '<p class="mt-4 bg-white">hi</p>\n')
+    const run = runGate(script, ['--root', root])
+    expect(run.status).toBe(1)
+    expect(run.out).toContain('index.html:1')
+    expect(run.out).toContain('bg-white')
+  })
+
+  it('passes themable keywords, var() forms and token utilities that share a prefix', () => {
+    const root = makeRoot()
+    write(
+      root,
+      'src/Good.tsx',
+      [
+        'export const G = () => (',
+        '  <div',
+        '    className="bg-[transparent] text-[currentColor] bg-[var(--surface)] border-t-primary ring-offset-background inset-ring-border"',
+        "    style={{ color: 'inherit', fill: 'none', border: '1px solid var(--border)' }}",
+        '  />',
+        ')',
+        '',
+      ].join('\n'),
+    )
+    write(root, 'index.html', '<p class="mt-4 text-muted">hi</p>\n')
+    const run = runGate(script, ['--root', root])
+    expect(run.out).toContain('colors: OK')
+    expect(run.status).toBe(0)
+  })
+
   it('flags a three-digit hex in CSS', () => {
     const root = makeRoot()
     write(root, 'src/styles/extra.css', '.a {\n  color: #f00;\n}\n')
