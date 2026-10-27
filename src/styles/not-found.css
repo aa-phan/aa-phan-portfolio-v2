@@ -1,2 +1,11 @@
 @import '@fontsource-variable/archivo/wdth.css';
 @import './index.css';
+
+/*
+ * The stuck glyph (D-01): the A by day and the V by night sit edge-on, a thin static sliver, as
+ * if the flip stopped halfway. It needs its own box to take a 3D transform. No animation.
+ */
+.wordmark-glyph {
+  display: inline-block;
+  transform: perspective(600px) rotateX(84deg);
+}

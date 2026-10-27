@@ -116,3 +116,30 @@ describe('inline theme-init script in index.html', () => {
     }
   })
 })
+
+describe('inline theme-init script in 404.html (second HTML entry)', () => {
+  const notFound = new DOMParser().parseFromString(
+    readFileSync(path.resolve(import.meta.dirname, '../../404.html'), 'utf8'),
+    'text/html',
+  )
+  const notFoundScripts = [...notFound.querySelectorAll('script:not([src])')]
+
+  it('is exactly one classic inline script in the head', () => {
+    expect(notFoundScripts).toHaveLength(1)
+    expect(notFoundScripts[0]!.hasAttribute('type')).toBe(false)
+    expect(notFoundScripts[0]!.parentElement).toBe(notFound.head)
+    // No module script and no external script: the page ships no JavaScript beyond this one.
+    expect(notFound.querySelectorAll('script[src], script[type="module"]')).toHaveLength(0)
+  })
+
+  it('is byte-identical to the one in index.html', () => {
+    expect(notFoundScripts[0]!.textContent).toBe(scripts[0]!.textContent)
+  })
+
+  it('the identity check reports a one-character change as different', () => {
+    const original = scripts[0]!.textContent ?? ''
+    const altered = original.replace("'dark'", "'darl'")
+    expect(altered).not.toBe(original)
+    expect(altered).not.toBe(notFoundScripts[0]!.textContent)
+  })
+})
