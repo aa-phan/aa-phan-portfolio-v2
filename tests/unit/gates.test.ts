@@ -621,3 +621,97 @@ describe('check-no-phone', () => {
     expect(run.status).toBe(2)
   })
 })
+
+describe('check-images', () => {
+  const script = 'check-images.mjs'
+
+  // Tiny stand-ins: the gate reads extensions and bytes, never decodes an image.
+  const clean = Buffer.from('RIFF....WEBPVP8 clean-pixels')
+  const withMarker = (marker: string) => Buffer.from(`RIFF....WEBPVP8 ${marker} payload`)
+
+  // A built page that references one image by its hashed name.
+  function cleanDist(root: string): void {
+    write(root, 'dist/index.html', '<script type="module" src="/assets/index-abc.js"></script>\n')
+    write(root, 'dist/assets/index-abc.js', 'const logo="/assets/logo-1a2b.avif 40w"\n')
+    write(root, 'dist/assets/logo-1a2b.avif', clean)
+  }
+
+  it('passes a clean fixture with check-images: OK', () => {
+    const root = makeRoot()
+    cleanDist(root)
+    write(root, 'src/assets/images/logo.png', 'png-bytes')
+    write(root, 'src/content/images.ts', "import logo from '@/assets/images/logo.png?w=40'\n")
+    const run = runGate(script, ['--root', root])
+    expect(run.status).toBe(0)
+    expect(run.out).toContain('check-images: OK')
+  })
+
+  it('exits 2 when dist is missing', () => {
+    expect(runGate(script, ['--root', makeRoot()]).status).toBe(2)
+  })
+
+  it('flags a .png in dist and accepts .avif and .webp', () => {
+    const root = makeRoot()
+    cleanDist(root)
+    write(root, 'dist/assets/extra.webp', clean)
+    write(root, 'dist/assets/index-abc.js', 'a="logo-1a2b.avif extra.webp"\n')
+    expect(runGate(script, ['--root', root]).status).toBe(0)
+
+    write(root, 'dist/assets/photo-9.png', clean)
+    write(root, 'dist/assets/index-abc.js', 'a="logo-1a2b.avif extra.webp photo-9.png"\n')
+    const run = runGate(script, ['--root', root])
+    expect(run.status).toBe(1)
+    expect(run.out).toContain('photo-9.png')
+  })
+
+  it.each(['Exif', 'EXIF', 'x:xmpmeta'])('flags a %s marker and names the file only', (marker) => {
+    const root = makeRoot()
+    cleanDist(root)
+    write(root, 'dist/assets/logo-1a2b.avif', withMarker(marker))
+    const run = runGate(script, ['--root', root])
+    expect(run.status).toBe(1)
+    expect(run.out).toContain('logo-1a2b.avif')
+    expect(run.out).not.toContain(marker)
+  })
+
+  it('flags an image in dist that no page, script or stylesheet references', () => {
+    const root = makeRoot()
+    cleanDist(root)
+    write(root, 'dist/assets/orphan-77.webp', clean)
+    const run = runGate(script, ['--root', root])
+    expect(run.status).toBe(1)
+    expect(run.out).toContain('orphan-77.webp')
+  })
+
+  it('accepts an image referenced only from a stylesheet', () => {
+    const root = makeRoot()
+    cleanDist(root)
+    write(root, 'dist/assets/bg-5.webp', clean)
+    write(root, 'dist/assets/index-abc.css', '.x{background:url(/assets/bg-5.webp)}\n')
+    expect(runGate(script, ['--root', root]).status).toBe(0)
+  })
+
+  it('flags a source image that no src file imports, and accepts several widths of one import', () => {
+    const root = makeRoot()
+    cleanDist(root)
+    write(root, 'src/assets/images/used.png', 'png-bytes')
+    write(root, 'src/content/images.ts', "import a from '@/assets/images/used.png?w=40;60'\n")
+    expect(runGate(script, ['--root', root]).status).toBe(0)
+
+    write(root, 'src/assets/images/unused.jpg', 'jpg-bytes')
+    const run = runGate(script, ['--root', root])
+    expect(run.status).toBe(1)
+    expect(run.out).toContain('unused.jpg')
+  })
+
+  it('flags a raster image under public', () => {
+    const root = makeRoot()
+    cleanDist(root)
+    write(root, 'public/favicon.svg', '<svg/>')
+    expect(runGate(script, ['--root', root]).status).toBe(0)
+    write(root, 'public/hero.jpg', 'jpg-bytes')
+    const run = runGate(script, ['--root', root])
+    expect(run.status).toBe(1)
+    expect(run.out).toContain('hero.jpg')
+  })
+})

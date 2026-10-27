@@ -211,12 +211,13 @@ GitHub Actions builds the site and publishes it to GitHub Pages. The Vite base c
 | Build | `vite build` | The Vite build errors |
 | Initial JS budget | `scripts/check-js-budget.mjs` | The module script and modulepreloads exceed 150 kB gzipped |
 | Phone-number check | `scripts/check-no-phone.mjs` over the built site | A served file holds a phone-shaped string or a tel: link |
+| Image check | `scripts/check-images.mjs` over dist, public and src | A shipped raster is not AVIF or WebP, carries Exif or XMP, or is unreferenced, or a source image is not imported |
 | Token contrast test | Lands with the contrast gate | Any text, UI or focus pair is below AA in either theme |
 | Smoke tests | Playwright in CI | The hero is missing with JavaScript off, the theme flashes, or content is hidden or a transform animation runs with reduced motion emulated |
 | axe | Later gate | Serious or critical violations in light or dark |
 | Mobile Lighthouse | Later gate | Targets set in the scaffold milestone are missed |
 
-`npm run verify` chains the first nine rows in that order, and both CI workflows call it.
+`npm run verify` chains the first ten rows in that order, and both CI workflows call it.
 
 ## Stack
 
