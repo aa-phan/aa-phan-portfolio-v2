@@ -4,7 +4,12 @@ import os from 'node:os'
 import path from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { contrast } from '../../scripts/lib/color.mjs'
-import { COLOR_TOKENS, parseTokensCss, resolveTheme } from '../../scripts/lib/tokens.mjs'
+import {
+  BAND_ONLY_TOKENS,
+  COLOR_TOKENS,
+  parseTokensCss,
+  resolveTheme,
+} from '../../scripts/lib/tokens.mjs'
 
 const ROOT = path.resolve(import.meta.dirname, '../..')
 const TOKENS = path.join(ROOT, 'src/styles/tokens.css')
@@ -16,9 +21,12 @@ type ThemeName = 'light' | 'dark'
 const raw = parseTokensCss(readFileSync(TOKENS, 'utf8'))
 const themes = { light: resolveTheme(raw.light), dark: resolveTheme(raw.dark) }
 const bandThemes = {
-  bandOnLight: resolveTheme(raw.bandOnLight),
-  bandOnDark: resolveTheme(raw.bandOnDark),
+  bandOnLight: resolveTheme(raw.bandOnLight, { band: true }),
+  bandOnDark: resolveTheme(raw.bandOnDark, { band: true }),
 }
+// The fourteen page tokens: every color token except the band-only sleeve grounds.
+const PAGE_TOKENS: string[] = COLOR_TOKENS.filter((t: string) => !BAND_ONLY_TOKENS.includes(t))
+const SLEEVES = ['--sleeve-personal', '--sleeve-employer', '--sleeve-hackathon', '--sleeve-course']
 
 // The chosen system: five role tokens, then the nine derived tokens, as hex.
 const HEX: Record<string, { light: string; dark: string }> = {
@@ -98,10 +106,16 @@ afterEach(() => {
 })
 
 describe('palette D in src/styles/tokens.css', () => {
-  it('resolves exactly the fourteen color tokens in both themes', () => {
-    expect(Object.keys(HEX)).toEqual(COLOR_TOKENS)
-    expect(Object.keys(themes.light)).toEqual(COLOR_TOKENS)
-    expect(Object.keys(themes.dark)).toEqual(COLOR_TOKENS)
+  it('resolves exactly the fourteen page color tokens in both themes', () => {
+    expect(Object.keys(HEX)).toEqual(PAGE_TOKENS)
+    expect(Object.keys(themes.light)).toEqual(PAGE_TOKENS)
+    expect(Object.keys(themes.dark)).toEqual(PAGE_TOKENS)
+  })
+
+  it('lists eighteen color tokens, the last four being the band-only sleeve grounds', () => {
+    expect(COLOR_TOKENS).toHaveLength(18)
+    expect(BAND_ONLY_TOKENS).toEqual(SLEEVES)
+    expect(COLOR_TOKENS.slice(14)).toEqual(SLEEVES)
   })
 
   it('delivers the five role values as the swatch hexes', () => {
@@ -112,7 +126,7 @@ describe('palette D in src/styles/tokens.css', () => {
   })
 
   it('resolves the derived values to the chosen-system hexes', () => {
-    for (const token of COLOR_TOKENS.slice(5)) {
+    for (const token of PAGE_TOKENS.slice(5)) {
       expect(themes.light[token].hex, `light ${token}`).toBe(HEX[token].light)
       expect(themes.dark[token].hex, `dark ${token}`).toBe(HEX[token].dark)
     }
@@ -120,7 +134,7 @@ describe('palette D in src/styles/tokens.css', () => {
 
   it('keeps every color inside the sRGB gamut', () => {
     for (const theme of ['light', 'dark'] as const) {
-      for (const token of COLOR_TOKENS) {
+      for (const token of PAGE_TOKENS) {
         expect(themes[theme][token].inGamut, `${theme} ${token}`).toBe(true)
       }
     }
@@ -199,13 +213,48 @@ describe('parseTokensCss and resolveTheme', () => {
 
 describe('inverted band in src/styles/tokens.css', () => {
   it('gives the band the opposite theme complete token block', () => {
-    for (const token of COLOR_TOKENS) {
+    for (const token of PAGE_TOKENS) {
       expect(bandThemes.bandOnLight[token].hex, `band on light ${token}`).toBe(
         themes.dark[token].hex,
       )
       expect(bandThemes.bandOnDark[token].hex, `band on dark ${token}`).toBe(
         themes.light[token].hex,
       )
+    }
+  })
+
+  it('resolves the sleeve grounds only for a band', () => {
+    expect(Object.keys(bandThemes.bandOnLight)).toEqual(COLOR_TOKENS)
+    expect(Object.keys(bandThemes.bandOnDark)).toEqual(COLOR_TOKENS)
+    for (const token of SLEEVES) {
+      expect(themes.light, token).not.toHaveProperty(token)
+      expect(raw.light, token).not.toHaveProperty(token)
+      expect(raw.dark, token).not.toHaveProperty(token)
+    }
+    expect(() => resolveTheme(raw.light, { band: true })).toThrow('--sleeve-personal')
+  })
+
+  it('derives each sleeve ground from --text, --secondary and --background only', () => {
+    for (const map of [raw.bandOnLight, raw.bandOnDark]) {
+      for (const token of SLEEVES) {
+        const refs = [...map[token].matchAll(/var\((--[a-z-]+)\)/g)].map((m) => m[1])
+        expect(refs.length, token).toBe(2)
+        for (const ref of refs) {
+          expect(['--text', '--secondary', '--background'], `${token} -> ${ref}`).toContain(ref)
+        }
+        expect(map[token]).not.toMatch(/primary|accent|oklch\(/)
+      }
+    }
+  })
+
+  it('keeps the four sleeve grounds visibly distinct from each other and from the band', () => {
+    for (const band of [bandThemes.bandOnLight, bandThemes.bandOnDark]) {
+      const lightness = [...SLEEVES, '--background'].map((t) => band[t].L)
+      for (let a = 0; a < lightness.length; a++) {
+        for (let b = a + 1; b < lightness.length; b++) {
+          expect(Math.abs(lightness[a] - lightness[b])).toBeGreaterThan(0.03)
+        }
+      }
     }
   })
 
@@ -230,6 +279,67 @@ describe('check-contrast gate', () => {
     expect(run.out).toMatch(/^band-on-light --muted on --background text .* FAIL/m)
     expect(run.out).toMatch(/^band-on-dark --muted on --background text .* PASS/m)
     expect(run.out.trimEnd().split('\n').at(-1)).toMatch(/^RESULT: FAIL/)
+  })
+
+  it('fails when a sleeve ground is mixed so --text on it falls below AA', () => {
+    const dir = makeTemp()
+    const css = readFileSync(TOKENS, 'utf8')
+    const block = /(\[data-theme='dark'\] \.band-invert \{[^}]*?--sleeve-employer:)[^;]+;/
+    expect(css).toMatch(block)
+    writeFileSync(
+      path.join(dir, 'tokens.css'),
+      css.replace(block, '$1 color-mix(in oklch, var(--text) 70%, var(--background));'),
+    )
+    const run = runGate(['--tokens', path.join(dir, 'tokens.css')])
+    expect(run.status).toBe(1)
+    expect(run.out).toMatch(/^band-on-dark --text on --sleeve-employer text .* FAIL/m)
+    expect(run.out.trimEnd().split('\n').at(-1)).toMatch(/^RESULT: FAIL/)
+  })
+
+  it('evaluates a pair with a themes field only in those themes', () => {
+    const dir = makeTemp()
+    const pairs = path.join(dir, 'pairs.json')
+    writeFileSync(
+      pairs,
+      JSON.stringify([
+        {
+          fg: '--text',
+          bg: '--sleeve-personal',
+          category: 'text',
+          usedBy: 'test',
+          themes: ['band-on-light'],
+        },
+        { fg: '--text', bg: '--background', category: 'text', usedBy: 'test' },
+      ]),
+    )
+    const run = runGate(['--pairs', pairs])
+    expect(run.status).toBe(0)
+    expect(run.out).toMatch(/^band-on-light --text on --sleeve-personal text /m)
+    expect(run.out).not.toMatch(/^(light|dark|band-on-dark) --text on --sleeve-personal/m)
+    expect(run.out.trimEnd().split('\n').at(-1)).toBe('RESULT: PASS checks=5')
+  })
+
+  it.each([
+    ['a band-only token without a themes field', { bg: '--sleeve-course' }, 'band-only'],
+    [
+      'a band-only token in a page theme',
+      { bg: '--sleeve-course', themes: ['band-on-dark', 'dark'] },
+      'band-only',
+    ],
+    ['an unknown theme name', { themes: ['sepia'] }, 'unknown theme "sepia"'],
+    ['an empty themes array', { themes: [] }, 'themes'],
+  ])('exits 2 for %s', (_label, extra, message) => {
+    const dir = makeTemp()
+    const pairs = path.join(dir, 'pairs.json')
+    writeFileSync(
+      pairs,
+      JSON.stringify([
+        { fg: '--text', bg: '--background', category: 'text', usedBy: 'test', ...extra },
+      ]),
+    )
+    const run = runGate(['--pairs', pairs])
+    expect(run.status).toBe(2)
+    expect(run.out).toContain(message)
   })
 
   it('exits 2 when a band block lacks a token', () => {

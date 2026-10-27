@@ -74,6 +74,12 @@
   --on-accent: color-mix(in oklch, var(--background) 100%, var(--text));
   --primary-hover: color-mix(in oklch, var(--primary) 94%, var(--background));
   --focus-ring: color-mix(in oklch, var(--text) 100%, var(--background));
+
+  /* Sleeve grounds (D-09): four neutral steps of text, secondary and background, no indigo. */
+  --sleeve-personal: color-mix(in oklch, var(--text) 19%, var(--background));
+  --sleeve-employer: color-mix(in oklch, var(--text) 24%, var(--background));
+  --sleeve-hackathon: color-mix(in oklch, var(--secondary) 100%, var(--background));
+  --sleeve-course: color-mix(in oklch, var(--text) 5%, var(--secondary));
 }
 
 [data-theme='dark'] .band-invert {
@@ -93,6 +99,12 @@
   --on-accent: color-mix(in oklch, var(--background) 100%, var(--text));
   --primary-hover: color-mix(in oklch, var(--primary) 85%, var(--text));
   --focus-ring: color-mix(in oklch, var(--text) 100%, var(--background));
+
+  /* Sleeve grounds (D-09): four neutral steps of text, secondary and background, no indigo. */
+  --sleeve-personal: color-mix(in oklch, var(--text) 19%, var(--background));
+  --sleeve-employer: color-mix(in oklch, var(--text) 24%, var(--background));
+  --sleeve-hackathon: color-mix(in oklch, var(--secondary) 100%, var(--background));
+  --sleeve-course: color-mix(in oklch, var(--text) 5%, var(--secondary));
 }
 
 :root {

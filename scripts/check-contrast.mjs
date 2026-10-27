@@ -6,6 +6,9 @@
 // text 4.5, large text 3, UI components 3, focus indicators 3. Ratios are compared unrounded, and a color outside the sRGB gamut
 // counts as a failure.
 //
+// A pair may carry "themes": [...] to limit where it is evaluated; the band-only sleeve grounds
+// must, and only in the band themes.
+//
 // Flags: --tokens PATH (default src/styles/tokens.css)
 //        --pairs PATH  (default scripts/contrast-pairs.json)
 //        --matrix PATH (default docs/contrast-matrix.md)
@@ -21,10 +24,17 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { THRESHOLDS, contrast } from './lib/color.mjs'
-import { COLOR_TOKENS, TokenError, parseTokensCss, resolveTheme } from './lib/tokens.mjs'
+import {
+  BAND_ONLY_TOKENS,
+  COLOR_TOKENS,
+  TokenError,
+  parseTokensCss,
+  resolveTheme,
+} from './lib/tokens.mjs'
 
 const ROOT = path.resolve(import.meta.dirname, '..')
 const THEMES = ['light', 'dark', 'band-on-light', 'band-on-dark']
+const BAND_THEMES = ['band-on-light', 'band-on-dark']
 const DEFAULT_TOKENS = path.join(ROOT, 'src/styles/tokens.css')
 const DEFAULT_PAIRS = path.join(ROOT, 'scripts/contrast-pairs.json')
 const DEFAULT_MATRIX = path.join(ROOT, 'docs/contrast-matrix.md')
@@ -88,6 +98,24 @@ function loadPairs(file) {
     if (typeof p.usedBy !== 'string') {
       throw new UsageError(`pair ${p.fg} on ${p.bg}: usedBy must be a string`)
     }
+    if (p.themes !== undefined) {
+      if (!Array.isArray(p.themes) || p.themes.length === 0) {
+        throw new UsageError(`pair ${p.fg} on ${p.bg}: themes must be a non-empty array`)
+      }
+      for (const t of p.themes) {
+        if (!THEMES.includes(t)) {
+          throw new UsageError(`pair ${p.fg} on ${p.bg}: unknown theme "${t}"`)
+        }
+      }
+    }
+    // The sleeve grounds exist only inside the band, so a pair using one must say so.
+    if (BAND_ONLY_TOKENS.includes(p.fg) || BAND_ONLY_TOKENS.includes(p.bg)) {
+      if (!p.themes || !p.themes.every((t) => BAND_THEMES.includes(t))) {
+        throw new UsageError(
+          `pair ${p.fg} on ${p.bg}: a band-only token needs "themes" limited to ${BAND_THEMES.join(' and ')}`,
+        )
+      }
+    }
   }
   return pairs
 }
@@ -97,6 +125,7 @@ function evaluate(themes, pairs) {
   const results = []
   for (const theme of THEMES) {
     for (const p of pairs) {
+      if (p.themes && !p.themes.includes(theme)) continue
       const fg = themes[theme][p.fg]
       const bg = themes[theme][p.bg]
       const min = THRESHOLDS[p.category]
@@ -164,8 +193,8 @@ function main(argv) {
   const themes = {
     light: resolveTheme(raw.light),
     dark: resolveTheme(raw.dark),
-    'band-on-light': resolveTheme(raw.bandOnLight),
-    'band-on-dark': resolveTheme(raw.bandOnDark),
+    'band-on-light': resolveTheme(raw.bandOnLight, { band: true }),
+    'band-on-dark': resolveTheme(raw.bandOnDark, { band: true }),
   }
   const pairs = loadPairs(opts.pairs)
   const results = evaluate(themes, pairs)

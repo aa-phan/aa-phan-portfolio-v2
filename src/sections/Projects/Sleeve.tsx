@@ -1,14 +1,24 @@
 import type { MouseEvent } from 'react'
+import { cn } from '@/lib/utils'
 import type { ProjectRow } from './project-types'
 
 /** Stack items shown on a sleeve before the "+N more" line. */
 const STACK_SHOWN = 3
 
+/** Ground per context kind (D-09): four neutral band tokens, spelled out so Tailwind sees each class. */
+const GROUND = {
+  personal: 'bg-(--sleeve-personal)',
+  employer: 'bg-(--sleeve-employer)',
+  hackathon: 'bg-(--sleeve-hackathon)',
+  course: 'bg-(--sleeve-course)',
+} as const
+
 /**
  * One typographic record sleeve (D-09): no image. Dates and the context label sit at the top, the
  * first three stack items read like a tracklist, and the title is anchored bottom-left with a
  * negative bottom margin equal to the padding, so at most the descenders of the last line crop at
- * the sleeve edge. data-kind carries the context kind for the ground tokens plan 03-13 adds.
+ * the sleeve edge. The ground is the band token for the project's context kind, and data-kind
+ * carries that kind as a hook.
  */
 export function Sleeve({
   project,
@@ -35,7 +45,10 @@ export function Sleeve({
         data-kind={project.context.kind}
         aria-label={`${project.title}, project ${position} of ${total}`}
         onClick={open}
-        className="sleeve flex aspect-[4/5] w-full cursor-pointer flex-col justify-between overflow-hidden rounded-hold bg-secondary p-4 text-left text-text"
+        className={cn(
+          'sleeve flex aspect-[4/5] w-full cursor-pointer flex-col justify-between overflow-hidden rounded-hold p-4 text-left text-text',
+          GROUND[project.context.kind],
+        )}
       >
         <span className="flex flex-col gap-3">
           <span className="flex flex-col text-xs">

@@ -2,7 +2,7 @@
 export interface ProjectRow {
   id: string
   title: string
-  context: { kind: string; label: string }
+  context: { kind: 'personal' | 'employer' | 'course' | 'hackathon'; label: string }
   dates: { label: string }
   stack: readonly string[]
   bullets: readonly string[]

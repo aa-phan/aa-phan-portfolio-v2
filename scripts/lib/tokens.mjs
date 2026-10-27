@@ -1,8 +1,8 @@
 // Parses the shipped token file and resolves every color token per theme.
 //
 // The contrast gate reads src/styles/tokens.css itself, not a copy, so a change to
-// a token value changes the gate result. Only the fourteen color tokens are
-// resolved. Every other custom property (elevation, z-index, duration, easing) is
+// a token value changes the gate result. Only the color tokens are resolved: fourteen page
+// tokens, plus four sleeve grounds that exist only inside the inverted band. Every other custom property (elevation, z-index, duration, easing) is
 // ignored and never parsed.
 
 import { mixColors, parseOklch } from './color.mjs'
@@ -22,7 +22,15 @@ export const COLOR_TOKENS = [
   '--on-accent',
   '--primary-hover',
   '--focus-ring',
+  '--sleeve-personal',
+  '--sleeve-employer',
+  '--sleeve-hackathon',
+  '--sleeve-course',
 ]
+
+// Tokens declared only in the band blocks. A page theme does not define them, so resolveTheme
+// reads them only for a band, and a pair using one must name the band themes it applies to.
+export const BAND_ONLY_TOKENS = COLOR_TOKENS.slice(14)
 
 export class TokenError extends Error {}
 
@@ -67,9 +75,10 @@ export function parseTokensCss(cssText) {
   return { light, dark, bandOnLight, bandOnDark }
 }
 
-// Resolve every COLOR_TOKENS name in one theme's raw map to a color from makeColor.
-// A color-mix argument may reference a role token or another derived token.
-export function resolveTheme(raw) {
+// Resolve every COLOR_TOKENS name in one theme's raw map to a color from makeColor. The
+// band-only sleeve grounds are resolved only when band is true. A color-mix argument may
+// reference a role token or another derived token.
+export function resolveTheme(raw, { band = false } = {}) {
   const cache = new Map()
   const resolve = (name, stack) => {
     if (cache.has(name)) return cache.get(name)
@@ -99,6 +108,9 @@ export function resolveTheme(raw) {
   }
   /** @type {Record<string, ReturnType<typeof parseOklch>>} */
   const out = {}
-  for (const name of COLOR_TOKENS) out[name] = resolve(name, [])
+  for (const name of COLOR_TOKENS) {
+    if (!band && BAND_ONLY_TOKENS.includes(name)) continue
+    out[name] = resolve(name, [])
+  }
   return out
 }
