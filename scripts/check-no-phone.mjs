@@ -2,12 +2,21 @@
 //
 // Everything in dist is served to the world, and CI logs of a public repository
 // are public too. This fails when a served file holds a phone-shaped string or a
-// tel: link. On a hit it prints only the file and byte offset, never the
-// matched characters.
+// tel: link. On a hit it prints only the file and a byte offset (or a PDF page, or a
+// metadata key name), never the matched characters.
+//
+// A PDF is read twice. A byte-level pass over its dictionaries and decoded content streams
+// (below) is kept as a second opinion. The main pass loads it with pdfjs-dist, the parser the
+// browsers' PDF viewers use, and scans the text of every page (joined with spaces and joined
+// with nothing, so a number split across text items still reads as one), every link
+// annotation (any telephone-scheme link fails) and the document metadata (the Info
+// dictionary entry by entry, and the XMP packet). A PDF that cannot be read fails the gate:
+// it exits 0 only after every file and every page has been scanned.
 //
 // Flag: --root DIR (default cwd); scans ROOT/dist.
-// Exit: 0 printing "no-phone: OK", 1 on a hit, 2 when dist is missing.
+// Exit: 0 printing "no-phone: OK", 1 on a hit or an unreadable PDF, 2 when dist is missing.
 import fs from 'node:fs'
+import { createRequire } from 'node:module'
 import path from 'node:path'
 import zlib from 'node:zlib'
 
@@ -303,8 +312,100 @@ function scan(label, name, view, text) {
   }
 }
 
+// The shape labels that match somewhere in `text`, each once. A PDF's text has no useful
+// byte offset, so its hits are reported by page or metadata key instead.
+function shapeLabels(text) {
+  const labels = new Set()
+  for (const shape of SHAPES) {
+    if (!shape.views.includes('text')) continue
+    if (shape.only && !shape.only.test(TEXT_NAME)) continue
+    shape.re.lastIndex = 0
+    if (shape.re.test(text)) labels.add(shape.label)
+    shape.re.lastIndex = 0
+  }
+  return [...labels]
+}
+
+// pdfjs's own structural flags in `info`; everything else is an entry of the document's Info
+// dictionary, whose key names are listed for the owner to review.
+const PDFJS_INFO_FLAGS = new Set([
+  'PDFFormatVersion',
+  'Language',
+  'EncryptFilterName',
+  'IsLinearized',
+  'IsAcroFormPresent',
+  'IsXFAPresent',
+  'IsCollectionPresent',
+  'IsSignaturesPresent',
+])
+const TEL_SCHEME = /^\s*tel:/i
+
+// Reads one PDF with pdfjs and records hits. Anything that throws is a hit (fail closed).
+async function scanPdfWithPdfjs(rel, bytes) {
+  let task
+  try {
+    const { getDocument } = await import('pdfjs-dist/legacy/build/pdf.mjs')
+    const require = createRequire(import.meta.url)
+    const fontDir = path.join(
+      path.dirname(require.resolve('pdfjs-dist/package.json')),
+      'standard_fonts',
+    )
+    // pdfjs 6.3.289 never evaluates generated code and ignores isEvalSupported (the option was
+    // removed upstream); it stays so a build of pdfjs that honours it is still held to false.
+    /** @type {any} */
+    const params = {
+      data: new Uint8Array(bytes),
+      isEvalSupported: false,
+      useSystemFonts: false,
+      disableFontFace: true,
+      verbosity: 0,
+      standardFontDataUrl: `${fontDir}${path.sep}`,
+    }
+    task = getDocument(params)
+    const doc = await task.promise
+
+    for (let n = 1; n <= doc.numPages; n++) {
+      const page = await doc.getPage(n)
+      const items = (await page.getTextContent()).items.map((item) =>
+        'str' in item ? item.str : '',
+      )
+      const labels = new Set([...shapeLabels(items.join(' ')), ...shapeLabels(items.join(''))])
+      for (const label of labels) hits.push(`${rel} page ${n} (${label})`)
+      const links = (await page.getAnnotations()).flatMap((a) => [a.url, a.unsafeUrl])
+      if (links.some((url) => typeof url === 'string' && TEL_SCHEME.test(url))) {
+        hits.push(`${rel} (link annotation)`)
+      }
+      page.cleanup()
+    }
+
+    const { info = {}, metadata } = await doc.getMetadata()
+    const keys = []
+    for (const [key, value] of Object.entries(info)) {
+      if (PDFJS_INFO_FLAGS.has(key)) continue
+      keys.push(key)
+      const text = typeof value === 'string' ? value : JSON.stringify(value)
+      if (shapeLabels(text).length > 0) hits.push(`${rel} (metadata ${key})`)
+    }
+    const xmp = typeof metadata?.getRaw === 'function' ? metadata.getRaw() : ''
+    if (xmp) {
+      keys.push('XMP')
+      if (shapeLabels(xmp).length > 0) hits.push(`${rel} (metadata XMP)`)
+    }
+    // Key names only, for review; the values are never printed.
+    console.log(`no-phone: ${rel} metadata keys: ${keys.length > 0 ? keys.join(', ') : 'none'}`)
+  } catch {
+    hits.push(`${rel} could not be read`)
+  } finally {
+    try {
+      await task?.destroy()
+    } catch {
+      // Nothing left to release.
+    }
+  }
+}
+
 for (const file of files) {
-  const rel = path.relative(ROOT, file)
+  const rel = path.relative(ROOT, file).split(path.sep).join('/')
   const bytes = fs.readFileSync(file)
   // latin1 keeps one character per byte, so an index is a byte offset.
   const text = bytes.toString('latin1')
@@ -316,6 +417,7 @@ for (const file of files) {
       scan(`${rel} (stream ${i + 1})`, file, 'stream', decoded)
       scan(`${rel} (stream ${i + 1} text)`, TEXT_NAME, 'text', pdfShownText(decoded))
     })
+    await scanPdfWithPdfjs(rel, bytes)
     continue
   }
   scan(rel, file, 'raw', text)
