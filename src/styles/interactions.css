@@ -69,6 +69,41 @@
 }
 
 /*
+ * Theme toggle (D-05, found by the D-24 QA loop as a primary target with no hover answer). The
+ * track grows 8 percent and its border darkens to --text on hover, keyboard focus and touch
+ * press. The scale sits on the track, never on the thumb: react-spring owns the thumb's
+ * translateX alone (IX-10), so no element has two owners. Reduced motion keeps the state
+ * visible as a 2 px --text border with no movement.
+ */
+.theme-track {
+  transition:
+    scale 220ms var(--ease-out),
+    border-color 220ms var(--ease-out);
+}
+
+@media (hover: hover) {
+  .theme-toggle:hover .theme-track {
+    scale: 1.08;
+    border-color: var(--text);
+  }
+}
+
+.theme-toggle:focus-visible .theme-track,
+.theme-toggle:active .theme-track {
+  scale: 1.08;
+  border-color: var(--text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle:hover .theme-track,
+  .theme-toggle:focus-visible .theme-track,
+  .theme-toggle:active .theme-track {
+    scale: none;
+    box-shadow: inset 0 0 0 1px var(--text);
+  }
+}
+
+/*
  * Desktop nav label roll (D-05): each link holds two copies of its label in a clipped line. On
  * hover and keyboard focus both copies move up one line, so the duplicate (aria-hidden, so the
  * accessible name stays single) turns in from below. Hover is gated to devices that hover;

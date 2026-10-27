@@ -11,11 +11,11 @@ export function ThemeToggle() {
       aria-pressed={dark}
       aria-label="Dark theme"
       onClick={toggle}
-      className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-pill px-1"
+      className="theme-toggle inline-flex min-h-11 min-w-11 items-center justify-center rounded-pill px-1"
     >
       <span
         aria-hidden="true"
-        className="relative inline-flex h-7 w-12 items-center rounded-pill border border-border-strong bg-surface p-px"
+        className="theme-track relative inline-flex h-7 w-12 items-center rounded-pill border border-border-strong bg-surface p-px"
       >
         <ThemeThumb on={dark} className="size-6 rounded-pill bg-primary" />
       </span>
