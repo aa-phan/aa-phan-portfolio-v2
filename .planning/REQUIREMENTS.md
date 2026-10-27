@@ -27,7 +27,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **CNT-02**: All v1 content is carried over: 5 experience entries, all 7 v1 projects (RecipeCart, A.T.L.A.S, Suspect Genie, MediaDash, Full-Stack Library Simulator, FPGA-Based Stopwatch, Smart Mirror), education entries including GPA, public email, and the DJ Instagram link
 - [x] **CNT-03**: `references/Aaron_Phan_Resume.pdf` is the source of truth: where it conflicts with v1, the resume wins; v1-only items it does not cover (4 extra projects, ITS Student Consultant role) are kept from v1. The resume's own metric overlap (Symbotic 76% accuracy vs Suspect Genie >=50%) is shown only where the resume places each figure, and date formats are normalized, all recorded in a content inventory before typing
 - [ ] **CNT-04**: Visitor can download a resume PDF generated from `references/Aaron_Phan_Resume.pdf` with the phone number removed. The phone number must not appear anywhere on the site, including the PDF, meta tags, JSON-LD and OG data
-- [ ] **CNT-05**: Only used images are migrated, optimized (AVIF/WebP) and stripped of EXIF
+- [x] **CNT-05**: Only used images are migrated, optimized (AVIF/WebP) and stripped of EXIF
 
 ### Navigation and Recruiter Fast Path
 
@@ -127,7 +127,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CNT-02 | Phase 3 | Pending |
 | CNT-03 | Phase 1 | Complete |
 | CNT-04 | Phase 3 | Pending |
-| CNT-05 | Phase 3 | Pending |
+| CNT-05 | Phase 3 | Complete |
 | NAV-01 | Phase 2 | Complete |
 | NAV-02 | Phase 3 | Pending |
 | NAV-03 | Phase 3 | Pending |
