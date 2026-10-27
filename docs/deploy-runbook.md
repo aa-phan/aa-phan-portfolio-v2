@@ -22,7 +22,7 @@ Assets are module-imported, so no absolute asset paths exist. Anything under `pu
    The separator set matches `scripts/check-no-phone.mjs`, which also catches space-separated groups.
 
    Known false positives (owner decision, 2026-10-27); any other hit stops the push:
-   - Commit `4517011` and the tree hit `.planning/phases/02-deployed-themed-skeleton/02-REVIEW.md`: the review's example number is all nines, not a real number.
+   - Commit `4517011` and the tree hit `.planning/phases/02-deployed-themed-skeleton/02-REVIEW-iter1.md` (the first review, renamed from `02-REVIEW.md`): its example number is all nines, not a real number.
    - Commit `b56e593` and the tree hit `.planning/phases/01-decisions-and-documentation/01-07-PLAN.md`: a shell loop over three viewport widths, which the space separator added to the guard now matches.
 2. Node 22.12 or newer locally, `lts/*` in CI.
 3. A committed lockfile (`npm ci` fails without one).
