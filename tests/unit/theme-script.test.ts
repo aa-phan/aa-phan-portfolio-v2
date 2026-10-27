@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { THEME_STORAGE_KEY } from '@/lib/theme'
 import { setMediaQuery } from '../setup'
 
 const DARK_QUERY = '(prefers-color-scheme: dark)'
@@ -27,6 +28,10 @@ describe('inline theme-init script in index.html', () => {
     expect(scripts).toHaveLength(1)
     expect(scripts[0]!.hasAttribute('type')).toBe(false)
     expect(scripts[0]!.parentElement).toBe(doc.head)
+  })
+
+  it('reads the same storage key that theme.ts writes', () => {
+    expect(scripts[0]!.textContent).toContain(`getItem('${THEME_STORAGE_KEY}')`)
   })
 
   it('uses the system preference when nothing is stored (system dark)', () => {

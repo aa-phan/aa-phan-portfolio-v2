@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { Container } from '@/layout/Container'
+import { cn } from '@/lib/utils'
 
 export function Section({
   id,
@@ -16,7 +17,7 @@ export function Section({
     <section
       id={id}
       aria-labelledby={`${id}-heading`}
-      className={['scroll-mt-6 py-16', className].filter(Boolean).join(' ')}
+      className={cn('scroll-mt-6 py-16', className)}
     >
       <Container>
         <h2 id={`${id}-heading`} className="text-3xl font-semibold">
