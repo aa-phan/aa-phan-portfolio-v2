@@ -185,6 +185,21 @@ describe('check-contrast gate', () => {
     expect(run.out).toContain('--surface')
   })
 
+  it.each(['constructor', 'toString', 'nope'])(
+    'exits 2 naming an unknown category "%s" instead of crashing',
+    (category) => {
+      const dir = makeTemp()
+      const pairs = path.join(dir, 'pairs.json')
+      writeFileSync(
+        pairs,
+        JSON.stringify([{ fg: '--text', bg: '--background', category, usedBy: 'test' }]),
+      )
+      const run = runGate(['--pairs', pairs])
+      expect(run.status).toBe(2)
+      expect(run.out).toContain(`unknown category "${category}"`)
+    },
+  )
+
   it('exits 1 with "matrix stale" when the committed matrix drifts', () => {
     const dir = makeTemp()
     const matrix = path.join(dir, 'matrix.md')

@@ -82,7 +82,7 @@ function loadPairs(file) {
         throw new UsageError(`pair ${JSON.stringify(p)}: ${key} is not a color token`)
       }
     }
-    if (!(p.category in THRESHOLDS)) {
+    if (!Object.hasOwn(THRESHOLDS, p.category)) {
       throw new UsageError(`pair ${p.fg} on ${p.bg}: unknown category "${p.category}"`)
     }
     if (typeof p.usedBy !== 'string') {
