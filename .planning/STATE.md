@@ -4,16 +4,16 @@ milestone: v2
 current_phase: 03
 current_phase_name: Content-Complete Site
 status: executing
-stopped_at: Completed 03-06-PLAN.md
-last_updated: "2026-10-27T18:08:01.751Z"
+stopped_at: Completed 03-07-PLAN.md
+last_updated: "2026-10-27T18:18:35.243Z"
 last_activity: 2026-10-27
 last_activity_desc: Phase 03 execution started
-state_head: 28ccd5f60267d7a1e74b618b0576d42c57ba6ea5
+state_head: a48ce0069d9d64ba9ce153a1624068b6c13cfad8
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 35
-  completed_plans: 22
+  completed_plans: 23
   percent: 33
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-10-08)
 ## Current Position
 
 Phase: 03 (Content-Complete Site) — EXECUTING
-Plan: 7 of 19
+Plan: 8 of 19
 Status: Ready to execute
 Last activity: 2026-10-27 — Phase 03 execution started
 
@@ -82,6 +82,7 @@ Progress: [███░░░░░░░] 33%
 | Phase 03 P04 | 7 min | 2 tasks | 9 files |
 | Phase 03 P05 | 8 min | 2 tasks | 13 files |
 | Phase 03 P06 | 30 min | 3 tasks | 13 files |
+| Phase 03 P07 | 10 min | 2 tasks | 16 files |
 
 ## Accumulated Context
 
@@ -127,6 +128,8 @@ Recent decisions affecting current work:
 - [Phase 03]: 03-05: reduced-motion visitors never load the motion features chunk; toast is static until the chunk loads
 - [Phase 03]: 03-06: hero role line is plain text from first paint; TextReveal stays exported for Phase 5 SEC-04
 - [Phase 03]: 03-06: primary CTA ink flood is CSS-owned (clip-path), hover gated by (hover: hover) with focus-visible and :active equivalents
+- [Phase 03]: 03-07: desktop bar (including theme toggle) is display none below 768 px; phones have no toggle or nav until 03-08/03-09
+- [Phase 03]: 03-07: nav link gap is 16 px at 768 and 24 px from 1024 to avoid overflow with six links, toggle and Resume
 
 ### Pending Todos
 
@@ -159,6 +162,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-27T18:08:01.672Z
-Stopped at: Completed 03-06-PLAN.md
+Last session: 2026-10-27T18:18:35.160Z
+Stopped at: Completed 03-07-PLAN.md
 Resume file: None
