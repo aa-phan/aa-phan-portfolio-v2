@@ -1,16 +1,19 @@
 import { TextReveal } from '@/anim'
 import { Container } from '@/layout/Container'
 
-export function Hero() {
+interface HeroProps {
+  profile: { name: string; tagline: string }
+  email: string
+}
+
+export function Hero({ profile, email }: HeroProps) {
   return (
     <section id="hero" aria-labelledby="hero-heading" className="pt-24 pb-16">
       <Container>
         <h1 id="hero-heading" className="text-mega">
-          Aaron Phan
+          {profile.name}
         </h1>
-        <TextReveal className="mt-4 max-w-2xl text-l text-muted">
-          Software engineer building cloud-native backends in Go.
-        </TextReveal>
+        <TextReveal className="mt-4 max-w-2xl text-l text-muted">{profile.tagline}</TextReveal>
         <div className="mt-8 flex flex-col gap-3 md:flex-row md:items-center">
           <a
             href={`${import.meta.env.BASE_URL}resume.pdf`}
@@ -20,7 +23,7 @@ export function Hero() {
             Download resume
           </a>
           <a
-            href="mailto:aaron.phan240@gmail.com"
+            href={`mailto:${email}`}
             className="inline-flex min-h-11 items-center justify-center rounded-pill border border-border-strong px-6 font-medium text-text hover:bg-surface"
           >
             Copy email
