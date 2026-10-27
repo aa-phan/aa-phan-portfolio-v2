@@ -467,6 +467,22 @@
 }
 
 /*
+ * Sleeve title size (found by the D-24 QA loop: "Recommendation" broke mid-word at 768 to 1500 px
+ * because the sleeve is narrower than the --text-l ladder assumes). The sleeve is an inline-size
+ * container and the title takes 12 percent of its width, capped at --text-l, so the longest
+ * title word always fits. Same pattern as the contact email's clamp. The line height and
+ * tracking stay the --text-l pair.
+ */
+.sleeve {
+  container-type: inline-size;
+}
+
+.sleeve-title {
+  font-size: clamp(1.25rem, 12cqw, var(--text-l));
+  letter-spacing: var(--text-l--letter-spacing);
+}
+
+/*
  * Project crate sleeves (D-05, interim). This rise is a CSS stand-in: IX-03 replaces it in
  * Phase 4 when react-spring takes over the sleeve, and the rule is deleted then so the sleeve
  * keeps one owner. Hover is gated to devices that hover; keyboard focus shows it everywhere.

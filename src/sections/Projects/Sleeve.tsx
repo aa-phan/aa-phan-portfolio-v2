@@ -62,7 +62,7 @@ export function Sleeve({
             {more > 0 ? <span>+{more} more</span> : null}
           </span>
         </span>
-        <span className="-mb-4 block text-l leading-[0.95] break-words hyphens-auto">
+        <span className="sleeve-title -mb-4 block leading-[0.95] break-words hyphens-auto">
           {project.title}
         </span>
       </button>
