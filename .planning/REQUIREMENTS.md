@@ -23,8 +23,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Content
 
-- [ ] **CNT-01**: All six sections (About Me, Skills, Education, Experience, Projects, Contact Me) render from typed content modules
-- [ ] **CNT-02**: All v1 content is carried over: 5 experience entries, all 7 v1 projects (RecipeCart, A.T.L.A.S, Suspect Genie, MediaDash, Full-Stack Library Simulator, FPGA-Based Stopwatch, Smart Mirror), education entries including GPA, public email, and the DJ Instagram link
+- [x] **CNT-01**: All six sections (About Me, Skills, Education, Experience, Projects, Contact Me) render from typed content modules
+- [x] **CNT-02**: All v1 content is carried over: 5 experience entries, all 7 v1 projects (RecipeCart, A.T.L.A.S, Suspect Genie, MediaDash, Full-Stack Library Simulator, FPGA-Based Stopwatch, Smart Mirror), education entries including GPA, public email, and the DJ Instagram link
 - [x] **CNT-03**: `references/Aaron_Phan_Resume.pdf` is the source of truth: where it conflicts with v1, the resume wins; v1-only items it does not cover (4 extra projects, ITS Student Consultant role) are kept from v1. The resume's own metric overlap (Symbotic 76% accuracy vs Suspect Genie >=50%) is shown only where the resume places each figure, and date formats are normalized, all recorded in a content inventory before typing
 - [ ] **CNT-04**: Visitor can download a resume PDF generated from `references/Aaron_Phan_Resume.pdf` with the phone number removed. The phone number must not appear anywhere on the site, including the PDF, meta tags, JSON-LD and OG data
 - [x] **CNT-05**: Only used images are migrated, optimized (AVIF/WebP) and stripped of EXIF
@@ -33,7 +33,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **NAV-01**: Hero shows name, role and CTAs in a static shell that is visible without JavaScript
 - [ ] **NAV-02**: Sticky nav with scroll-spy on desktop, a thumb-reachable morphing pill nav on mobile (reference 445), and a skip link
-- [ ] **NAV-03**: Visitor can copy the email address with a confirmation toast
+- [x] **NAV-03**: Visitor can copy the email address with a confirmation toast
 - [ ] **NAV-04**: A visitor can find name, role, experience, projects, resume and contact within 10 seconds on a phone (acceptance test)
 
 ### Signature Interaction
@@ -123,14 +123,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DSN-02 | Phase 2 | Complete |
 | DSN-03 | Phase 2 | Complete |
 | DSN-04 | Phase 2 | Complete |
-| CNT-01 | Phase 3 | Pending |
-| CNT-02 | Phase 3 | Pending |
+| CNT-01 | Phase 3 | Complete |
+| CNT-02 | Phase 3 | Complete |
 | CNT-03 | Phase 1 | Complete |
 | CNT-04 | Phase 3 | Pending |
 | CNT-05 | Phase 3 | Complete |
 | NAV-01 | Phase 2 | Complete |
 | NAV-02 | Phase 3 | Pending |
-| NAV-03 | Phase 3 | Pending |
+| NAV-03 | Phase 3 | Complete |
 | NAV-04 | Phase 3 | Pending |
 | SIG-01 | Phase 4 | Pending |
 | SIG-02 | Phase 4 | Pending |
