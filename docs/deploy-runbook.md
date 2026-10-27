@@ -15,15 +15,24 @@ Assets are module-imported, so no absolute asset paths exist. Anything under `pu
 
 ## Prerequisites
 
-1. OD-01 resolved (2026-10-09): the owner's personal contact details were rewritten out of this repo's entire history. Before any push, run both guards; each must print nothing except the known false positive below.
-   - History guard: `git log --all -E -G'[0-9]{3}[-. )]+[0-9]{3}[-. ][0-9]{4}' --oneline`
-   - Tree guard (file names only, never the digits): `git grep -lE '[0-9]{3}[-. )]+[0-9]{3}[-. ][0-9]{4}' HEAD`
+1. OD-01 resolved (2026-10-09): the owner's personal contact details were rewritten out of this repo's entire history. Before any push, run both guards; each must print nothing except the known false positives below.
 
-   The separator set matches `scripts/check-no-phone.mjs`, which also catches space-separated groups.
+   ```sh
+   # Bytes, not characters, so the multi-byte separators match in any locale.
+   export LC_ALL=C
+   SEP=$'([-./ \t]|\xc2[\xa0\xad]|\xe2\x80[\x80-\x8a\x90-\x95\xaf]|\xe2\x81\x9f|\xe2\x88\x92|\xe3\x80\x80)'
+   PAT="[0-9]{3}(${SEP}|\\))+[0-9]{3}(${SEP})+[0-9]{4}"
+   ```
 
-   Known false positives (owner decision, 2026-10-27); any other hit stops the push:
+   - History guard: `git log --all -E -G"$PAT" --oneline`
+   - Tree guard (file names only, never the digits): `git grep -lE "$PAT" HEAD`
+
+   The separator set is the same as `scripts/check-no-phone.mjs` for literal characters: hyphen, dot, slash, space, tab, no-break and soft hyphen, the Unicode spaces U+2000 to U+200A, hyphens and dashes U+2010 to U+2015, narrow no-break space, medium mathematical space, minus sign and ideographic space. A closing parenthesis is also allowed between the first two groups, for `(area) exchange`. The guard differs from the script in what it does not read: HTML entities and `\uXXXX` escapes (the script decodes both), and contiguous digit runs, which the script checks in string literals and markup but a plain-text grep over source would flood with hashes and ids. It also reads source and docs, not the built output.
+
+   Known false positives (owner decision, 2026-10-26); any other hit stops the push:
    - Commit `4517011` and the tree hit `.planning/phases/02-deployed-themed-skeleton/02-REVIEW-iter1.md` (the first review, renamed from `02-REVIEW.md`): its example number is all nines, not a real number.
    - Commit `b56e593` and the tree hit `.planning/phases/01-decisions-and-documentation/01-07-PLAN.md`: a shell loop over three viewport widths, which the space separator added to the guard now matches.
+   - Wireframe viewport widths written as three numbers joined by slashes ("wireframes at" a phone, tablet and desktop width), which the slash separator added to the guard matches. Commits `c22f07b`, `b2f8b04`, `b56e593`, `991c252`, `d01324e` and `dd50558`, and the tree hits `.planning/ROADMAP.md`, `.planning/research/ARCHITECTURE.md` and, under `.planning/phases/01-decisions-and-documentation/`, `01-01-PLAN.md`, `01-01-SUMMARY.md` and `01-CONTEXT.md`.
 2. Node 22.12 or newer locally, `lts/*` in CI.
 3. A committed lockfile (`npm ci` fails without one).
 4. The Pages source set to GitHub Actions on the deploying repository.
