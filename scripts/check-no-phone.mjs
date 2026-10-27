@@ -33,34 +33,178 @@ const PDF_FILES = /\.pdf$/i
 // parenthesis, equals sign or tag end (or after whitespace in markup and text). A bare
 // key such as {tel:true} in minified JS, which React DOM ships in its list of input
 // types, is not a link and is not flagged.
-// Standalone ten-digit runs are checked in markup and text only: minified JS
-// legitimately holds ten-digit constants.
 //
-// Separators between the digit groups: dash, dot, space, tab, a non-breaking space (the
-// bytes 0xC2 0xA0 read as latin1) or an HTML entity for one, in any run. A leading +CC
-// or 1 country prefix and a parenthesised area code are allowed.
-const SEP = '(?:[-. \\t\\xa0\\xc2]|&nbsp;|&#160;)'
+// Separators between the digit groups, in any run: hyphen, dot, slash, space, tab, and the
+// typographic dashes and spaces a word processor or resume produces (en and em dash,
+// non-breaking hyphen, minus sign, no-break, narrow no-break, thin, figure and the other
+// Unicode spaces). Each is matched as the character itself, as its UTF-8 bytes (files are
+// read as latin1, one character per byte), as a JS \uXXXX escape, and as an HTML entity.
+// A leading +CC or 1 country prefix and a parenthesised area code are allowed.
+const SEPARATOR_CODE_POINTS = [
+  0xa0,
+  0xad,
+  ...Array.from({ length: 0x0b }, (_, i) => 0x2000 + i), // U+2000 to U+200A spaces
+  ...Array.from({ length: 6 }, (_, i) => 0x2010 + i), // U+2010 to U+2015 hyphens and dashes
+  0x202f,
+  0x205f,
+  0x2212,
+  0x3000,
+]
+const hex = (cp, width) => cp.toString(16).padStart(width, '0')
+const SEPARATOR_FORMS = [
+  '[-. \\t/\\x96\\x97]', // plain ASCII, plus WinAnsi en and em dash in extracted PDF text
+  `[${SEPARATOR_CODE_POINTS.map((cp) => `\\u${hex(cp, 4)}`).join('')}]`,
+  ...SEPARATOR_CODE_POINTS.map((cp) =>
+    [...Buffer.from(String.fromCodePoint(cp), 'utf8')].map((b) => `\\x${hex(b, 2)}`).join(''),
+  ),
+  ...SEPARATOR_CODE_POINTS.map((cp) => `\\\\u${hex(cp, 4)}`),
+  ...SEPARATOR_CODE_POINTS.map((cp) => `&#(?:${cp}|x0*${hex(cp, 1)});`),
+  '&(?:nbsp|ensp|emsp|thinsp|numsp|hyphen|dash|ndash|mdash|horbar|minus);',
+]
+const SEP = `(?:${SEPARATOR_FORMS.join('|')})`
 const PREFIX = `(?:\\+\\d{1,2}${SEP}*|1${SEP}+)?`
+
+// A plausible North American number: area code and exchange start 2 to 9, with an optional
+// 1 or +1 country prefix. Used for runs with no separators at all, where a loose ten-digit
+// pattern would also match hashes and numeric constants. The 32-bit integer limits (and
+// the few values below the signed one) are excluded, since a quoted 2147483647 is a CSS
+// z-index in many libraries.
+const NANP_RUN =
+  '(?<![0-9A-Za-z])(?!214748364\\d|429496729[56])(?:\\+?1)?[2-9]\\d{2}[2-9]\\d{6}(?![0-9A-Za-z])'
+
+// Where a shape applies. `raw` is the file as read (for a PDF, with stream bodies masked
+// out), `literal` is the string literals of a JS or JSON file, `stream` is a decoded PDF
+// content stream and `text` is the text a PDF content stream draws.
+const LITERAL_FILES = /\.(js|mjs|cjs|json|webmanifest)$/i
 const SHAPES = [
   {
     label: 'separated number',
+    views: ['raw', 'text'],
     re: new RegExp(
       `(?<!\\d)${PREFIX}(?:\\(\\d{3}\\)${SEP}*|\\d{3}${SEP}+)\\d{3}${SEP}+\\d{4}(?!\\d)`,
-      'g',
+      'gi',
     ),
   },
-  { label: 'tel: link', re: /(?<=["'`(=>]|^)tel:/gim },
-  { label: 'tel: link', re: /(?<=\s)tel:/gi, only: MARKUP_FILES },
-  { label: 'ten-digit run', re: /(?<![0-9A-Za-z])\d{10}(?![0-9A-Za-z])/g, only: MARKUP_FILES },
+  { label: 'tel: link', views: ['raw', 'text', 'stream'], re: /(?<=["'`(=>]|^)tel:/gim },
+  { label: 'tel: link', views: ['raw', 'text'], re: /(?<=\s)tel:/gi, only: MARKUP_FILES },
+  // Standalone digit runs are checked in markup and text only: minified JS legitimately
+  // holds ten-digit constants. A number in a JS string literal is caught by the `literal`
+  // view, which ignores code outside strings.
+  {
+    label: 'ten-digit run',
+    views: ['raw', 'text'],
+    re: /(?<![0-9A-Za-z])\d{10}(?![0-9A-Za-z])/g,
+    only: MARKUP_FILES,
+  },
+  {
+    label: 'eleven-digit run',
+    views: ['raw', 'text'],
+    re: /(?<![0-9A-Za-z])\+?1[2-9]\d{2}[2-9]\d{6}(?![0-9A-Za-z])/g,
+    only: MARKUP_FILES,
+  },
+  { label: 'unseparated number', views: ['literal'], re: new RegExp(NANP_RUN, 'g') },
 ]
 
+// The string literals of a JS or JSON file, kept at their byte offsets with everything else
+// blanked to NUL, so a numeric constant, an identifier or a comment can never match. This is
+// a small tokenizer, not a parser: comments and regex literals are skipped so an apostrophe in
+// either does not shift which quotes open a string, and the `${...}` expressions inside a
+// template literal count as code (minified bundles hold numeric constants there).
+const REGEX_AFTER = new Set([...'(,=:[!&|?{};+-*%<>~^'])
+function literalView(text) {
+  const n = text.length
+  const view = Buffer.alloc(n)
+  const keep = (from, to) => view.write(text.slice(from, to), from, 'latin1')
+  const templateDepth = [] // one entry per open `${`: the `{` nesting inside it
+  let i = 0
+  let prev = '' // last non-space character of code, for telling a regex from a division
+
+  // i is just past an opening backtick or a closing brace of a `${...}`.
+  const templateBody = () => {
+    const from = i
+    while (i < n) {
+      if (text[i] === '\\') i += 2
+      else if (text[i] === '`') {
+        keep(from, i)
+        i++
+        return
+      } else if (text[i] === '$' && text[i + 1] === '{') {
+        keep(from, i)
+        i += 2
+        templateDepth.push(0)
+        return
+      } else i++
+    }
+    keep(from, n)
+  }
+
+  while (i < n) {
+    const c = text[i]
+    const next = text[i + 1]
+    if (c === '/' && next === '*') {
+      const end = text.indexOf('*/', i + 2)
+      i = end < 0 ? n : end + 2
+    } else if (c === '/' && next === '/') {
+      const end = text.indexOf('\n', i)
+      i = end < 0 ? n : end
+    } else if (c === '"' || c === "'") {
+      const from = ++i
+      while (i < n && text[i] !== c && text[i] !== '\n') i += text[i] === '\\' ? 2 : 1
+      keep(from, i)
+      i++
+      prev = c
+    } else if (c === '`') {
+      i++
+      templateBody()
+      prev = c
+    } else if (
+      c === '/' &&
+      (prev === '' ||
+        REGEX_AFTER.has(prev) ||
+        /\b(?:return|typeof)\s*$/.test(text.slice(i - 10, i)))
+    ) {
+      let inClass = false
+      for (i++; i < n && text[i] !== '\n'; i++) {
+        if (text[i] === '\\') i++
+        else if (text[i] === '[') inClass = true
+        else if (text[i] === ']') inClass = false
+        else if (text[i] === '/' && !inClass) break
+      }
+      i++
+      prev = '/'
+    } else {
+      if (templateDepth.length > 0) {
+        if (c === '{') templateDepth[templateDepth.length - 1]++
+        else if (c === '}') {
+          if (templateDepth[templateDepth.length - 1] === 0) {
+            templateDepth.pop()
+            i++
+            templateBody()
+            continue
+          }
+          templateDepth[templateDepth.length - 1]--
+        }
+      }
+      if (c > ' ') prev = c
+      i++
+    }
+  }
+  return view.toString('latin1')
+}
+
 // PDF text lives in content streams, usually Flate-compressed, so a raw byte scan of the
-// file cannot see it. Inflate every stream that inflates, then pull out the strings the
-// content stream draws (Tj and TJ operators) so a number split across kerned runs still
-// reads as one. Limit: text set in a font with a custom or CID encoding stores glyph ids,
-// not characters, and is not readable without the font's ToUnicode map. The resume PDF
-// is also reviewed by hand for that reason.
-function inflatePdfStreams(buf) {
+// file cannot see it. Each stream is inflated when it inflates (otherwise its raw bytes are
+// taken as an uncompressed content stream), then the strings it draws (Tj and TJ operators)
+// are pulled out so a number split across kerned runs still reads as one. The number shapes
+// apply to that drawn text only. Stream bytes are never scanned for them: drawing operands
+// are decimals and integers (a move to a three-decimal x and a four-digit y) that read as a
+// separated number, and xref offsets are ten-digit runs. Stream bodies are blanked out of the raw scan for the same
+// reason, so the raw scan still covers the PDF's own dictionaries (document info strings,
+// URI actions) at their byte offsets. tel: links are checked in decoded streams too.
+// Limit: text set in a font with a custom or CID encoding stores glyph ids, not characters,
+// and is not readable without the font's ToUnicode map, and strings inside compressed object
+// streams are not read as text. The resume PDF is also reviewed by hand for that reason.
+function pdfStreams(buf) {
   const text = buf.toString('latin1')
   const streams = []
   const open = /stream\r?\n/g
@@ -72,13 +216,26 @@ function inflatePdfStreams(buf) {
     // Resume after "endstream", whose tail would otherwise match "stream" again.
     open.lastIndex = end + 'endstream'.length
     const slice = buf.subarray(start, end)
+    let content = slice
     try {
-      streams.push(zlib.inflateSync(slice, { finishFlush: zlib.constants.Z_SYNC_FLUSH }))
+      content = zlib.inflateSync(slice, { finishFlush: zlib.constants.Z_SYNC_FLUSH })
     } catch {
-      // Not Flate (an image, a font program, plain content): the raw scan covers it.
+      // Not Flate (an image, a font program, plain content): read the bytes as they are.
     }
+    streams.push({ start, end, content })
   }
   return streams
+}
+
+// The PDF text with every stream body replaced by NULs, so offsets are unchanged.
+function maskStreams(text, streams) {
+  let out = ''
+  let at = 0
+  for (const { start, end } of streams) {
+    out += text.slice(at, start) + '\0'.repeat(end - start)
+    at = end
+  }
+  return out + text.slice(at)
 }
 
 function decodePdfLiteral(body) {
@@ -92,8 +249,11 @@ function decodePdfLiteral(body) {
 function decodePdfHex(body) {
   const hex = body.replace(/\s+/g, '')
   const padded = hex.length % 2 ? `${hex}0` : hex
-  // Dropping NULs also reads UTF-16BE text whose characters are plain ASCII.
-  return Buffer.from(padded, 'hex').toString('latin1').replaceAll('\0', '')
+  const bytes = Buffer.from(padded, 'hex')
+  // A byte order mark marks UTF-16BE text, whose dashes and spaces are real characters.
+  if (bytes[0] === 0xfe && bytes[1] === 0xff) return bytes.subarray(2).swap16().toString('utf16le')
+  // Otherwise dropping NULs reads two-byte text whose characters are plain ASCII.
+  return bytes.toString('latin1').replaceAll('\0', '')
 }
 
 function pdfShownText(content) {
@@ -131,9 +291,11 @@ const files = []
 walk(DIST, files)
 
 const hits = []
-// `name` decides which shapes apply (the shape's `only` filter); `label` is what is printed.
-function scan(label, name, text) {
+// `name` is matched against a shape's `only` filter; `view` selects the shapes that read this
+// text; `label` is what is printed (a file and a byte offset, never the matched characters).
+function scan(label, name, view, text) {
   for (const shape of SHAPES) {
+    if (!shape.views.includes(view)) continue
     if (shape.only && !shape.only.test(name)) continue
     for (const match of text.matchAll(shape.re)) {
       hits.push(`${label} at offset ${match.index} (${shape.label})`)
@@ -145,14 +307,19 @@ for (const file of files) {
   const rel = path.relative(ROOT, file)
   const bytes = fs.readFileSync(file)
   // latin1 keeps one character per byte, so an index is a byte offset.
-  scan(rel, file, bytes.toString('latin1'))
+  const text = bytes.toString('latin1')
   if (PDF_FILES.test(file)) {
-    inflatePdfStreams(bytes).forEach((stream, i) => {
-      const content = stream.toString('latin1')
-      scan(`${rel} (stream ${i + 1})`, file, content)
-      scan(`${rel} (stream ${i + 1} text)`, TEXT_NAME, pdfShownText(content))
+    const streams = pdfStreams(bytes)
+    scan(rel, file, 'raw', maskStreams(text, streams))
+    streams.forEach(({ content }, i) => {
+      const decoded = content.toString('latin1')
+      scan(`${rel} (stream ${i + 1})`, file, 'stream', decoded)
+      scan(`${rel} (stream ${i + 1} text)`, TEXT_NAME, 'text', pdfShownText(decoded))
     })
+    continue
   }
+  scan(rel, file, 'raw', text)
+  if (LITERAL_FILES.test(file)) scan(rel, file, 'literal', literalView(text))
 }
 
 if (hits.length > 0) {

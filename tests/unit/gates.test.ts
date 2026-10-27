@@ -387,7 +387,155 @@ describe('check-no-phone', () => {
     expect(run.status).toBe(0)
   })
 
+  // Typographic dashes and spaces are what pasting copy from a resume or word processor gives.
+  // Each separator is written as an escape or built from a code point, never as digits.
+  const TYPOGRAPHIC = [
+    ['an en dash', '–'],
+    ['an em dash', '—'],
+    ['a non-breaking hyphen', '‑'],
+    ['a minus sign', '−'],
+    ['a slash', '/'],
+    ['a narrow no-break space', ' '],
+    ['a thin space', ' '],
+    ['a figure space', ' '],
+    ['an en dash entity', '&ndash;'],
+    ['a numeric entity', '&#8209;'],
+    ['a hex entity', '&#x202F;'],
+  ] as const
+
+  it.each(TYPOGRAPHIC)('flags a number separated by %s in HTML', (_name, sep) => {
+    const root = makeRoot()
+    write(root, 'dist/index.html', `<p>${groups(sep, '555', '210', '0123')}</p>\n`)
+    const run = runGate(script, ['--root', root])
+    expect(run.status).toBe(1)
+    expect(run.out).toContain('index.html')
+    for (const digits of ['555', '210', '0123']) expect(run.out).not.toContain(digits)
+  })
+
+  it.each(TYPOGRAPHIC)('flags a number separated by %s in a JS bundle', (_name, sep) => {
+    const root = makeRoot()
+    write(root, 'dist/assets/app.js', `var s="${groups(sep, '555', '210', '0123')}";\n`)
+    const run = runGate(script, ['--root', root])
+    expect(run.status).toBe(1)
+    expect(run.out).toContain('app.js')
+    for (const digits of ['555', '210', '0123']) expect(run.out).not.toContain(digits)
+  })
+
+  it('flags a number written with a JS unicode escape for the dash', () => {
+    const root = makeRoot()
+    write(root, 'dist/assets/app.js', `var s="${groups('\\u2013', '555', '210', '0123')}";\n`)
+    expect(runGate(script, ['--root', root]).status).toBe(1)
+  })
+
+  describe('contiguous numbers', () => {
+    const ten = ['555', '210', '0123'].join('')
+    const eleven = ['1', ten].join('')
+
+    it.each([
+      ['a double-quoted literal', `var s="${ten}";\n`],
+      ['a single-quoted literal', `var s='${ten}';\n`],
+      ['a template literal', `var s=\`${ten}\`;\n`],
+      ['a +1 literal', `var s="+${eleven}";\n`],
+      ['an 11-digit literal', `var s="${eleven}";\n`],
+      ['a number inside a sentence', `var s="Call ${ten} today";\n`],
+      ['a JSX children prop', `r("a",{children:"${ten}"});\n`],
+    ])('flags %s in a JS bundle without printing digits', (_name, content) => {
+      const root = makeRoot()
+      write(root, 'dist/assets/app.js', content)
+      const run = runGate(script, ['--root', root])
+      expect(run.status).toBe(1)
+      expect(run.out).toContain('app.js')
+      expect(run.out).toMatch(/offset \d+/)
+      for (const digits of ['555', '210', '0123']) expect(run.out).not.toContain(digits)
+    })
+
+    it('flags a literal after a regex literal that holds a quote', () => {
+      const root = makeRoot()
+      write(root, 'dist/assets/app.js', `var r=/["']/g;/* it's */var s="${ten}";\n`)
+      expect(runGate(script, ['--root', root]).status).toBe(1)
+    })
+
+    it.each([
+      ['a +1 number', `<p>+${eleven}</p>\n`],
+      ['an 11-digit number', `<p>${eleven}</p>\n`],
+    ])('flags %s in HTML', (_name, content) => {
+      const root = makeRoot()
+      write(root, 'dist/index.html', content)
+      const run = runGate(script, ['--root', root])
+      expect(run.status).toBe(1)
+      for (const digits of ['555', '210', '0123']) expect(run.out).not.toContain(digits)
+    })
+
+    it('does not flag unquoted numeric constants, hashes or other digit strings in JS', () => {
+      const root = makeRoot()
+      write(root, 'dist/index.html', '<p>hello</p>\n')
+      write(
+        root,
+        'dist/assets/app.js',
+        [
+          `var a=${ten},b=${eleven},c=+${eleven};`, // numeric constants, not text
+          `var h="${['e3b0c442', '98fc1c14', '9afbf4c8'].join('')}";`, // a hex hash
+          `var t=${['1700000', '000000'].join('')};`, // a millisecond timestamp
+          `var q="${['1234', '567890'].join('')}";`, // not a plausible NANP number
+          `var l="${['1', ten, '9'].join('')}";`, // longer run
+          `var r=/${['x', ten].join('')}/;`, // inside a regex literal
+          `/* ${ten} */`, // a comment
+          '',
+        ].join('\n'),
+      )
+      const run = runGate(script, ['--root', root])
+      expect(run.status).toBe(0)
+      expect(run.out).toContain('no-phone: OK')
+    })
+  })
+
   describe('PDF text layer', () => {
+    it('flags a number separated by a WinAnsi en dash in a Tj string', () => {
+      const root = makeRoot()
+      const content = `BT (${groups('\\226', '555', '210', '0123')}) Tj ET`
+      write(root, 'dist/resume.pdf', pdfWithStream(content))
+      expect(runGate(script, ['--root', root]).status).toBe(1)
+    })
+
+    it('flags a contiguous number in an uncompressed content stream', () => {
+      const root = makeRoot()
+      const ten = ['555', '210', '0123'].join('')
+      write(root, 'dist/resume.pdf', `%PDF-1.4\nstream\nBT (${ten}) Tj ET\nendstream\n%%EOF\n`)
+      expect(runGate(script, ['--root', root]).status).toBe(1)
+    })
+
+    it('flags a number in a document-info string outside any stream', () => {
+      const root = makeRoot()
+      const probe = groups(' ', '555', '210', '0123')
+      write(
+        root,
+        'dist/resume.pdf',
+        `%PDF-1.4\n1 0 obj\n<< /Subject (${probe}) >>\nendobj\n%%EOF\n`,
+      )
+      expect(runGate(script, ['--root', root]).status).toBe(1)
+    })
+
+    it('does not flag drawing operands in a compressed content stream', () => {
+      const root = makeRoot()
+      // A move with a three-decimal x and a four-digit y reads like a separated number.
+      const coords = `${['123', '456'].join('.')} ${['12', '34'].join('')} m ${['150', '250'].join('.')} ${['3000'].join('')} l S`
+      write(root, 'dist/resume.pdf', pdfWithStream(`${coords}\nBT (Hello) Tj ET`))
+      const run = runGate(script, ['--root', root])
+      expect(run.status).toBe(0)
+      expect(run.out).toContain('no-phone: OK')
+    })
+
+    it('does not flag drawing operands in an uncompressed content stream', () => {
+      const root = makeRoot()
+      const coords = `${['123', '456'].join('.')} ${['12', '34'].join('')} m ${['150', '250'].join('.')} ${['3000'].join('')} l S`
+      write(
+        root,
+        'dist/resume.pdf',
+        `%PDF-1.4\nstream\n${coords}\nBT (Hello) Tj ET\nendstream\n%%EOF\n`,
+      )
+      expect(runGate(script, ['--root', root]).status).toBe(0)
+    })
+
     it('flags a number inside a Flate-compressed Tj string without printing digits', () => {
       const root = makeRoot()
       const probe = groups(' ', '555', '010', '0123')
