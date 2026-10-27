@@ -1,3 +1,4 @@
+import { capitalOneLogo, spectrumLogo, symboticLogo } from './images'
 import type { ExperienceEntry } from './schema'
 
 /** EXP-01 to EXP-05 from 01-CONTENT-INVENTORY.md, newest first, transcribed verbatim. */
@@ -6,6 +7,7 @@ export const experience = [
     id: 'capital-one',
     role: 'Software Engineer Intern',
     org: 'Capital One',
+    logo: capitalOneLogo,
     location: 'Plano, TX',
     dates: { start: '2026-06', end: '2026-08', label: 'June 2026 – August 2026' },
     bullets: [
@@ -18,6 +20,7 @@ export const experience = [
     id: 'spectrum',
     role: 'Network Engineer Intern',
     org: 'Spectrum',
+    logo: spectrumLogo,
     location: 'Austin, TX',
     dates: { start: '2025-05', end: '2025-08', label: 'May 2025 – August 2025' },
     bullets: [
@@ -30,6 +33,7 @@ export const experience = [
     id: 'symbotic',
     role: 'System Engineer Intern',
     org: 'Symbotic',
+    logo: symboticLogo,
     location: 'Raymond, NH',
     dates: { start: '2025-01', end: '2025-05', label: 'January 2025 – May 2025' },
     bullets: [

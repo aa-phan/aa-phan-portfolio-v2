@@ -25,6 +25,6 @@
 
     "paths": { "@/*": ["./src/*"] }
   },
-  "include": ["tests"],
+  "include": ["tests", "src/types"],
   "exclude": ["tests/fixtures"]
 }

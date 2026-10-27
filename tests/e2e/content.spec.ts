@@ -163,3 +163,49 @@ test.describe('experience index list', () => {
     await context.close()
   })
 })
+
+test.describe('experience logos', () => {
+  test('the three logos load as AVIF and the monogram rows have no image', async ({ page }) => {
+    await open(page)
+    await page.locator('#experience').scrollIntoViewIfNeeded()
+    const logos = page.locator('#experience .exp-slot img')
+    await expect(logos).toHaveCount(3)
+    for (let i = 0; i < 3; i++) {
+      const logo = logos.nth(i)
+      await logo.scrollIntoViewIfNeeded()
+      await expect(logo).toHaveAttribute('alt', '')
+      await expect
+        .poll(() => logo.evaluate((el: HTMLImageElement) => el.currentSrc))
+        .toMatch(/\.avif$/)
+      await expect
+        .poll(() => logo.evaluate((el: HTMLImageElement) => el.naturalWidth))
+        .toBeGreaterThan(0)
+    }
+    await expect(page.locator('#experience .exp-chip')).toHaveCount(2)
+  })
+
+  test('with image requests aborted the slots stay 24 px and the names stay aligned', async ({
+    page,
+  }) => {
+    await page.route(/\.(avif|webp|png)(\?.*)?$/, (route) => route.abort())
+    await open(page)
+    const slots = await page
+      .locator('#experience .exp-slot')
+      .evaluateAll((els) =>
+        els.map((el) => [el.getBoundingClientRect().width, el.getBoundingClientRect().height]),
+      )
+    expect(slots).toHaveLength(5)
+    for (const [w, h] of slots) {
+      expect(w).toBe(24)
+      expect(h).toBe(24)
+    }
+    const xs = await page
+      .locator('#experience h3')
+      .evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().left)))
+    expect(new Set(xs).size).toBe(1)
+    const nameXs = await page
+      .locator('#experience .exp-name')
+      .evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().left)))
+    expect(new Set(nameXs).size).toBe(1)
+  })
+})

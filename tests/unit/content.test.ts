@@ -14,8 +14,12 @@ function walk(value: unknown, path = 'siteContent'): Visit[] {
 }
 
 const visits = walk(siteContent)
+// Image URLs are bundler output (hashed file names and width descriptors), not authored text. The
+// built site is scanned separately by check-no-phone, and alt text stays in scope here.
+const IMAGE_URL = /\.logo\.(?:src|sources\.\w+)$|\.photo\.(?:src|sources\.\w+)$/
 const strings = visits.filter(
-  (v): v is { path: string; value: string } => typeof v.value === 'string',
+  (v): v is { path: string; value: string } =>
+    typeof v.value === 'string' && !IMAGE_URL.test(v.path),
 )
 
 // The phone probe is composed from digit-group quantifiers so no phone-shaped literal is committed.

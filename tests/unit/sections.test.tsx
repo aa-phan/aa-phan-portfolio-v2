@@ -33,7 +33,7 @@ describe('Experience section', () => {
     })
   })
 
-  it('shows the monogram chip and no img for an entry without a logo', () => {
+  it('shows the monogram chip and no img for an entry without a logo, and a decorative logo for the rest', () => {
     const { container } = render(<Experience entries={siteContent.experience} />)
     const rows = Array.from(container.querySelectorAll('details'))
     const odder = rows[3]
@@ -42,7 +42,15 @@ describe('Experience section', () => {
     expect(chip?.textContent).toBe('OT')
     expect(chip?.getAttribute('aria-hidden')).toBe('true')
     expect(odder.querySelector('img')).toBeNull()
-    expect(container.querySelectorAll('img')).toHaveLength(0)
+    const logos = Array.from(container.querySelectorAll('img'))
+    expect(logos).toHaveLength(3)
+    for (const logo of logos) {
+      expect(logo.getAttribute('alt')).toBe('')
+      expect(logo.getAttribute('width')).toBe('20')
+    }
+    expect(container.querySelectorAll('picture source[type="image/avif"]')).toHaveLength(3)
+    // Spectrum's 32 px source yields one width, so imagetools folds its WebP into the img fallback.
+    expect(container.querySelectorAll('picture source[type="image/webp"]')).toHaveLength(2)
   })
 
   it('keeps an empty 24 px slot for an entry with neither logo nor monogram', () => {

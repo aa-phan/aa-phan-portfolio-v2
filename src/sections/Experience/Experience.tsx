@@ -8,13 +8,14 @@ interface ExperienceRow {
   dates: { label: string }
   bullets: readonly string[]
   monogram?: string
+  logo?: { src: string; width: number; height: number; sources?: { avif?: string; webp?: string } }
 }
 
 /**
  * Experience as an index list (D-07). Each row is a native details element, so it opens by tap,
  * click, Enter or Space and works without JavaScript. Every row starts closed and any number may
  * be open. The summary starts with a 24 px slot that keeps its size whatever it holds: a
- * monogram chip when there is no logo, and the logo picture once plan 03-11 supplies it.
+ * monogram chip when there is no logo, and the logo picture when there is one (alt is empty: the company name is adjacent text).
  */
 export function Experience({ entries }: { entries: readonly ExperienceRow[] }) {
   return (
@@ -26,7 +27,24 @@ export function Experience({ entries }: { entries: readonly ExperienceRow[] }) {
               <summary className="exp-summary">
                 <h3 className="exp-company text-m">
                   <span className="exp-slot">
-                    {entry.monogram ? (
+                    {entry.logo ? (
+                      <picture>
+                        {entry.logo.sources?.avif ? (
+                          <source srcSet={entry.logo.sources.avif} type="image/avif" />
+                        ) : null}
+                        {entry.logo.sources?.webp ? (
+                          <source srcSet={entry.logo.sources.webp} type="image/webp" />
+                        ) : null}
+                        <img
+                          src={entry.logo.src}
+                          width={entry.logo.width}
+                          height={entry.logo.height}
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </picture>
+                    ) : entry.monogram ? (
                       <span aria-hidden="true" className="exp-chip">
                         {entry.monogram}
                       </span>
