@@ -29,10 +29,10 @@ test.describe('nav', () => {
       'href',
       '#hero',
     )
-    await expect(page.getByRole('link', { name: 'Resume', exact: true })).toHaveAttribute(
-      'download',
-      '',
-    )
+    // The Contact section carries its own Resume link, so scope this one to the header.
+    await expect(
+      page.getByRole('banner').getByRole('link', { name: 'Resume', exact: true }),
+    ).toHaveAttribute('download', '')
   })
 
   test('the bar is sticky: it stays at the top of the viewport after scrolling', async ({

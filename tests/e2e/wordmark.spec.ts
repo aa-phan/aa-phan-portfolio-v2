@@ -165,3 +165,54 @@ test('the home link underline draws on keyboard focus', async ({ browser }) => {
   await expect.poll(size).not.toMatch(/^0px/)
   await context.close()
 })
+
+/*
+ * Finale wordmark (D-01, D-12): the footer's fit-to-width name. The visible string, PHAN by day
+ * and the wider PHVNTM by night, must measure 90 to 100 percent of its container and never
+ * overflow it. Measured after the fonts are ready, because the fallback face is narrower.
+ */
+for (const width of [375, 768, 1280] as const) {
+  for (const scheme of ['light', 'dark'] as const) {
+    test(`finale wordmark fills 90 to 100 percent of the container at ${width} in ${scheme}`, async ({
+      browser,
+    }) => {
+      const viewport = { width, height: 800 }
+      const context = await browser.newContext({ colorScheme: scheme, viewport })
+      const page = await context.newPage()
+      await page.goto('./')
+      await page.evaluate(() => document.fonts.ready)
+
+      const fit = page.locator('footer .finale-fit')
+      const visible = fit.locator(scheme === 'light' ? '.wordmark-day' : '.wordmark-night')
+      const hidden = fit.locator(scheme === 'light' ? '.wordmark-night' : '.wordmark-day')
+      await visible.scrollIntoViewIfNeeded()
+      await expect(visible).toBeVisible()
+      await expect(hidden).toBeHidden()
+      await expect(visible).toHaveText(scheme === 'light' ? 'PHAN' : 'PHVNTM')
+      await expect(fit.locator('.wordmark-finale')).toHaveAttribute('aria-hidden', 'true')
+
+      const metrics = await fit.evaluate(
+        (el, selector) => {
+          const run = el.querySelector(selector)
+          if (!run) throw new Error('finale string missing')
+          return {
+            run: run.getBoundingClientRect().width,
+            container: el.clientWidth,
+            scrollWidth: el.scrollWidth,
+          }
+        },
+        scheme === 'light' ? '.wordmark-day' : '.wordmark-night',
+      )
+
+      expect(metrics.run / metrics.container).toBeGreaterThanOrEqual(0.9)
+      expect(metrics.run / metrics.container).toBeLessThanOrEqual(1)
+      expect(metrics.scrollWidth).toBeLessThanOrEqual(metrics.container)
+
+      const stretch = await visible.evaluate((el) => getComputedStyle(el).fontStretch)
+      expect(stretch).toBe(scheme === 'light' ? '100%' : '125%')
+      const weight = await visible.evaluate((el) => getComputedStyle(el).fontWeight)
+      expect(weight).toBe('800')
+      await context.close()
+    })
+  }
+}

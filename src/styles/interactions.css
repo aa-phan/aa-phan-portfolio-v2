@@ -686,9 +686,7 @@ html:has(dialog[open]) {
 :root {
   /* The night wordmark box is 0.137 of the container width tall; 0.13 plus 3.5rem for the small
      print and padding stays below the real footer height at every width. */
-  --footer-floor: calc(
-    0.13 * (min(100vw, 1680px) - 2 * clamp(1rem, 2vw, 2rem)) + 3.5rem
-  );
+  --footer-floor: calc(0.13 * (min(100vw, 1680px) - 2 * clamp(1rem, 2vw, 2rem)) + 3.5rem);
 }
 
 .contact-section {
