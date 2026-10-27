@@ -278,6 +278,94 @@ describe('project parity with the inventory', () => {
   })
 })
 
+describe('skills parity with the inventory', () => {
+  const ids = ['SKL-01', 'SKL-02', 'SKL-03', 'SKL-04']
+  const { skills } = siteContent
+
+  it.each(ids.map((id, index) => [id, index] as const))(
+    '%s items equal the module group at its position',
+    (id, index) => {
+      const group = skills[index]
+      if (!group) throw new Error(`module has no skill group at position ${index}`)
+      expect(group.label).toBe(block(id).heading.slice(id.length + 1))
+      expect([...group.items]).toEqual(label(id, 'Value').split(', ').reduce(joinParens, []))
+    },
+  )
+})
+
+/** Re-join items split inside a parenthesis, such as "SQL (Postgres)". */
+function joinParens(acc: string[], part: string): string[] {
+  const last = acc[acc.length - 1]
+  if (last !== undefined && last.includes('(') && !last.includes(')')) {
+    acc[acc.length - 1] = `${last}, ${part}`
+  } else {
+    acc.push(part)
+  }
+  return acc
+}
+
+describe('education parity with the inventory', () => {
+  const ids = ['EDU-01', 'EDU-02']
+  const { education } = siteContent
+
+  it.each(ids.map((id, index) => [id, index] as const))(
+    '%s equals the module entry at its position',
+    (id, index) => {
+      const entry = education[index]
+      if (!entry) throw new Error(`module has no education entry at position ${index}`)
+      expect(sameCopy(label(id, 'Degree'), entry.degree), `${id} degree`).toBe(true)
+      expect(sameCopy(label(id, 'Organization'), entry.school), `${id} school`).toBe(true)
+      expect(sameCopy(label(id, 'Location'), entry.location), `${id} location`).toBe(true)
+      expect(sameCopy(label(id, 'Dates'), entry.dates.label), `${id} dates`).toBe(true)
+      expect(withoutSourceNote(label(id, 'GPA')), `${id} gpa`).toBe(entry.gpa)
+      const track = 'track' in entry ? (entry as { track?: string }).track : undefined
+      const inventoryTrack = block(id).labels.get('Track')
+      if (inventoryTrack === undefined) {
+        expect(track, `${id} track`).toBeUndefined()
+      } else {
+        expect(withoutSourceNote(inventoryTrack), `${id} track`).toBe(track)
+      }
+    },
+  )
+})
+
+describe('inventory completeness (CNT-02)', () => {
+  const idsWith = (prefix: string) => [...inventory.keys()].filter((id) => id.startsWith(prefix))
+  const isPublicContact = (id: string) => /^(https:\/\/|[^\s@]+@[^\s@]+$)/.test(label(id, 'Value'))
+  const { experience, projects, education, skills, contacts } = siteContent
+
+  it.each([
+    ['EXP', experience.length, 5],
+    ['PRJ', projects.length, 7],
+    ['EDU', education.length, 2],
+    ['SKL', skills.length, 4],
+  ] as const)(
+    'every %s inventory block has exactly one module entry (%i of %i)',
+    (prefix, count, expected) => {
+      expect(idsWith(prefix)).toHaveLength(expected)
+      expect(count).toBe(expected)
+    },
+  )
+
+  it('every public CON block has exactly one contact, and no excluded one is present', () => {
+    const publicIds = idsWith('CON').filter(isPublicContact)
+    expect(publicIds).toEqual(['CON-01', 'CON-02', 'CON-03', 'CON-04'])
+    expect(contacts).toHaveLength(4)
+    expect(contacts.map((c) => c.kind)).toEqual(['email', 'github', 'linkedin', 'instagram'])
+  })
+
+  it('module ids are unique within each array', () => {
+    for (const list of [experience, projects, education, skills]) {
+      const ids = list.map((entry) => entry.id)
+      expect(new Set(ids).size).toBe(ids.length)
+    }
+  })
+
+  it('self-check: a missing module entry would be detected', () => {
+    expect(idsWith('SKL')).not.toHaveLength(skills.length - 1)
+  })
+})
+
 describe('write-up rule (03-02, permanent)', () => {
   const figure = /\d+(?:\.\d+)?%?/g
 

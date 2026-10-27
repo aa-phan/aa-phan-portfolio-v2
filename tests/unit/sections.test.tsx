@@ -1,9 +1,12 @@
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { siteContent } from '@/content'
+import { About } from '@/sections/About/About'
+import { Education } from '@/sections/Education/Education'
 import { Experience } from '@/sections/Experience/Experience'
 import { ProjectDialog } from '@/sections/Projects/ProjectDialog'
 import { Projects } from '@/sections/Projects/Projects'
+import { Skills } from '@/sections/Skills/Skills'
 
 describe('Experience section', () => {
   it('is labelled by an h2 named Experience', () => {
@@ -203,5 +206,53 @@ describe('ProjectDialog', () => {
     expect(onIndexChange).not.toHaveBeenCalled()
     fireEvent.click(dialog)
     expect(onIndexChange).toHaveBeenCalledWith(null)
+  })
+})
+
+describe('About section', () => {
+  it('renders the photo with its exact alt, lazy loading and no quote', () => {
+    const { container } = render(<About profile={siteContent.profile} />)
+    const photo = container.querySelector('img')
+    expect(photo?.getAttribute('alt')).toBe('Aaron Phan DJing at his UT Austin graduation')
+    expect(photo?.getAttribute('loading')).toBe('lazy')
+    expect(photo?.getAttribute('width')).toBe('539')
+    expect(photo?.getAttribute('height')).toBe('800')
+    expect(container.querySelectorAll('img')).toHaveLength(1)
+    expect(container.querySelector('blockquote')).toBeNull()
+  })
+
+  it('renders a blockquote only when the profile carries a quote', () => {
+    const { container, rerender } = render(<About profile={{ bio: ['One.', 'Two.'] }} />)
+    expect(container.querySelector('blockquote')).toBeNull()
+    rerender(<About profile={{ bio: ['One.', 'Two.'], quote: 'A line.' }} />)
+    expect(container.querySelector('blockquote')?.textContent).toBe('A line.')
+  })
+})
+
+describe('Skills section', () => {
+  it('renders four statements, each with a weight 750 label and a closing period', () => {
+    const { container } = render(<Skills groups={siteContent.skills} />)
+    const items = container.querySelectorAll('li')
+    expect(items).toHaveLength(4)
+    for (const item of items) {
+      expect(item.querySelector('.skill-label')?.className).toContain('font-[750]')
+      expect(item.textContent?.endsWith('.')).toBe(true)
+    }
+    expect(items[0]?.textContent).toBe(
+      'Languages: C/C++, Go, HTML/CSS, Java, JavaScript, MATLAB, Python, SQL (Postgres).',
+    )
+  })
+})
+
+describe('Education section', () => {
+  it('leads with the graduation date and shows both GPAs in tabular figures', () => {
+    render(<Education entries={siteContent.education} />)
+    for (const text of ['December 2026', 'GPA 3.2', 'GPA 3.911']) {
+      const node = screen.getByText(text)
+      expect(node.className, text).toContain('tabular-nums')
+    }
+    expect(screen.getByText('Graduating')).toBeTruthy()
+    expect(screen.getByText('Data Science track')).toBeTruthy()
+    expect(screen.getByText('High School Diploma, May 2022')).toBeTruthy()
   })
 })

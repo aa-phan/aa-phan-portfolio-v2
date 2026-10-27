@@ -302,3 +302,54 @@ test.describe('about me', () => {
     })
   }
 })
+
+test.describe('skills and education', () => {
+  const STATEMENTS = [
+    'Languages: C/C++, Go, HTML/CSS, Java, JavaScript, MATLAB, Python, SQL (Postgres).',
+    'Frameworks: Flask, JavaFX, JUnit, Langchain, PyQt.',
+    'Developer Tools: Anaconda, Claude Code, Docker, Git, IntelliJ, Jenkins, Jira, Jupyter Notebook, Kubernetes, MongoDB, PyCharm, Salesforce, Supabase, VS Code.',
+    'Libraries: Keras, Matplotlib, NumPy, Pandas, PyTorch, Scikit-learn, TensorFlow.',
+  ]
+
+  test('the four skill statements are visible with a weight 750 group name', async ({ page }) => {
+    await open(page)
+    const items = page.locator('#skills li')
+    await expect(items).toHaveCount(4)
+    for (let i = 0; i < STATEMENTS.length; i++) {
+      await expect(items.nth(i)).toHaveText(STATEMENTS[i] ?? '')
+      await expect(items.nth(i)).toBeVisible()
+    }
+    const weights = await page
+      .locator('#skills .skill-label')
+      .evaluateAll((els) => els.map((el) => getComputedStyle(el).fontWeight))
+    expect(weights).toEqual(['750', '750', '750', '750'])
+  })
+
+  test('there is no slider or marquee in Skills', async ({ page }) => {
+    await open(page)
+    await expect(
+      page.locator('#skills [class*="slider" i], #skills [class*="marquee" i]'),
+    ).toHaveCount(0)
+  })
+
+  test('education shows the graduation date and both GPAs', async ({ page }) => {
+    await open(page)
+    const education = page.locator('#education')
+    await expect(education.getByText('December 2026', { exact: true })).toBeVisible()
+    await expect(education.getByText('Graduating', { exact: true })).toBeVisible()
+    await expect(education.getByText('GPA 3.2', { exact: true })).toBeVisible()
+    await expect(education.getByText('GPA 3.911', { exact: true })).toBeVisible()
+    await expect(education.getByText('Data Science track')).toBeVisible()
+    await expect(education.getByText('High School Diploma, May 2022')).toBeVisible()
+  })
+
+  test('at 320 px there is no horizontal overflow and the statements wrap', async ({ page }) => {
+    await open(page, 320)
+    const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth)
+    expect(scrollWidth).toBeLessThanOrEqual(320)
+    const overflow = await page
+      .locator('#skills li, #education p, #education h3')
+      .evaluateAll((els) => els.filter((el) => el.scrollWidth > el.clientWidth + 1).length)
+    expect(overflow).toBe(0)
+  })
+})

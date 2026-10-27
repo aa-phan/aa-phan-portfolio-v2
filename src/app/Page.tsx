@@ -4,9 +4,11 @@ import { SECTION_IDS } from '@/layout/nav-items'
 import { PillNav } from '@/layout/PillNav'
 import { SiteHeader } from '@/layout/SiteHeader'
 import { About } from '@/sections/About/About'
+import { Education } from '@/sections/Education/Education'
 import { Experience } from '@/sections/Experience/Experience'
 import { Hero } from '@/sections/Hero/Hero'
 import { Projects } from '@/sections/Projects/Projects'
+import { Skills } from '@/sections/Skills/Skills'
 import { SectionStubs } from '@/sections/Stubs/SectionStubs'
 
 const MAILTO = 'mailto:'
@@ -25,6 +27,8 @@ export function Page() {
         <Experience entries={siteContent.experience} />
         <Projects projects={siteContent.projects} />
         <About profile={profile} />
+        <Skills groups={siteContent.skills} />
+        <Education entries={siteContent.education} />
         <SectionStubs />
       </main>
       <PillNav activeId={activeId} onNavigate={lockTo} />
