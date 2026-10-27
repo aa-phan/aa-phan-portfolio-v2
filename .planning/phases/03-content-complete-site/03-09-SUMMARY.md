@@ -58,8 +58,8 @@ patterns-established:
   - "Mobile-only specs live in tests/e2e/mobile/ and run on the Pixel 7 project; desktop specs run on chromium"
   - "Reduced-motion running-animation checks wait 100 ms and count playState running, because the base guard turns every change into a 0.01 ms transition"
 
-requirements-completed: [NAV-02]
-requirements-partial: [NAV-04]
+requirements-completed: []
+requirements-partial: [NAV-02, NAV-04]
 
 duration: ~35 min
 completed: 2026-10-27
@@ -200,7 +200,7 @@ None. T-03-14 (motion chunk failure) is mitigated and tested: with every non-ini
 ## Notes for follow-up
 
 - The scrim and panel are visually checked by a screenshot at 375 x 667 only; real-phone feel is left to the human run (coverage D7).
-- NAV-04 is not marked complete: the project rule leaves it to phase-level acceptance. NAV-02 is marked complete here because the desktop half (03-07) and this phone half are both delivered.
+- NAV-04 is not marked complete: the project rule leaves it to phase-level acceptance. NAV-02 has both halves delivered (desktop in 03-07, phone here) but was not marked complete: plan 03-18 also declares it and has no summary yet, so the shared-ID gate (`requirements.ready-ids`) held it back.
 
 ## Next Phase Readiness
 
