@@ -14,7 +14,7 @@ The journey runs from decisions to a live site in six phases. It starts with a s
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Decisions and Documentation** - Time-boxed design, content, IA, tokens, motion and architecture docs that gate all code (completed 2026-10-09)
-- [ ] **Phase 2: Deployed Themed Skeleton** - Vite/React/TS/Tailwind app live on the project URL with CI, JS budget, light/dark tokens and one motion-preference source
+- [x] **Phase 2: Deployed Themed Skeleton** - Vite/React/TS/Tailwind app live on the project URL with CI, JS budget, light/dark tokens and one motion-preference source (completed 2026-10-26)
 - [ ] **Phase 3: Content-Complete Site** - All six sections with real content, resume download, copy-email and navigation, passing the 10-second phone test
 - [ ] **Phase 4: Motion System and Signature Rail** - Shared motion rules plus the handled-object project rail with overlay, touch and keyboard paths
 - [ ] **Phase 5: Section Treatments** - Expandable experience cards, skills slider, education card and hero text effect
@@ -76,7 +76,7 @@ Plans:
   4. Every text, UI and focus color pair in both themes passes WCAG 2.2 AA according to the committed contrast matrix, checked against the real token files.
   5. With the OS reduce-motion setting on, a rendered motion-primitives component and the page show all content with no animation, driven by one preference source, and lint fails any import of `motion/react` or `@react-spring/web` outside `anim/` and the vendored primitives.
 
-**Plans:** 9/9 plans executed
+**Plans:** 9/9 plans complete
 
 Plans:
 **Wave 1**
@@ -267,7 +267,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Decisions and Documentation | 7/7 | Complete    | 2026-10-09 |
-| 2. Deployed Themed Skeleton | 9/9 | In Progress | - |
+| 2. Deployed Themed Skeleton | 9/9 | Complete    | 2026-10-26 |
 | 3. Content-Complete Site | 0/0 | Not started | - |
 | 4. Motion System and Signature Rail | 0/0 | Not started | - |
 | 5. Section Treatments | 0/0 | Not started | - |
