@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="robots" content="noindex" />
+    <meta
+      name="description"
+      content="This page is not part of Aaron Phan's portfolio. Head back to the home page for his experience, projects and contact details."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <title>Dead air. | Aaron Phan</title>
+    <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
+    <script>
+      ;(function () {
+        var t
+        try {
+          t = localStorage.getItem('theme')
+        } catch (e) {}
+        if (t !== 'light' && t !== 'dark') {
+          try {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+          } catch (e) {
+            t = 'light'
+          }
+        }
+        document.documentElement.setAttribute('data-theme', t)
+      })()
+    </script>
+    <link rel="stylesheet" href="/src/styles/not-found.css" />
+  </head>
+  <body class="flex min-h-svh flex-col bg-background font-sans text-text antialiased">
+    <main
+      id="main"
+      class="mx-auto flex w-full max-w-[1680px] flex-1 flex-col justify-center gap-6 px-[clamp(1rem,2vw,2rem)] py-16 md:gap-8"
+    >
+      <h1 class="-ms-[0.055em] text-mega text-balance">Dead air.</h1>
+      <p class="text-l text-text">This page isn’t in the set.</p>
+      <div>
+        <a
+          href="%BASE_URL%"
+          class="cta cta-filled relative isolate inline-flex min-h-11 items-center justify-center overflow-hidden rounded-pill bg-primary px-6 text-s font-medium text-on-primary"
+        >
+          <span class="cta-flood" aria-hidden="true"></span>
+          <span class="cta-label">Back to the home page</span>
+        </a>
+      </div>
+    </main>
+    <footer class="pb-6 md:pb-8">
+      <div class="mx-auto max-w-[1680px] px-[clamp(1rem,2vw,2rem)]">
+        <div class="finale-fit">
+          <span aria-hidden="true" class="wordmark wordmark-finale">
+            <span class="wordmark-day">PH<span class="wordmark-glyph">A</span>N</span>
+            <span class="wordmark-night">PH<span class="wordmark-glyph">V</span>NTM</span>
+          </span>
+        </div>
+        <div class="mt-4 flex flex-wrap justify-between gap-x-6 gap-y-1 text-s text-muted">
+          <p>Aaron Phan. DJs as PHVNTM.</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

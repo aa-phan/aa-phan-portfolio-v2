@@ -3,6 +3,7 @@
 @import './base.css';
 @import './interactions.css';
 @source '../../index.html';
+@source '../../404.html';
 @source '../../src';
 
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
