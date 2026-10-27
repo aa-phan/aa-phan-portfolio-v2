@@ -125,3 +125,55 @@
     text-underline-offset: 2px;
   }
 }
+
+/*
+ * Wordmark (D-01): PHAN by day, PHVNTM by night. Both strings are in the DOM and plain CSS on
+ * html[data-theme] shows one (the repo has no dark variant utilities). Night widens the
+ * wordmark only; headings keep their width. The glyph span is the hook for the later flip.
+ */
+.wordmark {
+  display: inline-block;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.wordmark-nav {
+  font-size: var(--text-m);
+  line-height: 1.35;
+  letter-spacing: -0.03em;
+}
+
+[data-theme='dark'] .wordmark-day,
+[data-theme='light'] .wordmark-night {
+  display: none;
+}
+
+.wordmark-night {
+  font-stretch: 125%;
+}
+
+/*
+ * Home link underline (D-01): a 2 px currentColor line draws left to right in 220 ms on hover
+ * (devices that hover only) and on keyboard focus. Reduced motion shows it with no transition.
+ */
+.home-link .wordmark {
+  background: linear-gradient(currentColor, currentColor) no-repeat left bottom / 0 2px;
+  padding-bottom: 2px;
+  transition: background-size 220ms var(--ease-out);
+}
+
+@media (hover: hover) {
+  .home-link:hover .wordmark {
+    background-size: 100% 2px;
+  }
+}
+
+.home-link:focus-visible .wordmark {
+  background-size: 100% 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-link .wordmark {
+    transition: none;
+  }
+}

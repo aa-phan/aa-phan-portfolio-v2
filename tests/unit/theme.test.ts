@@ -119,6 +119,15 @@ describe('subscribeTheme', () => {
     stop()
   })
 
+  it('never applies a stored value other than light or dark', () => {
+    document.documentElement.setAttribute('data-theme', 'light')
+    localStorage.setItem(THEME_STORAGE_KEY, 'purple')
+    const stop = subscribeTheme(() => {})
+    window.dispatchEvent(storageEvent(THEME_STORAGE_KEY))
+    expect(theme()).toBe('light')
+    stop()
+  })
+
   it('ignores storage events for other keys', () => {
     document.documentElement.setAttribute('data-theme', 'light')
     localStorage.setItem(THEME_STORAGE_KEY, 'dark')

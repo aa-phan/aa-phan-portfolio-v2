@@ -1,14 +1,9 @@
 import { ThemeThumb } from '@/anim'
-import { applyTheme, type Theme } from '@/lib/theme'
-import { useTheme } from '@/lib/useTheme'
+import { useTheme } from '@/hooks/useTheme'
 
 export function ThemeToggle() {
-  const dark = useTheme() === 'dark'
-
-  function toggle() {
-    const next: Theme = dark ? 'light' : 'dark'
-    applyTheme(next)
-  }
+  const { theme, toggle } = useTheme()
+  const dark = theme === 'dark'
 
   return (
     <button
