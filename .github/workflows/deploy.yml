@@ -5,14 +5,17 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Least privilege: the build job runs npm install scripts, so it gets read-only access (Pages read
+# is what configure-pages needs to look up the site). Only the deploy job is granted the Pages
+# write and OIDC token permissions.
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
+# Let an in-flight deployment finish. A newer push waits in the queue and replaces any older
+# pending run, instead of cancelling a deploy half way through.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 env:
   VITE_BASE: /aa-phan-portfolio-v2/ # the cutover sets this to /
@@ -20,6 +23,9 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -28,6 +34,10 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run verify
+      # The same end-to-end gate CI runs: a failing JS-disabled shell, theme flash or
+      # reduced-motion check must stop the publish.
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
@@ -36,6 +46,9 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
