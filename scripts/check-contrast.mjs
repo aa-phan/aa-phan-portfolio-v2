@@ -53,11 +53,15 @@ function parseArgs(argv) {
   return opts
 }
 
+function errorMessage(e) {
+  return e instanceof Error ? e.message : String(e)
+}
+
 function readText(file) {
   try {
     return fs.readFileSync(file, 'utf8')
   } catch (e) {
-    throw new UsageError(`cannot read ${file}: ${e.message}`)
+    throw new UsageError(`cannot read ${file}: ${errorMessage(e)}`)
   }
 }
 
@@ -67,7 +71,7 @@ function loadPairs(file) {
     pairs = JSON.parse(readText(file))
   } catch (e) {
     if (e instanceof UsageError) throw e
-    throw new UsageError(`${file} is not valid JSON: ${e.message}`)
+    throw new UsageError(`${file} is not valid JSON: ${errorMessage(e)}`)
   }
   if (!Array.isArray(pairs) || pairs.length === 0) {
     throw new UsageError(`${file} must hold a non-empty array of pairs`)

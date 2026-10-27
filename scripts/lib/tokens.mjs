@@ -36,7 +36,9 @@ const MIX =
 // declarations win, matching the cascade for equal specificity.
 export function parseTokensCss(cssText) {
   const css = cssText.replace(/\/\*[\s\S]*?\*\//g, '')
+  /** @type {Record<string, string>} */
   const light = {}
+  /** @type {Record<string, string>} */
   const dark = {}
   for (const block of css.matchAll(BLOCK)) {
     const selector = block[1].trim()
@@ -78,6 +80,7 @@ export function resolveTheme(raw) {
     cache.set(name, color)
     return color
   }
+  /** @type {Record<string, ReturnType<typeof parseOklch>>} */
   const out = {}
   for (const name of COLOR_TOKENS) out[name] = resolve(name, [])
   return out
