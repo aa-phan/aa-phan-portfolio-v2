@@ -11,8 +11,12 @@ test('reduced motion: theme thumb snaps to its target', async ({ browser }) => {
   await expect(toggle).toHaveAttribute('aria-pressed', 'false')
 
   const transform = await page.evaluate(() => {
-    const button = document.querySelector<HTMLButtonElement>('button[aria-pressed]')
-    const thumb = document.querySelector<HTMLElement>('[data-part="theme-thumb"]')
+    // The toggle exists in more than one bar; only the one a visitor sees (rendered, so it has an
+    // offsetParent) counts.
+    const visible = <T extends HTMLElement>(selector: string) =>
+      Array.from(document.querySelectorAll<T>(selector)).find((el) => el.offsetParent !== null)
+    const button = visible<HTMLButtonElement>('button[aria-pressed]')
+    const thumb = visible<HTMLElement>('[data-part="theme-thumb"]')
     if (!button || !thumb) throw new Error('toggle not found')
     const start = getComputedStyle(thumb).transform
     button.click()
@@ -51,8 +55,11 @@ test('motion: theme thumb animates with no preference', async ({ browser }) => {
   const travel = await page.evaluate(
     () =>
       new Promise<number[]>((resolve) => {
-        const button = document.querySelector<HTMLButtonElement>('button[aria-pressed]')
-        const thumb = document.querySelector<HTMLElement>('[data-part="theme-thumb"]')
+        // Only the visible toggle instance (rendered, so it has an offsetParent) counts.
+        const visible = <T extends HTMLElement>(selector: string) =>
+          Array.from(document.querySelectorAll<T>(selector)).find((el) => el.offsetParent !== null)
+        const button = visible<HTMLButtonElement>('button[aria-pressed]')
+        const thumb = visible<HTMLElement>('[data-part="theme-thumb"]')
         if (!button || !thumb) throw new Error('toggle not found')
         button.click()
         const xs: number[] = []
@@ -70,7 +77,9 @@ test('motion: theme thumb animates with no preference', async ({ browser }) => {
     .poll(
       () =>
         page.evaluate(() => {
-          const thumb = document.querySelector<HTMLElement>('[data-part="theme-thumb"]')
+          const thumb = Array.from(
+            document.querySelectorAll<HTMLElement>('[data-part="theme-thumb"]'),
+          ).find((el) => el.offsetParent !== null)
           return thumb ? getComputedStyle(thumb).transform : ''
         }),
       { timeout: 2000 },

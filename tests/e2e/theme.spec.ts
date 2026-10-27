@@ -4,6 +4,12 @@ const LIGHT_BG = 'oklch(0.9696 0.003 290)'
 const DARK_BG = 'oklch(0.1491 0.0128 292.39)'
 const BACKGROUNDS = { light: LIGHT_BG, dark: DARK_BG } as const
 const SCHEMES = ['light', 'dark'] as const
+// The toggle lives in a phone bar and a desktop bar. Each test that matters for the switch runs at
+// both widths, and checks that only the bar a visitor sees exposes a toggle.
+const VIEWPORTS = [
+  { width: 1280, height: 800 },
+  { width: 375, height: 667 },
+] as const
 
 test('theme: toggle switches to dark and the choice survives reload', async ({ browser }) => {
   const context = await browser.newContext({ colorScheme: 'light' })
@@ -11,6 +17,7 @@ test('theme: toggle switches to dark and the choice survives reload', async ({ b
   await page.goto('./')
 
   const toggle = page.getByRole('button', { name: 'Dark theme' })
+  await expect(toggle).toHaveCount(1)
   await expect(toggle).toHaveAttribute('aria-pressed', 'false')
 
   await toggle.click()
@@ -29,20 +36,21 @@ test('theme: toggle switches to dark and the choice survives reload', async ({ b
   await context.close()
 })
 
-test('theme: first visit follows system preference', async ({ browser }) => {
-  for (const scheme of SCHEMES) {
-    const context = await browser.newContext({ colorScheme: scheme })
-    const page = await context.newPage()
-    await page.goto('./')
+for (const viewport of VIEWPORTS) {
+  test(`theme: first visit follows system preference at ${viewport.width}`, async ({ browser }) => {
+    for (const scheme of SCHEMES) {
+      const context = await browser.newContext({ colorScheme: scheme, viewport })
+      const page = await context.newPage()
+      await page.goto('./')
 
-    await expect(page.locator('html')).toHaveAttribute('data-theme', scheme)
-    await expect(page.getByRole('button', { name: 'Dark theme' })).toHaveAttribute(
-      'aria-pressed',
-      scheme === 'dark' ? 'true' : 'false',
-    )
-    await context.close()
-  }
-})
+      await expect(page.locator('html')).toHaveAttribute('data-theme', scheme)
+      const toggle = page.getByRole('button', { name: 'Dark theme' })
+      await expect(toggle).toHaveCount(1)
+      await expect(toggle).toHaveAttribute('aria-pressed', scheme === 'dark' ? 'true' : 'false')
+      await context.close()
+    }
+  })
+}
 
 test('theme: stored choice wins over system preference', async ({ browser }) => {
   const context = await browser.newContext({ colorScheme: 'dark' })
@@ -77,57 +85,60 @@ test('theme: no flash, attribute and background are set before app JS runs', asy
   }
 })
 
-test('theme: blocked storage falls back to system preference and toggle still works', async ({
-  browser,
-}) => {
-  const context = await browser.newContext({ colorScheme: 'dark' })
-  await context.addInitScript(() => {
-    Object.defineProperty(window, 'localStorage', {
-      configurable: true,
-      get() {
-        throw new DOMException('blocked', 'SecurityError')
-      },
+for (const viewport of VIEWPORTS) {
+  test(`theme: blocked storage falls back to system preference and toggle still works at ${viewport.width}`, async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({ colorScheme: 'dark', viewport })
+    await context.addInitScript(() => {
+      Object.defineProperty(window, 'localStorage', {
+        configurable: true,
+        get() {
+          throw new DOMException('blocked', 'SecurityError')
+        },
+      })
     })
+    const page = await context.newPage()
+    const errors: Error[] = []
+    page.on('pageerror', (e) => errors.push(e))
+
+    await page.goto('./')
+    await page.waitForLoadState('networkidle')
+
+    const toggle = page.getByRole('button', { name: 'Dark theme' })
+    await expect(toggle).toHaveCount(1)
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+    await expect(toggle).toHaveAttribute('aria-pressed', 'true')
+
+    await toggle.click()
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+    await expect(toggle).toHaveAttribute('aria-pressed', 'false')
+
+    // The visitor chose light but nothing could be stored: a later OS scheme flip must not undo it.
+    // The change event arrives some time after emulateMedia resolves, so count the events with a
+    // listener registered after the app's own and wait for each flip to be delivered before
+    // asserting.
+    await page.evaluate(() => {
+      const flips: boolean[] = []
+      const query = window.matchMedia('(prefers-color-scheme: dark)')
+      query.addEventListener('change', () => flips.push(query.matches))
+      Object.assign(window, { flips })
+    })
+    const flipCount = () =>
+      page.evaluate(() => (window as unknown as { flips: boolean[] }).flips.length)
+    for (const [delivered, scheme] of [
+      [1, 'light'],
+      [2, 'dark'],
+    ] as const) {
+      await page.emulateMedia({ colorScheme: scheme })
+      await expect.poll(flipCount).toBe(delivered)
+    }
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+
+    expect(errors).toEqual([])
+    await context.close()
   })
-  const page = await context.newPage()
-  const errors: Error[] = []
-  page.on('pageerror', (e) => errors.push(e))
-
-  await page.goto('./')
-  await page.waitForLoadState('networkidle')
-
-  const toggle = page.getByRole('button', { name: 'Dark theme' })
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
-  await expect(toggle).toHaveAttribute('aria-pressed', 'true')
-
-  await toggle.click()
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
-  await expect(toggle).toHaveAttribute('aria-pressed', 'false')
-
-  // The visitor chose light but nothing could be stored: a later OS scheme flip must not undo it.
-  // The change event arrives some time after emulateMedia resolves, so count the events with a
-  // listener registered after the app's own and wait for each flip to be delivered before
-  // asserting.
-  await page.evaluate(() => {
-    const flips: boolean[] = []
-    const query = window.matchMedia('(prefers-color-scheme: dark)')
-    query.addEventListener('change', () => flips.push(query.matches))
-    Object.assign(window, { flips })
-  })
-  const flipCount = () =>
-    page.evaluate(() => (window as unknown as { flips: boolean[] }).flips.length)
-  for (const [delivered, scheme] of [
-    [1, 'light'],
-    [2, 'dark'],
-  ] as const) {
-    await page.emulateMedia({ colorScheme: scheme })
-    await expect.poll(flipCount).toBe(delivered)
-  }
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
-
-  expect(errors).toEqual([])
-  await context.close()
-})
+}
 
 test('theme: follows an OS scheme change while no choice is stored, then stops once chosen', async ({
   browser,
