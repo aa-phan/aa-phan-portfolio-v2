@@ -4,16 +4,16 @@ milestone: v2
 current_phase: 03
 current_phase_name: Content-Complete Site
 status: executing
-stopped_at: Completed 03-01-PLAN.md
-last_updated: "2026-10-27T08:37:05.884Z"
+stopped_at: Completed 03-02-PLAN.md (D-16 resume export deferred to owner)
+last_updated: "2026-10-27T17:37:35.852Z"
 last_activity: 2026-10-27
 last_activity_desc: Phase 03 execution started
-state_head: 6daa23a5d3d3f8a02051f79aac176009d0a128dc
+state_head: e965c81383812f9c49c1613231e8344e422d1c75
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 35
-  completed_plans: 17
+  completed_plans: 18
   percent: 33
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-10-08)
 ## Current Position
 
 Phase: 03 (Content-Complete Site) — EXECUTING
-Plan: 2 of 19
+Plan: 3 of 19
 Status: Ready to execute
 Last activity: 2026-10-27 — Phase 03 execution started
 
@@ -77,6 +77,7 @@ Progress: [███░░░░░░░] 33%
 | Phase 02 P08 | 12 min | 2 tasks | 7 files |
 | Phase 02 P09 | 35 min | 3 tasks | 9 files |
 | Phase 03 P01 | n/a | 2 tasks | 6 files |
+| Phase 03 P03-02 | n/a | 3 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -114,6 +115,7 @@ Recent decisions affecting current work:
 - [Phase 02]: Phase branch promoted to main with git merge --ff-only and a normal push; staging live at https://aa-phan.github.io/aa-phan-portfolio-v2/
 - [Phase 03]: D-02: palette D replaces palette A in place (only --text, --background, --secondary change); contrast gate PASS checks=40
 - [Phase 03]: T-03-SC: owner approved pdfjs-dist@6.3.289 and axe-core@4.13.0 as devDependencies
+- [Phase 03]: D-13/D-14/D-15 answered by owner (2026-10-27): PRJ-01 link only, three write-ups approved, About quote removed; D-16 resume export pending owner action before 03-17 phone gate
 
 ### Pending Todos
 
@@ -128,6 +130,7 @@ None yet.
 - [Phase 2]: motion 14 is days old. Pin with `~14.0.0`, commit the lockfile, fallbacks are 12.43 and 13.5.1.
 - [Phase 4]: Needs real-device spikes (iPhone, mid-range Android) for drag versus scroll, including the iOS touch-action bug (WebKit 232545). Measure, then decide react-spring keep-or-drop and LazyMotion.
 - [Phase 6]: Pages source-switch downtime is unverified. Rehearse on a throwaway repo or accept the risk with a written rollback.
+- D-16/CNT-04: owner must export phone-free PDF over public/resume.pdf (still 594-byte stand-in) before plan 03-17 phone gate
 
 ### Quick Tasks Completed
 
@@ -145,6 +148,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-27T08:37:05.812Z
-Stopped at: Completed 03-01-PLAN.md
+Last session: 2026-10-27T17:37:23.941Z
+Stopped at: Completed 03-02-PLAN.md (D-16 resume export deferred to owner)
 Resume file: None

@@ -130,13 +130,13 @@ Waves 4 to 8 run one plan each: every plan from 02-05 on builds into `dist/` and
   4. Only the images the page uses ship, as optimized AVIF/WebP with EXIF stripped.
   5. On a phone, a first-time visitor can find name, role, experience, projects, resume and contact within 10 seconds (the 10-second acceptance test).
 
-**Plans:** 1/19 plans executed
+**Plans:** 2/19 plans executed
 
 Plans:
 **Wave 1**
 
 - [x] 03-01-PLAN.md — Tracer: palette D through tokens, contrast gate, matrix and pins; owner legitimacy check for pdfjs-dist and axe-core (wave 1)
-- [ ] 03-02-PLAN.md — Owner inputs: featured write-ups drafted from resume facts, then project links, write-up approval, the About line and the phone-free resume recorded in the inventory (wave 1)
+- [x] 03-02-PLAN.md — Owner inputs: featured write-ups drafted from resume facts, then project links, write-up approval, the About line and the phone-free resume recorded in the inventory (wave 1)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -268,7 +268,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Decisions and Documentation | 7/7 | Complete    | 2026-10-09 |
 | 2. Deployed Themed Skeleton | 9/9 | Complete    | 2026-10-26 |
-| 3. Content-Complete Site | 1/19 | In Progress | - |
+| 3. Content-Complete Site | 2/19 | In Progress | - |
 | 4. Motion System and Signature Rail | 0/0 | Not started | - |
 | 5. Section Treatments | 0/0 | Not started | - |
 | 6. Hardening and Cutover | 0/0 | Not started | - |
