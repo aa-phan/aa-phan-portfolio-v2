@@ -1,6 +1,7 @@
 import { contacts } from './contacts'
 import { experience } from './experience'
 import { profile } from './profile'
+import { projects } from './projects'
 
 export type {
   ContactLink,
@@ -14,4 +15,4 @@ export type {
   Writeup,
 } from './schema'
 
-export const siteContent = { profile, contacts, experience }
+export const siteContent = { profile, contacts, experience, projects }

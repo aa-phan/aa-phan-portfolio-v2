@@ -7,6 +7,7 @@ export function Section({
   title,
   mood = 'tight',
   className,
+  aside,
   children,
 }: {
   id: string
@@ -14,6 +15,8 @@ export function Section({
   /** Vertical rhythm: tight is 96 px top and bottom, airy opens with 160 px on top. */
   mood?: 'tight' | 'airy'
   className?: string
+  /** Optional content on the heading's baseline at the right (the Projects crate index). */
+  aside?: ReactNode
   children?: ReactNode
 }) {
   return (
@@ -28,9 +31,18 @@ export function Section({
       )}
     >
       <Container>
-        <h2 id={`${id}-heading`} className="text-xl">
-          {title}
-        </h2>
+        {aside ? (
+          <div className="flex items-baseline justify-between gap-4">
+            <h2 id={`${id}-heading`} className="text-xl">
+              {title}
+            </h2>
+            {aside}
+          </div>
+        ) : (
+          <h2 id={`${id}-heading`} className="text-xl">
+            {title}
+          </h2>
+        )}
         {children}
       </Container>
     </section>

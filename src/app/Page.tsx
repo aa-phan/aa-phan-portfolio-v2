@@ -5,6 +5,7 @@ import { PillNav } from '@/layout/PillNav'
 import { SiteHeader } from '@/layout/SiteHeader'
 import { Experience } from '@/sections/Experience/Experience'
 import { Hero } from '@/sections/Hero/Hero'
+import { Projects } from '@/sections/Projects/Projects'
 import { SectionStubs } from '@/sections/Stubs/SectionStubs'
 
 const MAILTO = 'mailto:'
@@ -21,6 +22,7 @@ export function Page() {
       <main id="main" tabIndex={-1} className="outline-none">
         <Hero profile={profile} email={email} />
         <Experience entries={siteContent.experience} />
+        <Projects projects={siteContent.projects} />
         <SectionStubs />
       </main>
       <PillNav activeId={activeId} onNavigate={lockTo} />
