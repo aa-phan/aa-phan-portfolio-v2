@@ -74,6 +74,39 @@ describe('subscribeTheme', () => {
     stop()
   })
 
+  it('keeps an explicit choice for the session when storage is blocked', async () => {
+    // A fresh module copy, so the session flag does not leak into the other tests.
+    vi.resetModules()
+    const fresh = await import('@/lib/theme')
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('blocked')
+    })
+    document.documentElement.setAttribute('data-theme', 'light')
+    const stop = fresh.subscribeTheme(() => {})
+    fresh.applyTheme('dark')
+    setMediaQuery(DARK_QUERY, true)
+    setMediaQuery(DARK_QUERY, false)
+    expect(theme()).toBe('dark')
+    stop()
+  })
+
+  it('follows the system scheme again once storage works and the choice is cleared elsewhere', async () => {
+    vi.resetModules()
+    const fresh = await import('@/lib/theme')
+    const setItem = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('blocked')
+    })
+    document.documentElement.setAttribute('data-theme', 'light')
+    const stop = fresh.subscribeTheme(() => {})
+    fresh.applyTheme('dark')
+    setItem.mockRestore()
+    window.dispatchEvent(storageEvent(null))
+    setMediaQuery(DARK_QUERY, true)
+    setMediaQuery(DARK_QUERY, false)
+    expect(theme()).toBe('light')
+    stop()
+  })
+
   it('adopts a choice stored by another tab and a cleared store', () => {
     document.documentElement.setAttribute('data-theme', 'light')
     const stop = subscribeTheme(() => {})

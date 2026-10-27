@@ -8,15 +8,25 @@ export function readTheme(): Theme {
 }
 
 /**
+ * True when the visitor chose a theme but storage refused it. Storage is the record of an
+ * explicit choice, so without this flag a blocked-storage visitor would look like one who
+ * never chose, and the next OS scheme change would silently undo their choice.
+ */
+let unsavedChoice = false
+
+/**
  * Switch the theme: the attribute is written first so the switch always works, then the
- * choice is stored. When storage is blocked the choice lasts for the page session only.
+ * choice is stored. When storage is blocked the choice lasts for the page session only, and
+ * the OS scheme no longer overrides it.
  */
 export function applyTheme(theme: Theme): void {
   document.documentElement.setAttribute('data-theme', theme)
   try {
     localStorage.setItem(THEME_STORAGE_KEY, theme)
+    unsavedChoice = false
   } catch {
     // Storage blocked (private mode, policy): the in-memory choice still applies.
+    unsavedChoice = true
   }
 }
 
@@ -63,6 +73,8 @@ export function subscribeTheme(onChange: () => void): () => void {
   // `storage` fires in other tabs only. A null key means the whole store was cleared.
   const onStorage = (event: StorageEvent) => {
     if (event.key !== null && event.key !== THEME_STORAGE_KEY) return
+    // Storage events only fire when storage works, and it is now the record of the choice.
+    unsavedChoice = false
     syncAttribute(storedTheme() ?? systemTheme())
   }
   window.addEventListener('storage', onStorage)
@@ -74,7 +86,7 @@ export function subscribeTheme(onChange: () => void): () => void {
     // matchMedia missing or blocked: OS scheme changes are simply not followed.
   }
   const onSystemChange = () => {
-    if (storedTheme() === null) syncAttribute(systemTheme())
+    if (!unsavedChoice && storedTheme() === null) syncAttribute(systemTheme())
   }
   mql?.addEventListener('change', onSystemChange)
 

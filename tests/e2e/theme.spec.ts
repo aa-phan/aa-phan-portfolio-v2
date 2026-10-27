@@ -104,6 +104,27 @@ test('theme: blocked storage falls back to system preference and toggle still wo
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
   await expect(toggle).toHaveAttribute('aria-pressed', 'false')
 
+  // The visitor chose light but nothing could be stored: a later OS scheme flip must not undo it.
+  // The change event arrives some time after emulateMedia resolves, so count the events with a
+  // listener registered after the app's own and wait for each flip to be delivered before
+  // asserting.
+  await page.evaluate(() => {
+    const flips: boolean[] = []
+    const query = window.matchMedia('(prefers-color-scheme: dark)')
+    query.addEventListener('change', () => flips.push(query.matches))
+    Object.assign(window, { flips })
+  })
+  const flipCount = () =>
+    page.evaluate(() => (window as unknown as { flips: boolean[] }).flips.length)
+  for (const [delivered, scheme] of [
+    [1, 'light'],
+    [2, 'dark'],
+  ] as const) {
+    await page.emulateMedia({ colorScheme: scheme })
+    await expect.poll(flipCount).toBe(delivered)
+  }
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+
   expect(errors).toEqual([])
   await context.close()
 })
