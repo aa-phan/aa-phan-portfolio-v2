@@ -10,32 +10,32 @@ Wireframes are ASCII inside this markdown file (D-02). No HTML sketches.
 
 Seven fixed anchors. Every phase doc refers to a section by its anchor, never by a position number. The page order is in the next section.
 
-| Anchor | Section |
-|--------|---------|
-| {#hero} | Hero |
+| Anchor        | Section    |
+| ------------- | ---------- |
+| {#hero}       | Hero       |
 | {#experience} | Experience |
-| {#projects} | Projects |
-| {#about} | About Me |
-| {#skills} | Skills |
-| {#education} | Education |
-| {#contact} | Contact Me |
+| {#projects}   | Projects   |
+| {#about}      | About Me   |
+| {#skills}     | Skills     |
+| {#education}  | Education  |
+| {#contact}    | Contact Me |
 
 ## Section order
 
-| Order | Section | Anchor | Why here |
-|-------|---------|--------|----------|
-| 1 | Hero | {#hero} | Name, role and the Resume and Copy email CTAs are visible at first paint, which is most of the 10-second test. |
-| 2 | Experience | {#experience} | Recruiters look for experience first; it is the first thing below the fold and one pill tap from anywhere. |
-| 3 | Projects | {#projects} | The signature rail and overlay; it follows Experience so the work sits next to the roles it came from. |
-| 4 | About Me | {#about} | Personality (the DJ side) comes after the evidence, and links to the Instagram in Contact. |
-| 5 | Skills | {#skills} | A scan-friendly summary once the reader knows the work. |
-| 6 | Education | {#education} | Short, factual, needed for the GPA and degree check, but rarely the first stop. |
-| 7 | Contact Me | {#contact} | The page ends on the action; it is also one tap from the hero CTA and the pill nav. |
+| Order | Section    | Anchor        | Why here                                                                                                       |
+| ----- | ---------- | ------------- | -------------------------------------------------------------------------------------------------------------- |
+| 1     | Hero       | {#hero}       | Name, role and the Resume and Copy email CTAs are visible at first paint, which is most of the 10-second test. |
+| 2     | Experience | {#experience} | Recruiters look for experience first; it is the first thing below the fold and one pill tap from anywhere.     |
+| 3     | Projects   | {#projects}   | The signature rail and overlay; it follows Experience so the work sits next to the roles it came from.         |
+| 4     | About Me   | {#about}      | Personality (the DJ side) comes after the evidence, and links to the Instagram in Contact.                     |
+| 5     | Skills     | {#skills}     | A scan-friendly summary once the reader knows the work.                                                        |
+| 6     | Education  | {#education}  | Short, factual, needed for the GPA and degree check, but rarely the first stop.                                |
+| 7     | Contact Me | {#contact}    | The page ends on the action; it is also one tap from the hero CTA and the pill nav.                            |
 
 ## Navigation model
 
-- Below 768 px a thumb-reachable bottom pill nav is fixed to the viewport. Collapsed, it has three segments: Experience, Projects and Menu. Experience and Projects jump straight to their section; the Menu segment morphs the pill in place into a panel of the six section links, the theme toggle and Resume [IX-07] (reference 445). Contact is one tap from the hero CTA and the Contact link in the panel.
-- 768 px and wider use a sticky top nav: section links, the theme toggle [IX-10] and a Resume button, with a scroll-spy indicator under the active link [IX-08]. The bottom pill is not shown at this width.
+- 768 px and wider use a sticky top nav, always visible, on a solid ground (D-18): the wordmark top left (PHAN in the light theme, PHVNTM in the dark theme; it is the home link), the six section links (Experience, Projects, About, Skills, Education, Contact), the theme toggle [IX-10] and a Resume button, with a scroll-spy indicator under the active link [IX-08]. The bottom pill is not shown at this width.
+- Below 768 px a non-fixed top bar sits above the hero (D-19): the wordmark on the left and the theme toggle on the right, visible on first paint. A thumb-reachable bottom pill nav is fixed to the viewport. Collapsed, it has three segments: Experience, Projects and Menu. Experience and Projects jump straight to their section; the Menu segment morphs the pill in place into a panel of the six section links, the theme toggle and Resume [IX-07] (reference 445). The panel carries Contact Me.
 - A skip link is the first focusable element and targets {#main}.
 - Nav form is chosen by width. Hover effects are chosen by pointer capability, never by width.
 - Nav links are plain anchors in a single page: there is no router, and the URL changes only by the browser's own hash handling.
@@ -44,14 +44,14 @@ Seven fixed anchors. Every phase doc refers to a section by its anchor, never by
 
 A first-time visitor on a 375 px phone reaches each item with at most one tap from the first viewport.
 
-| Item | Where at 375 | Taps from first viewport |
-|------|--------------|--------------------------|
-| Name | The h1 in the hero, visible on first paint | 0 |
-| Role | The role line directly under the name | 0 |
-| Experience | The Experience segment of the collapsed pill nav | 1 |
-| Projects | The Projects segment of the collapsed pill nav | 1 |
-| Resume | The Download resume CTA in the hero | 1 |
-| Contact | The Contact CTA in the hero, or the Copy email CTA | 1 |
+| Item       | Where at 375                                                    | Taps from first viewport |
+| ---------- | --------------------------------------------------------------- | ------------------------ |
+| Name       | The h1 in the hero, visible on first paint                      | 0                        |
+| Role       | The role line directly under the name                           | 0                        |
+| Experience | The Experience segment of the collapsed pill nav                | 1                        |
+| Projects   | The Projects segment of the collapsed pill nav                  | 1                        |
+| Resume     | The Download resume CTA in the hero                             | 1                        |
+| Contact    | The Copy email CTA in the hero (Contact Me is in the pill menu) | 1                        |
 
 Pass rule: all six found in 10 seconds or less, timed on a real phone with motion enabled (the same rule as the design brief).
 
@@ -59,9 +59,11 @@ Pass rule: all six found in 10 seconds or less, timed on a real phone with motio
 
 A 375 x 667 viewport shows, top to bottom:
 
-- The name as the h1.
-- The role line under it, with the text effect [IX-01] on the role line only.
-- The Download resume and Copy email CTAs (and a Contact link), each at least 44 px tall.
+- The top bar with the wordmark and the theme toggle.
+- The name as the h1, "Aaron" over "Phan".
+- The role line under it, plain text from first paint (the text effect [IX-01] arrives in Phase 5).
+- The Download resume and Copy email CTAs, each at least 44 px tall. There is no Contact link in the hero.
+- The two corner facts under the CTAs: "Graduating December 2026, UT Austin ECE" and "Last role: Capital One, summer 2026".
 - The collapsed pill nav fixed at the bottom, clear of the CTAs.
 - The top edge of {#experience}, so the reader knows there is more below.
 
@@ -103,18 +105,18 @@ Featured order: PRJ-01, PRJ-02, PRJ-03, then PRJ-04, PRJ-05, PRJ-06, PRJ-07 (the
 
 ### Frame: Hero @ 375
 
-The first viewport (375 x 667): name, role line, three CTAs in the HERO-03 order, the collapsed pill nav and the top edge of Experience. Nothing here waits on motion.
+The first viewport (375 x 667): the top bar, the name over two lines, the role line, the two CTAs in the HERO-03 order, the corner facts (HERO-04), the collapsed pill nav and the top edge of Experience. Nothing here waits on motion.
 
 ```text
 +------------------------------------+
-| {#hero} inside {#main}             |
+| PHAN                           (o) |
+| top bar, not fixed                 |
 |                                    |
-| Aaron Phan                         |
-| (h1, visible on first paint)       |
+| Aaron                              |
+| Phan   (h1, two lines)             |
 |                                    |
 | Software engineer building         |
 | cloud-native backends in Go.       |
-|   ^ role line [IX-01]              |
 |                                    |
 | +--------------------------------+ |
 | | [ Download resume ]    [IX-02] | |
@@ -122,7 +124,8 @@ The first viewport (375 x 667): name, role line, three CTAs in the HERO-03 order
 | +--------------------------------+ |
 | | [ Copy email ]         [IX-09] | |
 | +--------------------------------+ |
-| Contact >      (to {#contact})     |
+| Graduating Dec 2026, UT Austin ECE |
+| Last role: Capital One, summer 2026|
 |                                    |
 | Experience                         |
 |   (top edge of {#experience})      |
@@ -135,30 +138,33 @@ The first viewport (375 x 667): name, role line, three CTAs in the HERO-03 order
 
 Notes:
 
-- Name, role and CTAs are in the HTML at first paint; [IX-01] animates only the role line.
-- Every button and card carries the press-squish [IX-02] on its inner surface.
+- Name, role, CTAs and facts are in the HTML at first paint. The role line is plain text; the text effect [IX-01] arrives in Phase 5.
+- Every button and card gets the press-squish [IX-02] on its inner surface in Phase 4; until then the CTAs answer with the ink flood on press.
+- The facts are abbreviated in the frame only ("Dec"); the site shows the full HERO-04 copy.
 - Hero text is left aligned and the bottom pill never covers a CTA at 375 x 667.
 
 ### Frame: Hero @ 768
 
-The sticky top nav replaces the pill nav at 768 px. The nav row is drawn to scale, so it has no side padding in this frame.
+The sticky top nav replaces the pill nav at 768 px. The nav row is drawn to scale, so it has no side padding in this frame, and its link labels are abbreviated in the frame only.
 
 ```text
 +--------------------------------------------------------------+
-|Experience Projects About Skills Education Contact (o)[Resume]|
-|sticky top nav  [IX-08] indicator  [IX-10] theme              |
+| PHAN Exp. Proj. About Skills Edu. Contact (o) [ Resume ]     |
+| sticky top nav, solid ground [IX-08] indicator [IX-10] theme |
 |                                                              |
 | {#hero}                                                      |
 |                                                              |
-| Aaron Phan                                                   |
+| Aaron                                                        |
+| Phan                          (h1, two lines, columns 1 to 9)|
 |                                                              |
-| Software engineer building cloud-native backends in          |
-| Go.   [IX-01]                                                |
+| Software engineer building           +---------------------+ |
+| cloud-native backends in Go.         | [ Download resume ] | |
+|                                      +---------------------+ |
+|                                      +---------------------+ |
+|                                      | [ Copy email ]      | |
+|                                      +---------------------+ |
 |                                                              |
-| +----------------------+  +------------------+               |
-| | [ Download resume ]  |  | [ Copy email ]   |   Contact >   |
-| +----------------------+  +------------------+               |
-| CTA surfaces squish on press [IX-02]; copy [IX-09]           |
+| Grad. Dec 2026, UT Austin ECE  Last: Capital One, summer 2026|
 |                                                              |
 | Experience                                                   |
 | (top edge of {#experience})                                  |
@@ -169,38 +175,38 @@ Notes:
 
 - Nav is chosen by width (768 px and up); pointer effects are chosen by pointer capability.
 - The skip link targets {#main} and appears before the nav on first Tab.
+- The corner facts are abbreviated in the frame only; the site shows the full HERO-04 copy. The role line text effect [IX-01] arrives in Phase 5; press-squish [IX-02] arrives in Phase 4.
 
 ### Frame: Hero @ 1280
 
-The hero at desktop width. Name and role sit left; the CTA wrappers get the fine-pointer Magnetic effect, which is decoration only.
+The hero at desktop width: a poster with the name at the top, the role line and CTAs in the middle band, and the two corner facts along the bottom.
 
 ```text
 +----------------------------------------------------------------------------------------------+
-| Aaron Phan      Experience  Projects  About  Skills  Education  Contact     (o) [ Resume ]   |
-|sticky top nav   scroll-spy [IX-08]   theme toggle [IX-10]                                    |
+| PHAN        Experience  Projects  About  Skills  Education  Contact            (o) [ Resume ]|
+| sticky top nav, solid ground    scroll-spy [IX-08]    theme toggle [IX-10]                   |
 |                                                                                              |
 | {#hero}                                                                                      |
 |                                                                                              |
+| Aaron                                                                                        |
+| Phan                                                  (h1, two lines, columns 1 to 9)        |
 |                                                                                              |
-| Aaron Phan                                                                                   |
+| Software engineer building cloud-native                          +---------------------+     |
+| backends in Go.                      (columns 1 to 6)            | [ Download resume ] |     |
+|                                                                  +---------------------+     |
+|                                                                  +---------------------+     |
+|                                                                  | [ Copy email ]      |     |
+|                                                                  +---------------------+     |
+|                                                                    (columns 9 to 12)         |
 |                                                                                              |
-| Software engineer building cloud-native backends in Go.   [IX-01]                            |
-|                                                                                              |
-| +------------------------+   +------------------+                                            |
-| | [ Download resume ]    |   | [ Copy email ]   |    Contact >                               |
-| +------------------------+   +------------------+                                            |
-|   ^ CTA wrappers carry Magnetic [IX-17]; inner buttons squish [IX-02]                        |
-|                                                                                              |
-| wheel scroll is smoothed on desktop [IX-16]; first section reveal [IX-15]                    |
-|                                                                                              |
-| Experience   (top edge of {#experience})                                                     |
+| Graduating December 2026, UT Austin ECE              Last role: Capital One, summer 2026     |
 +----------------------------------------------------------------------------------------------+
 ```
 
 Notes:
 
-- Magnetic is fine-pointer only: (hover: hover) and (pointer: fine). Touch gets [IX-02] only.
-- IX IDs used here: [IX-01] [IX-02] [IX-08] [IX-09] [IX-10] [IX-15] [IX-16] [IX-17]. Anchors: {#hero}, {#main}.
+- The CTAs carry the ink flood on hover and focus; press-squish [IX-02] arrives in Phase 4, the role line text effect [IX-01] in Phase 5.
+- IX IDs used here: [IX-01] (Phase 5) [IX-02] (Phase 4) [IX-08] [IX-09] [IX-10]. Anchors: {#hero}, {#main}.
 
 ### Frame: Experience @ 375
 

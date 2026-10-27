@@ -6,10 +6,10 @@ Phase 1 plan 01-01 created this file with the structure, the source-of-truth rul
 
 ## Sources
 
-| Source | Role | Version |
-|--------|------|---------|
-| `references/Aaron_Phan_Resume.pdf` | Source of truth | File modified 2026-10-09. Kept out of version control by design (D-03). |
-| `aa-phan.github.io/index.html` (the iPod site) | Legacy source | Repo `aa-phan.github.io` at commit `d9d97db`. Content constants sit at lines 460-545. |
+| Source                                         | Role            | Version                                                                               |
+| ---------------------------------------------- | --------------- | ------------------------------------------------------------------------------------- |
+| `references/Aaron_Phan_Resume.pdf`             | Source of truth | File modified 2026-10-09. Kept out of version control by design (D-03).               |
+| `aa-phan.github.io/index.html` (the iPod site) | Legacy source   | Repo `aa-phan.github.io` at commit `d9d97db`. Content constants sit at lines 460-545. |
 
 ## Source-of-truth rules
 
@@ -55,10 +55,19 @@ Wireframes: `### Frame: Hero` in `01-IA-WIREFRAMES.md`. The hero role line is ga
 
 ### HERO-03 CTAs
 
-- Value: Three calls to action in this order: Download resume, Copy email, Contact.
-- Source: resume (Download resume links to the phone-stripped copy, CON-05), CON-01 (Copy email, IX-09), the Contact section anchor.
+- Value: Two calls to action in this order: Download resume, Copy email.
+- Source: resume (Download resume links to the phone-stripped copy, CON-05), CON-01 (Copy email, IX-09).
 - Legacy-site value: None. The iPod site has no hero CTAs.
 - Resolution: New for v2. Download resume points at the CNT-04 derivative, never at the source file.
+- Edit record (rule 3, plan 03-06, D-04): before = three CTAs in the order Download resume, Copy email, Contact; after = two CTAs, Download resume and Copy email. Reason: D-04. The hero has no Contact link; Contact is reached through Copy email (one tap, no navigation) and through the nav and the pill menu.
+
+### HERO-04 Corner facts
+
+- Value: Graduating December 2026, UT Austin ECE
+- Value: Last role: Capital One, summer 2026
+- Source: EDU-01 (dates, degree), EXP-01 (organization, dates)
+- Legacy-site value: None. The iPod site has no hero facts.
+- Resolution: New for v2 (D-04); recruiter facts, not decoration. Shown bottom-left and bottom-right of the hero at 768 px and up, stacked under the CTAs on phones.
 
 ## Experience {#experience}
 
@@ -428,60 +437,60 @@ Six items. Five are public; one (CON-06) is recorded only to make its exclusion 
 
 Collected in one stop by plan 03-02 so the content modules are typed once from a final inventory.
 
-| ID | Input | Status |
-|----|-------|--------|
-| D-13 | A public repository URL per project (PRJ-01 to PRJ-07), or none | answered (2026-10-27): PRJ-01 RecipeCart https://github.com/aa-phan/RecipeCart; PRJ-02 to PRJ-07 none for now, owner will add more later |
-| D-14 | Approve, edit or reject the three featured write-ups (PRJ-01 to PRJ-03) | answered (2026-10-27): all three approved as drafted |
-| D-15 | One line in the owner's own words about the night side for About Me, or none yet | answered (2026-10-27): none yet; proverb removed |
+| ID   | Input                                                                             | Status                                                                                                                                                                             |
+| ---- | --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| D-13 | A public repository URL per project (PRJ-01 to PRJ-07), or none                   | answered (2026-10-27): PRJ-01 RecipeCart https://github.com/aa-phan/RecipeCart; PRJ-02 to PRJ-07 none for now, owner will add more later                                           |
+| D-14 | Approve, edit or reject the three featured write-ups (PRJ-01 to PRJ-03)           | answered (2026-10-27): all three approved as drafted                                                                                                                               |
+| D-15 | One line in the owner's own words about the night side for About Me, or none yet  | answered (2026-10-27): none yet; proverb removed                                                                                                                                   |
 | D-16 | A phone-free PDF exported from the resume source and saved over public/resume.pdf | answered (2026-10-27) as pending owner action: owner chose to keep the number off the site and will export the phone-free PDF himself later; public/resume.pdf is not yet replaced |
 
 ## Reconciliation log
 
 Every place the resume and the legacy site disagree, or a source was added or dropped, is listed here (CNT-03).
 
-| ID | Topic | Resume | Legacy site | Resolution |
-|----|-------|--------|-------------|------------|
-| R-01 | Symbotic and Suspect Genie metrics | None of the figures appear | Symbotic: 76% accuracy, 12% defective-freight reduction, 12 hours/month downtime. Suspect Genie: 25% automation, at least 50% accuracy, 24% model improvement, 36% fewer labor hours | Conflict resolved by the resume revision of 2026-10-09: the resume carries none of these figures, so none are published, and EXP-03 and PRJ-03 use the resume bullets verbatim (D-08, CNT-03). |
-| R-02 | Capital One title | Software Engineer Intern | Software Engineering Intern | Resume title wins (EXP-01). |
-| R-03 | Symbotic title | System Engineer Intern | Systems Engineer Intern | Resume title wins (EXP-03). |
-| R-04 | Spectrum start date | May 2025 | June 2025 | Resume date wins (EXP-02). |
-| R-05 | Locations for EXP-01 to EXP-03 | Plano TX, Austin TX, Raymond NH | Not stated | Added from the resume. |
-| R-06 | Experience recount (D-09) | Lists 3 roles: Capital One, Spectrum, Symbotic | Lists those 3 plus OdderTech IT and ITS Student Consultant I | Keeping both legacy-only roles gives 3 + 2 = 5 entries, matching the 5-entry requirement. Keeping OdderTech is G-10; dropping it would leave 4. |
-| R-07 | Spectrum and A.T.L.A.S both state 30% efficiency | The resume places the 30% figure in both the Spectrum bullet and the A.T.L.A.S bullet | Same | Kept in both places as written on the resume (EXP-02, PRJ-02). |
-| R-08 | Education GPA and track | Omitted | GPA 3.2, Track Data Science | Taken from the legacy site because the resume omits them (EDU-01). |
-| R-09 | Stack and skill name casing and order | Mixed casing (Typescript, Javascript, MatLAB, PyQT, Tensorflow, Pytorch) | PyQT, otherwise official casing | Official product casing and alphabetical skill order per G-09 (SKL-01..04, PRJ-01..03). |
-| R-10 | Legacy skills absent from the resume skills list | Not listed | AWS CloudFormation, AWS Lambda under Developer Tools | Dropped per D-10 (G-13 ruled: dropped). Both still appear in the Capital One bullets. |
+| ID   | Topic                                            | Resume                                                                                | Legacy site                                                                                                                                                                          | Resolution                                                                                                                                                                                     |
+| ---- | ------------------------------------------------ | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R-01 | Symbotic and Suspect Genie metrics               | None of the figures appear                                                            | Symbotic: 76% accuracy, 12% defective-freight reduction, 12 hours/month downtime. Suspect Genie: 25% automation, at least 50% accuracy, 24% model improvement, 36% fewer labor hours | Conflict resolved by the resume revision of 2026-10-09: the resume carries none of these figures, so none are published, and EXP-03 and PRJ-03 use the resume bullets verbatim (D-08, CNT-03). |
+| R-02 | Capital One title                                | Software Engineer Intern                                                              | Software Engineering Intern                                                                                                                                                          | Resume title wins (EXP-01).                                                                                                                                                                    |
+| R-03 | Symbotic title                                   | System Engineer Intern                                                                | Systems Engineer Intern                                                                                                                                                              | Resume title wins (EXP-03).                                                                                                                                                                    |
+| R-04 | Spectrum start date                              | May 2025                                                                              | June 2025                                                                                                                                                                            | Resume date wins (EXP-02).                                                                                                                                                                     |
+| R-05 | Locations for EXP-01 to EXP-03                   | Plano TX, Austin TX, Raymond NH                                                       | Not stated                                                                                                                                                                           | Added from the resume.                                                                                                                                                                         |
+| R-06 | Experience recount (D-09)                        | Lists 3 roles: Capital One, Spectrum, Symbotic                                        | Lists those 3 plus OdderTech IT and ITS Student Consultant I                                                                                                                         | Keeping both legacy-only roles gives 3 + 2 = 5 entries, matching the 5-entry requirement. Keeping OdderTech is G-10; dropping it would leave 4.                                                |
+| R-07 | Spectrum and A.T.L.A.S both state 30% efficiency | The resume places the 30% figure in both the Spectrum bullet and the A.T.L.A.S bullet | Same                                                                                                                                                                                 | Kept in both places as written on the resume (EXP-02, PRJ-02).                                                                                                                                 |
+| R-08 | Education GPA and track                          | Omitted                                                                               | GPA 3.2, Track Data Science                                                                                                                                                          | Taken from the legacy site because the resume omits them (EDU-01).                                                                                                                             |
+| R-09 | Stack and skill name casing and order            | Mixed casing (Typescript, Javascript, MatLAB, PyQT, Tensorflow, Pytorch)              | PyQT, otherwise official casing                                                                                                                                                      | Official product casing and alphabetical skill order per G-09 (SKL-01..04, PRJ-01..03).                                                                                                        |
+| R-10 | Legacy skills absent from the resume skills list | Not listed                                                                            | AWS CloudFormation, AWS Lambda under Developer Tools                                                                                                                                 | Dropped per D-10 (G-13 ruled: dropped). Both still appear in the Capital One bullets.                                                                                                          |
 
 ## Content gaps
 
 Each gap needs a ruling (D-07): supplied, deferred (Phase 3) or dropped. The user ruled on 2026-10-09 with "accept-defaults": every proposed default stands and the public email is confirmed (D-11).
 
-| ID | Gap | Proposed default | Ruling | Status |
-|----|-----|------------------|--------|--------|
-| G-01 | Project links (repo or demo URLs) for PRJ-01 to PRJ-07 | Deferred (Phase 3) | Default accepted: no URLs supplied now. Owner ruling 2026-10-27: 1 URL supplied (PRJ-01 RecipeCart); PRJ-02 to PRJ-07 none for now, more to be added later | supplied (owner, 2026-10-27) |
-| G-02 | Project screenshots or cover art | Deferred (Phase 3) | Default accepted: no images supplied now | deferred (Phase 3) |
-| G-03 | Featured projects | Supplied as PRJ-01, PRJ-02, PRJ-03 | Default accepted: PRJ-01, PRJ-02, PRJ-03 are featured | supplied |
-| G-04 | Hero role line (HERO-02) | Supplied as option 1 from HERO-02 | Default accepted: option 1, "Software engineer building cloud-native backends in Go." | supplied |
-| G-05 | UT Austin logo | Deferred (Phase 3), with a monogram chip if no asset arrives | Default accepted: asset deferred, monogram chip fallback | deferred (Phase 3) |
-| G-06 | OdderTech logo | Deferred (Phase 3), with a monogram chip if no asset arrives | Default accepted: asset deferred, monogram chip fallback | deferred (Phase 3) |
-| G-07 | Public email | Supplied as aaron.phan240@gmail.com (resume and legacy agree, D-11) | Default accepted: aaron.phan240@gmail.com confirmed public (D-11) | supplied |
-| G-08 | Academic-term dates | Supplied: Spring 2024 = January 2024 – May 2024, Fall 2023 = August 2023 – December 2023, Summer 2022 = June 2022 – August 2022 | Default accepted as proposed | supplied |
-| G-09 | Skill and stack name casing and order | Supplied: official product casing (TypeScript, JavaScript, PyQt, MATLAB, TensorFlow, PyTorch), alphabetical within each skill group, stacks keep source order | Default accepted as proposed | supplied |
-| G-10 | Keep the legacy-only OdderTech IT role (EXP-04) | Supplied (kept) | Default accepted: EXP-04 kept | supplied |
-| G-11 | Keep the high school education entry (EDU-02) | Supplied (kept) | Default accepted: EDU-02 kept | supplied |
-| G-12 | Higher-resolution employer logos (Capital One, Spectrum, Symbotic are favicon-grade) | Deferred (Phase 3) | Default accepted: higher-resolution logos deferred | deferred (Phase 3) |
-| G-13 | Legacy-only skills not on the resume skills list (AWS CloudFormation, AWS Lambda) | Dropped per D-10 | Default accepted: AWS CloudFormation and AWS Lambda dropped from the skills list | dropped |
+| ID   | Gap                                                                                  | Proposed default                                                                                                                                              | Ruling                                                                                                                                                     | Status                       |
+| ---- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| G-01 | Project links (repo or demo URLs) for PRJ-01 to PRJ-07                               | Deferred (Phase 3)                                                                                                                                            | Default accepted: no URLs supplied now. Owner ruling 2026-10-27: 1 URL supplied (PRJ-01 RecipeCart); PRJ-02 to PRJ-07 none for now, more to be added later | supplied (owner, 2026-10-27) |
+| G-02 | Project screenshots or cover art                                                     | Deferred (Phase 3)                                                                                                                                            | Default accepted: no images supplied now                                                                                                                   | deferred (Phase 3)           |
+| G-03 | Featured projects                                                                    | Supplied as PRJ-01, PRJ-02, PRJ-03                                                                                                                            | Default accepted: PRJ-01, PRJ-02, PRJ-03 are featured                                                                                                      | supplied                     |
+| G-04 | Hero role line (HERO-02)                                                             | Supplied as option 1 from HERO-02                                                                                                                             | Default accepted: option 1, "Software engineer building cloud-native backends in Go."                                                                      | supplied                     |
+| G-05 | UT Austin logo                                                                       | Deferred (Phase 3), with a monogram chip if no asset arrives                                                                                                  | Default accepted: asset deferred, monogram chip fallback                                                                                                   | deferred (Phase 3)           |
+| G-06 | OdderTech logo                                                                       | Deferred (Phase 3), with a monogram chip if no asset arrives                                                                                                  | Default accepted: asset deferred, monogram chip fallback                                                                                                   | deferred (Phase 3)           |
+| G-07 | Public email                                                                         | Supplied as aaron.phan240@gmail.com (resume and legacy agree, D-11)                                                                                           | Default accepted: aaron.phan240@gmail.com confirmed public (D-11)                                                                                          | supplied                     |
+| G-08 | Academic-term dates                                                                  | Supplied: Spring 2024 = January 2024 – May 2024, Fall 2023 = August 2023 – December 2023, Summer 2022 = June 2022 – August 2022                               | Default accepted as proposed                                                                                                                               | supplied                     |
+| G-09 | Skill and stack name casing and order                                                | Supplied: official product casing (TypeScript, JavaScript, PyQt, MATLAB, TensorFlow, PyTorch), alphabetical within each skill group, stacks keep source order | Default accepted as proposed                                                                                                                               | supplied                     |
+| G-10 | Keep the legacy-only OdderTech IT role (EXP-04)                                      | Supplied (kept)                                                                                                                                               | Default accepted: EXP-04 kept                                                                                                                              | supplied                     |
+| G-11 | Keep the high school education entry (EDU-02)                                        | Supplied (kept)                                                                                                                                               | Default accepted: EDU-02 kept                                                                                                                              | supplied                     |
+| G-12 | Higher-resolution employer logos (Capital One, Spectrum, Symbotic are favicon-grade) | Deferred (Phase 3)                                                                                                                                            | Default accepted: higher-resolution logos deferred                                                                                                         | deferred (Phase 3)           |
+| G-13 | Legacy-only skills not on the resume skills list (AWS CloudFormation, AWS Lambda)    | Dropped per D-10                                                                                                                                              | Default accepted: AWS CloudFormation and AWS Lambda dropped from the skills list                                                                           | dropped                      |
 
 ## Assets
 
 Measured with `sips -g pixelWidth -g pixelHeight` on the files under `aa-phan.github.io/images/` at commit `d9d97db`.
 
-| File | Used by | Size (px) | Note |
-|------|---------|-----------|------|
-| `images/about-dj.jpg` | ABT-04 | 539 x 800 | Portrait. Resize and convert with vite-imagetools in Phase 3. |
-| `images/logos/capitalone.png` | EXP-01 | 124 x 113 | Favicon-grade (G-12). |
-| `images/logos/spectrum.png` | EXP-02 | 32 x 32 | Favicon-grade (G-12). |
-| `images/logos/symbotic.png` | EXP-03 | 96 x 96 | Favicon-grade (G-12). |
+| File                          | Used by | Size (px) | Note                                                          |
+| ----------------------------- | ------- | --------- | ------------------------------------------------------------- |
+| `images/about-dj.jpg`         | ABT-04  | 539 x 800 | Portrait. Resize and convert with vite-imagetools in Phase 3. |
+| `images/logos/capitalone.png` | EXP-01  | 124 x 113 | Favicon-grade (G-12).                                         |
+| `images/logos/spectrum.png`   | EXP-02  | 32 x 32   | Favicon-grade (G-12).                                         |
+| `images/logos/symbotic.png`   | EXP-03  | 96 x 96   | Favicon-grade (G-12).                                         |
 
 The legacy template images (img-1 to img-6, blog-1 to blog-4, cover_bg_1, img_bg_1 to img_bg_3, about.jpg, loc.png) are not migrated.
 
