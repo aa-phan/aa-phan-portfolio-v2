@@ -153,13 +153,13 @@ Seven projects. PRJ-01 to PRJ-03 come from the resume; PRJ-04 to PRJ-07 are lega
   1. Built a TypeScript pipeline converting TikTok recipes into Kroger cart items using OCR and Claude.
   2. Developed a deterministic matching engine ranking grocery products by availability, package fit, and unit price.
   3. Implemented an OAuth2-secured cart workflow with explicit user approval, encrypted tokens, and automated secret redaction.
-- Write-up (D-14, proposed):
+- Write-up (D-14, approved):
   Problem: A recipe in a TikTok video had no direct path into a Kroger cart.
   Approach: A TypeScript pipeline converts the recipe using OCR and Claude, then a deterministic engine ranks products by availability, package fit, and unit price.
   Outcome: Items reach the cart through an OAuth2-secured workflow with explicit user approval, encrypted tokens, and automated secret redaction.
-- Edit record (rule 3): before = the bullets above are shown in the project detail; after (if approved) = the three lines replace the bullets in the project detail and the bullets stay recorded here.
+- Edit record (rule 3): approved by owner as drafted (2026-10-27). before = the bullets above are shown in the project detail; after = the three lines replace the bullets in the project detail and the bullets stay recorded here.
 - Related experience: none
-- Links: none yet, deferred to Phase 3 (G-01)
+- Links: Code https://github.com/aa-phan/RecipeCart
 - Image: none yet, deferred to Phase 3 (G-02)
 - Featured: yes
 - Source: resume
@@ -176,13 +176,13 @@ Seven projects. PRJ-01 to PRJ-03 come from the resume; PRJ-04 to PRJ-07 are lega
   1. Built a Python/Flask web app standardizing post-installation logging, improving team efficiency by 30%.
   2. Conducted user testing with off-net installation teams to iteratively refine features based on direct feedback.
   3. Documented technical architecture, reducing developer onboarding time by 12%.
-- Write-up (D-14, proposed):
+- Write-up (D-14, approved):
   Problem: Post-installation logging at Spectrum needed standardizing.
   Approach: I built a Python/Flask web app and refined its features through user testing with off-net installation teams.
   Outcome: Team efficiency improved by 30%, and documenting the technical architecture reduced developer onboarding time by 12%.
-- Edit record (rule 3): before = the bullets above are shown in the project detail; after (if approved) = the three lines replace the bullets in the project detail and the bullets stay recorded here.
+- Edit record (rule 3): approved by owner as drafted (2026-10-27). before = the bullets above are shown in the project detail; after = the three lines replace the bullets in the project detail and the bullets stay recorded here.
 - Related experience: EXP-02
-- Links: none yet, deferred to Phase 3 (G-01)
+- Links: none (owner, 2026-10-27)
 - Image: none yet, deferred to Phase 3 (G-02)
 - Featured: yes
 - Source: resume
@@ -200,13 +200,13 @@ Seven projects. PRJ-01 to PRJ-03 come from the resume; PRJ-04 to PRJ-07 are lega
   2. Developed a data preprocessing pipeline with NumPy, Pandas, and Scikit-learn to clean freight records and prepare features for model training.
   3. Trained and evaluated classification models with TensorFlow and Keras to identify patterns associated with unusable freight.
   4. Built a PyQt interface enabling non-technical teams to upload CSV files and review SKU-level predictions for targeted investigation.
-- Write-up (D-14, proposed):
+- Write-up (D-14, approved):
   Problem: Symbotic needed a way to judge whether shipping freight was viable from case dimensions and weight.
   Approach: A neural network classifier trained with TensorFlow and Keras, on features prepared by a NumPy, Pandas, and Scikit-learn pipeline.
   Outcome: A PyQt interface lets non-technical teams upload CSV files and review SKU-level predictions for targeted investigation.
-- Edit record (rule 3): before = the bullets above are shown in the project detail; after (if approved) = the three lines replace the bullets in the project detail and the bullets stay recorded here.
+- Edit record (rule 3): approved by owner as drafted (2026-10-27). before = the bullets above are shown in the project detail; after = the three lines replace the bullets in the project detail and the bullets stay recorded here.
 - Related experience: EXP-03
-- Links: none yet, deferred to Phase 3 (G-01)
+- Links: none (owner, 2026-10-27)
 - Image: none yet, deferred to Phase 3 (G-02)
 - Featured: yes
 - Source: resume
@@ -225,7 +225,7 @@ Seven projects. PRJ-01 to PRJ-03 come from the resume; PRJ-04 to PRJ-07 are lega
   3. Applied database management concepts to ensure low-latency exchange between frontend and backend applications.
   4. Integrated Supabase into the data storage schema for previous user watch history.
 - Related experience: none
-- Links: none yet, deferred to Phase 3 (G-01)
+- Links: none (owner, 2026-10-27)
 - Image: none yet, deferred to Phase 3 (G-02)
 - Featured: no
 - Source: legacy site
@@ -244,7 +244,7 @@ Seven projects. PRJ-01 to PRJ-03 come from the resume; PRJ-04 to PRJ-07 are lega
   3. Integrated MongoDB for efficient data storage and retrieval, ensuring robust and scalable database management.
   4. Utilized Scene Builder to design and arrange user interface components, streamlining development and improving usability.
 - Related experience: none
-- Links: none yet, deferred to Phase 3 (G-01)
+- Links: none (owner, 2026-10-27)
 - Image: none yet, deferred to Phase 3 (G-02)
 - Featured: no
 - Source: legacy site
@@ -262,7 +262,7 @@ Seven projects. PRJ-01 to PRJ-03 come from the resume; PRJ-04 to PRJ-07 are lega
   2. Developed and tested the stopwatch functionality on an FPGA board, ensuring accurate timekeeping and reliable performance.
   3. Applied state machine concepts to manage the stopwatch's operational states, enhancing the overall system efficiency.
 - Related experience: none
-- Links: none yet, deferred to Phase 3 (G-01)
+- Links: none (owner, 2026-10-27)
 - Image: none yet, deferred to Phase 3 (G-02)
 - Featured: no
 - Source: legacy site
@@ -279,7 +279,7 @@ Seven projects. PRJ-01 to PRJ-03 come from the resume; PRJ-04 to PRJ-07 are lega
   1. Fabricated a mirror frame using plywood and power tools to house a two-way mirror, a Raspberry Pi, and a computer monitor.
   2. Used Ubuntu Linux to create a custom GUI displaying information such as real-time weather content and traffic data to function as a smart display.
 - Related experience: none
-- Links: none yet, deferred to Phase 3 (G-01)
+- Links: none (owner, 2026-10-27)
 - Image: none yet, deferred to Phase 3 (G-02)
 - Featured: no
 - Source: legacy site
@@ -306,10 +306,10 @@ Interaction notes live in the wireframes. The DJ photo pairs with CON-04.
 
 ### ABT-03 Quote
 
-- Value: "The best time to start was yesterday, the next best time to start is today."
+- Value: none (owner line pending)
 - Source: legacy site
-- Legacy-site value: Same (ABOUT.quote).
-- Resolution: Kept verbatim.
+- Legacy-site value: "The best time to start was yesterday, the next best time to start is today." (ABOUT.quote).
+- Resolution: Edit recorded (rule 3, D-15, owner answer 2026-10-27). before = "The best time to start was yesterday, the next best time to start is today." after = none (owner line pending). Reason: D-15. The proverb is removed by owner decision; the section renders without a quote until a line is supplied.
 
 ### ABT-04 Photo
 
@@ -415,7 +415,7 @@ Six items. Five are public; one (CON-06) is recorded only to make its exclusion 
 - Value: A downloadable PDF of the resume, linked from the hero Resume CTA and from the Contact Me section.
 - Source: resume (`references/Aaron_Phan_Resume.pdf` is the content source of truth)
 - Legacy-site value: None. The iPod site has no resume download.
-- Resolution: The file the site serves is a phone-stripped derivative of the source resume, produced under CNT-04 in Phase 3. The source file is never copied into the public repo. The served copy must be checked for the phone number in its text layer and its metadata before it ships.
+- Resolution: The file the site serves is a phone-stripped derivative of the source resume, produced under CNT-04 in Phase 3. The source file is never copied into the public repo. The served copy must be checked for the phone number in its text layer and its metadata before it ships. D-16 update (2026-10-27): the owner chose to keep the number off the site and will export the phone-free PDF himself later; public/resume.pdf is still the stand-in, so this item stays pending owner action and must be done before the plan 03-17 phone gate. Once exported, the site serves the owner's phone-free export (date to be recorded then); the PDF text-layer gate from plan 03-17 checks its text, link annotations and metadata.
 
 ### CON-06 Phone
 
@@ -430,10 +430,10 @@ Collected in one stop by plan 03-02 so the content modules are typed once from a
 
 | ID | Input | Status |
 |----|-------|--------|
-| D-13 | A public repository URL per project (PRJ-01 to PRJ-07), or none | requested |
-| D-14 | Approve, edit or reject the three featured write-ups (PRJ-01 to PRJ-03) | requested |
-| D-15 | One line in the owner's own words about the night side for About Me, or none yet | requested |
-| D-16 | A phone-free PDF exported from the resume source and saved over public/resume.pdf | requested |
+| D-13 | A public repository URL per project (PRJ-01 to PRJ-07), or none | answered (2026-10-27): PRJ-01 RecipeCart https://github.com/aa-phan/RecipeCart; PRJ-02 to PRJ-07 none for now, owner will add more later |
+| D-14 | Approve, edit or reject the three featured write-ups (PRJ-01 to PRJ-03) | answered (2026-10-27): all three approved as drafted |
+| D-15 | One line in the owner's own words about the night side for About Me, or none yet | answered (2026-10-27): none yet; proverb removed |
+| D-16 | A phone-free PDF exported from the resume source and saved over public/resume.pdf | answered (2026-10-27) as pending owner action: owner chose to keep the number off the site and will export the phone-free PDF himself later; public/resume.pdf is not yet replaced |
 
 ## Reconciliation log
 
@@ -458,7 +458,7 @@ Each gap needs a ruling (D-07): supplied, deferred (Phase 3) or dropped. The use
 
 | ID | Gap | Proposed default | Ruling | Status |
 |----|-----|------------------|--------|--------|
-| G-01 | Project links (repo or demo URLs) for PRJ-01 to PRJ-07 | Deferred (Phase 3) | Default accepted: no URLs supplied now | deferred (Phase 3) |
+| G-01 | Project links (repo or demo URLs) for PRJ-01 to PRJ-07 | Deferred (Phase 3) | Default accepted: no URLs supplied now. Owner ruling 2026-10-27: 1 URL supplied (PRJ-01 RecipeCart); PRJ-02 to PRJ-07 none for now, more to be added later | supplied (owner, 2026-10-27) |
 | G-02 | Project screenshots or cover art | Deferred (Phase 3) | Default accepted: no images supplied now | deferred (Phase 3) |
 | G-03 | Featured projects | Supplied as PRJ-01, PRJ-02, PRJ-03 | Default accepted: PRJ-01, PRJ-02, PRJ-03 are featured | supplied |
 | G-04 | Hero role line (HERO-02) | Supplied as option 1 from HERO-02 | Default accepted: option 1, "Software engineer building cloud-native backends in Go." | supplied |
