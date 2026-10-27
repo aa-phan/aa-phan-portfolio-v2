@@ -1,5 +1,6 @@
 import { Component, lazy, Suspense, type ReactNode } from 'react'
 import { useMotionPreference } from '@/anim/useMotionPreference'
+import { cn } from '@/lib/utils'
 
 // The motion runtime lives in the vendored primitive, so it is split into its own chunk and
 // only requested for visitors who have not asked for reduced motion.
@@ -29,17 +30,20 @@ class ChunkBoundary extends Component<BoundaryProps, { failed: boolean }> {
 
 /**
  * Word-by-word reveal for a short line of text. The loading, failed and reduced-motion states
- * all render exactly one plain paragraph with the same class and text, so the static HTML shell
- * and every fallback match. Per-word slide: about 0.35 s in total (13 segments, stagger
+ * all render exactly one plain paragraph with the same text, so the static HTML shell and every
+ * fallback match. The shell, the loading fallback and the reduced-motion paragraph carry
+ * `reveal-pending`, which hides the line (when motion is allowed) until the effect mounts, so it
+ * never shows, vanishes and reveals again. The failed-chunk paragraph omits it and shows at once.
+ * Per-word slide: about 0.35 s in total (13 segments, stagger
  * 0.05 / 3 s, segment 0.3 / 2 s).
  */
 export function TextReveal({ children, className }: TextRevealProps) {
   const { reduced } = useMotionPreference()
-  const plain = <p className={className}>{children}</p>
-  if (reduced) return plain
+  const pending = <p className={cn(className, 'reveal-pending')}>{children}</p>
+  if (reduced) return pending
   return (
-    <ChunkBoundary fallback={plain}>
-      <Suspense fallback={plain}>
+    <ChunkBoundary fallback={<p className={className}>{children}</p>}>
+      <Suspense fallback={pending}>
         <TextEffect
           per="word"
           preset="slide"

@@ -25,3 +25,26 @@
     }
   }
 }
+
+/*
+ * The hero role line is revealed word by word by a lazily loaded effect. The static shell and
+ * the Suspense fallback carry this class so the line is hidden from the first paint until the
+ * effect takes over: without it the visitor would see the text, lose it when the effect mounts
+ * hidden, then watch it come back. The delayed animation is the safety net. If the script or
+ * chunk never arrives, the line fades in on its own after 3 s. Visitors who asked for reduced
+ * motion, and browsers that report scripting as disabled, always see the line at once.
+ */
+@layer components {
+  @media (prefers-reduced-motion: no-preference) and (scripting: enabled) {
+    .reveal-pending {
+      opacity: 0;
+      animation: reveal-pending-show 0s 3s forwards;
+    }
+  }
+
+  @keyframes reveal-pending-show {
+    to {
+      opacity: 1;
+    }
+  }
+}

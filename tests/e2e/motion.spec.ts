@@ -151,6 +151,46 @@ test('motion: role line text effect runs and name and CTAs never animate', async
   await context.close()
 })
 
+test('motion: role line never flashes visible, then hidden, before it is revealed', async ({
+  browser,
+}) => {
+  const context = await browser.newContext({
+    colorScheme: 'light',
+    reducedMotion: 'no-preference',
+  })
+  const page = await context.newPage()
+  // Sample the role line's opacity on every frame from the start of the document.
+  await page.addInitScript(() => {
+    const samples: number[] = []
+    ;(window as unknown as { __roleOpacity: number[] }).__roleOpacity = samples
+    const tick = () => {
+      const el = document.querySelector('#hero p')
+      if (el) samples.push(Number(getComputedStyle(el).opacity))
+      requestAnimationFrame(tick)
+    }
+    requestAnimationFrame(tick)
+  })
+
+  await page.goto('./')
+  await expect(page.locator('#hero p span').first()).toBeAttached({ timeout: 2000 })
+  await expect
+    .poll(() => page.evaluate(() => getComputedStyle(document.querySelector('#hero p')!).opacity))
+    .toBe('1')
+  await page.waitForTimeout(500)
+
+  const samples = await page.evaluate(
+    () => (window as unknown as { __roleOpacity: number[] }).__roleOpacity,
+  )
+  expect(samples.length).toBeGreaterThan(0)
+  // Hidden from the first frame it exists, and never dimmer than an earlier frame afterwards.
+  expect(samples[0]).toBe(0)
+  for (let i = 1; i < samples.length; i++) {
+    expect(samples[i], `frame ${i}`).toBeGreaterThanOrEqual(samples[i - 1]!)
+  }
+  expect(samples.at(-1)).toBe(1)
+  await context.close()
+})
+
 test('motion: role line stays readable when the effect chunk fails to load', async ({
   browser,
   baseURL,
