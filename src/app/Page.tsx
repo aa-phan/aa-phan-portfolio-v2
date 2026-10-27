@@ -3,6 +3,7 @@ import { useActiveSection } from '@/hooks/useActiveSection'
 import { SECTION_IDS } from '@/layout/nav-items'
 import { PillNav } from '@/layout/PillNav'
 import { SiteHeader } from '@/layout/SiteHeader'
+import { Experience } from '@/sections/Experience/Experience'
 import { Hero } from '@/sections/Hero/Hero'
 import { SectionStubs } from '@/sections/Stubs/SectionStubs'
 
@@ -19,6 +20,7 @@ export function Page() {
       <SiteHeader activeId={activeId} onNavigate={lockTo} />
       <main id="main" tabIndex={-1} className="outline-none">
         <Hero profile={profile} email={email} />
+        <Experience entries={siteContent.experience} />
         <SectionStubs />
       </main>
       <PillNav activeId={activeId} onNavigate={lockTo} />
