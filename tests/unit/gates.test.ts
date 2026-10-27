@@ -2,6 +2,7 @@ import { spawnSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
+import zlib from 'node:zlib'
 import { afterEach, describe, expect, it } from 'vitest'
 
 const ROOT = path.resolve(import.meta.dirname, '../..')
@@ -38,6 +39,23 @@ function runGate(script: string, args: string[]): Run {
 // committed file ever holds a phone-shaped literal.
 function phoneShape(area: string, exchange: string, line: string, sep: string): string {
   return [[area, exchange].join(' '), line].join(sep)
+}
+
+// Joins digit groups with one separator, for probes that are not the legacy shape above.
+function groups(sep: string, ...parts: string[]): string {
+  return parts.join(sep)
+}
+
+// A minimal PDF whose only content is one Flate-compressed content stream.
+function pdfWithStream(content: string): Buffer {
+  const body = zlib.deflateSync(Buffer.from(content, 'latin1'))
+  return Buffer.concat([
+    Buffer.from(
+      '%PDF-1.4\n1 0 obj\n<< /Length ' + body.length + ' /Filter /FlateDecode >>\nstream\n',
+    ),
+    body,
+    Buffer.from('\nendstream\nendobj\n%%EOF\n'),
+  ])
 }
 
 afterEach(() => {
@@ -254,6 +272,126 @@ describe('check-no-phone', () => {
     const run = runGate(script, ['--root', root])
     expect(run.status).toBe(0)
     expect(run.out).toContain('no-phone: OK')
+  })
+
+  it.each([
+    ['spaces', ' ', ' '],
+    ['mixed spaces and a dash', ' ', '-'],
+    ['a run of spaces', '   ', '   '],
+    ['non-breaking spaces', '\u00a0', '\u00a0'],
+  ])('flags a number separated by %s', (_name, first, second) => {
+    const root = makeRoot()
+    const probe = `${groups(first, '555', '010')}${second}0123`
+    write(root, 'dist/index.html', `<p>${probe}</p>\n`)
+    const run = runGate(script, ['--root', root])
+    expect(run.status).toBe(1)
+    for (const digits of ['555', '010', '0123']) expect(run.out).not.toContain(digits)
+  })
+
+  it.each([
+    ['parenthesised area code and spaces', `(${'555'}) ${groups(' ', '010', '0123')}`],
+    ['parenthesised area code, no space', `(${'555'})${groups('-', '010', '0123')}`],
+    ['a +1 prefix', `+1 ${groups(' ', '555', '010', '0123')}`],
+    ['a +1 prefix joined to the area code', `+1${groups(' ', '555', '010', '0123')}`],
+    ['a bare 1 prefix with dashes', `1-${groups('-', '555', '010', '0123')}`],
+    ['an HTML non-breaking space', groups('&nbsp;', '555', '010', '0123')],
+  ])('flags a number written with %s', (_name, probe) => {
+    const root = makeRoot()
+    write(root, 'dist/index.html', `<p>${probe}</p>\n`)
+    const run = runGate(script, ['--root', root])
+    expect(run.status).toBe(1)
+    for (const digits of ['555', '010', '0123']) expect(run.out).not.toContain(digits)
+  })
+
+  it('flags a spaced number inside a JS bundle', () => {
+    const root = makeRoot()
+    write(root, 'dist/assets/app.js', `var s="${groups(' ', '555', '010', '0123')}";\n`)
+    const run = runGate(script, ['--root', root])
+    expect(run.status).toBe(1)
+    expect(run.out).toContain('app.js')
+  })
+
+  it('does not flag digit groups of other sizes', () => {
+    const root = makeRoot()
+    write(
+      root,
+      'dist/assets/app.js',
+      `var a="${groups(' ', '2024', '010', '0123')}",b="${groups(' ', '55', '010', '01234')}";\n`,
+    )
+    write(root, 'dist/index.html', '<p>hello</p>\n')
+    const run = runGate(script, ['--root', root])
+    expect(run.status).toBe(0)
+  })
+
+  describe('PDF text layer', () => {
+    it('flags a number inside a Flate-compressed Tj string without printing digits', () => {
+      const root = makeRoot()
+      const probe = groups(' ', '555', '010', '0123')
+      write(root, 'dist/resume.pdf', pdfWithStream(`BT /F1 12 Tf 72 700 Td (${probe}) Tj ET`))
+      const run = runGate(script, ['--root', root])
+      expect(run.status).toBe(1)
+      expect(run.out).toContain('resume.pdf')
+      expect(run.out).toMatch(/offset \d+/)
+      for (const digits of ['555', '010', '0123']) expect(run.out).not.toContain(digits)
+    })
+
+    it('flags a number split across kerned TJ runs', () => {
+      const root = makeRoot()
+      const content = `BT [(555) -300 (010) -300 (0123)] TJ ET`
+      write(root, 'dist/resume.pdf', pdfWithStream(content))
+      expect(runGate(script, ['--root', root]).status).toBe(1)
+    })
+
+    it('flags a number written as hex strings', () => {
+      const root = makeRoot()
+      const hex = (text: string) => Buffer.from(text, 'latin1').toString('hex')
+      const content = `BT [<${hex('555')}> -300 <${hex('010')}> -300 <${hex('0123')}>] TJ ET`
+      write(root, 'dist/resume.pdf', pdfWithStream(content))
+      expect(runGate(script, ['--root', root]).status).toBe(1)
+    })
+
+    it('flags a number escaped with octal codes in a literal string', () => {
+      const root = makeRoot()
+      const octal = [...groups(' ', '555', '010', '0123')]
+        .map((ch) => '\\' + ch.charCodeAt(0).toString(8).padStart(3, '0'))
+        .join('')
+      write(root, 'dist/resume.pdf', pdfWithStream(`BT (${octal}) Tj ET`))
+      expect(runGate(script, ['--root', root]).status).toBe(1)
+    })
+
+    it('flags a tel: link inside a compressed stream', () => {
+      const root = makeRoot()
+      write(root, 'dist/resume.pdf', pdfWithStream('<< /S /URI /URI (tel:+1) >>'))
+      expect(runGate(script, ['--root', root]).status).toBe(1)
+    })
+
+    it('passes a PDF whose compressed text holds no phone shape', () => {
+      const root = makeRoot()
+      write(root, 'dist/resume.pdf', pdfWithStream('BT (Aaron Phan 2019 2024) Tj ET'))
+      const run = runGate(script, ['--root', root])
+      expect(run.status).toBe(0)
+      expect(run.out).toContain('no-phone: OK')
+    })
+
+    it('flags a contiguous ten-digit run in PDF text but not in xref offsets', () => {
+      const clean = makeRoot()
+      write(
+        clean,
+        'dist/resume.pdf',
+        `%PDF-1.4\nxref\n0 1\n${['00000', '00015'].join('')} 00000 n\n%%EOF\n`,
+      )
+      expect(runGate(script, ['--root', clean]).status).toBe(0)
+
+      const dirty = makeRoot()
+      write(dirty, 'dist/resume.pdf', pdfWithStream(`BT (${['55501', '00123'].join('')}) Tj ET`))
+      expect(runGate(script, ['--root', dirty]).status).toBe(1)
+    })
+
+    it('tolerates a PDF with a stream that is not Flate', () => {
+      const root = makeRoot()
+      write(root, 'dist/resume.pdf', '%PDF-1.4\nstream\nnot compressed at all\nendstream\n')
+      expect(runGate(script, ['--root', root]).status).toBe(0)
+    })
   })
 
   it('passes a clean dist', () => {
