@@ -67,7 +67,12 @@ export function subscribeTheme(onChange: () => void): () => void {
   }
   window.addEventListener('storage', onStorage)
 
-  const mql = typeof window.matchMedia === 'function' ? window.matchMedia(DARK_QUERY) : null
+  let mql: MediaQueryList | null = null
+  try {
+    mql = window.matchMedia(DARK_QUERY)
+  } catch {
+    // matchMedia missing or blocked: OS scheme changes are simply not followed.
+  }
   const onSystemChange = () => {
     if (storedTheme() === null) syncAttribute(systemTheme())
   }
