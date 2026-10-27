@@ -27,7 +27,8 @@ export const COLOR_TOKENS = [
 export class TokenError extends Error {}
 
 const BLOCK = /([^{}]+)\{([^{}]*)\}/g
-const DECLARATION = /(--[A-Za-z0-9-]+)\s*:\s*([^;]+);/g
+// The closing semicolon is optional: the last declaration in a block may omit it.
+const DECLARATION = /(--[A-Za-z0-9-]+)\s*:\s*([^;]+)(?:;|$)/g
 const MIX =
   /^color-mix\(\s*in\s+oklch\s*,\s*var\(\s*(--[A-Za-z0-9-]+)\s*\)\s+([0-9]+(?:\.[0-9]+)?)%\s*,\s*var\(\s*(--[A-Za-z0-9-]+)\s*\)\s*\)$/
 
@@ -36,6 +37,14 @@ const MIX =
 // declarations win, matching the cascade for equal specificity.
 export function parseTokensCss(cssText) {
   const css = cssText.replace(/\/\*[\s\S]*?\*\//g, '')
+  // BLOCK matches flat rules only. A wrapper such as @media or @layer would make its inner
+  // :root look like a top-level light block and silently audit the wrong palette.
+  const atRule = /@[A-Za-z-]+/.exec(css)
+  if (atRule) {
+    throw new TokenError(
+      `tokens.css uses ${atRule[0]}; the contrast gate parses flat rule blocks only, so keep tokens out of at-rules`,
+    )
+  }
   /** @type {Record<string, string>} */
   const light = {}
   /** @type {Record<string, string>} */

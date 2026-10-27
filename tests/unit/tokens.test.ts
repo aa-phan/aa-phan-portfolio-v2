@@ -145,6 +145,21 @@ describe('parseTokensCss and resolveTheme', () => {
     expect(parsed.light['--z-base']).toBe('0')
   })
 
+  it('reads a final declaration that has no trailing semicolon', () => {
+    const parsed = parseTokensCss(':root { --text: oklch(0.2 0 0); --muted: oklch(0.4 0 0) }')
+    expect(parsed.light['--text']).toBe('oklch(0.2 0 0)')
+    expect(parsed.light['--muted']).toBe('oklch(0.4 0 0)')
+  })
+
+  it.each([
+    '@media (prefers-color-scheme: dark)',
+    '@layer tokens',
+    '@supports (color: oklch(0 0 0))',
+  ])('fails loudly when tokens are wrapped in %s', (wrapper) => {
+    const css = `${wrapper} { :root { --text: oklch(0.2 0 0); } }`
+    expect(() => parseTokensCss(css)).toThrow(/uses @/)
+  })
+
   it('names the token when a required one is missing or malformed', () => {
     const { '--surface': _dropped, ...withoutSurface } = raw.light
     expect(() => resolveTheme(withoutSurface)).toThrow('--surface')
