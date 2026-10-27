@@ -21,25 +21,11 @@ env:
   VITE_BASE: /aa-phan-portfolio-v2/ # the cutover sets this to /
 
 jobs:
-  # The end-to-end gate runs in its own job: `playwright install --with-deps` downloads a browser
-  # and system packages that neither the lockfile nor the SHA pins cover, so it never shares a
-  # job with the build that produces the uploaded artifact.
-  e2e:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version: lts/*
-          cache: npm
-      - run: npm ci
-      - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e
-
-  # Builds the artifact once: the dist that verify's budget and phone gates scanned is the dist
-  # that gets uploaded.
+  # The cheap gates run first, so a push that fails typecheck, lint, the unit tests, the budget or
+  # the phone check stops before any browser is downloaded. This job builds the artifact once: the
+  # dist that verify's budget and phone gates scanned is the dist that gets uploaded. It never
+  # installs a browser.
   build:
-    needs: e2e
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -57,8 +43,25 @@ jobs:
         with:
           path: ./dist
 
-  deploy:
+  # The end-to-end gate runs in its own job, after the cheap gates: `playwright install --with-deps`
+  # downloads a browser and system packages that neither the lockfile nor the SHA pins cover, so it
+  # never shares a job with the build that produces the uploaded artifact. The artifact is only
+  # deployed when this job passes, because deploy needs both jobs.
+  e2e:
     needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: lts/*
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+
+  deploy:
+    needs: [build, e2e]
     runs-on: ubuntu-latest
     permissions:
       pages: write
