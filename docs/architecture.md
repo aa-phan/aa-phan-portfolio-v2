@@ -27,17 +27,18 @@ Dependencies point down only. A layer may import from layers below it, never abo
 | sections/   Hero, About, Experience, Projects, Skills, Education,     |
 |             Contact                      (props in, JSX out)          |
 +----------------------------------------------------------------------+
-| layout/     Container, Section, SiteHeader, MobileNav, Footer,        |
-|             SkipLink                                                  |
+| layout/     Container, Section, SiteHeader, PillNav, Footer,          |
+|             SkipLink, Wordmark                                        |
 +----------------------------------------------------------------------+
-| components/ ui/ (Button, Tag, Card, Heading, Logo, ThemeToggle, Icon) |
+| components/ ui/ (CtaLink, Toast, ThemeToggle, icons)                  |
 |             motion-primitives/ (vendored source, treated as owned)    |
 +----------------------------------------------------------------------+
 | anim/       the internal animation layer: the only place that         |
 |             imports motion/react and @react-spring/web               |
 +-------------------------------+--------------------------------------+
 | hooks/  lib/                  | styles/ (tokens.css, base.css,       |
-| (useActiveSection, cn, a11y)  |  index.css = tailwind + theme map)   |
+| (useActiveSection, useTheme,  |  index.css = tailwind + theme map)   |
+|  cn, a11y)                    |                                      |
 +-------------------------------+--------------------------------------+
 | content/ (typed TS data)      assets/ (images, fonts via Fontsource) |
 +----------------------------------------------------------------------+
@@ -65,9 +66,11 @@ These rules are enforced by oxlint's `no-restricted-imports` rule with per-folde
 ```text
 repo root
 |-- public/                  URL-stable files only: favicon set, og image,
-|                            resume.pdf (a phone-number-free copy), robots.txt
+|                            resume.pdf (a phone-number-free export), robots.txt
 |-- index.html               meta and social tags, inline theme-init script,
 |                            noscript fallback content
+|-- 404.html                 second HTML entry: the not-found page that
+|                            GitHub Pages serves for unknown paths
 |-- vite.config.ts           base from env, Tailwind plugin, imagetools, "@" alias
 |-- .oxlintrc.json           import-boundary rules (see Import rules)
 |-- .github/workflows/       ci.yml, deploy.yml
@@ -76,19 +79,21 @@ repo root
     |-- app/                 App.tsx, Page.tsx, Providers.tsx
     |-- sections/            one folder per section (Hero, About, Experience,
     |                        Projects, Skills, Education, Contact)
-    |-- layout/              Container, Section, SiteHeader, MobileNav,
-    |                        Footer, SkipLink
+    |-- layout/              Container, Section, SiteHeader, PillNav,
+    |                        Footer, SkipLink, Wordmark
     |-- components/
-    |   |-- ui/              Button, Tag, Card, Heading, Logo, ThemeToggle, Icon
+    |   |-- ui/              CtaLink, Toast, ThemeToggle, icons/ (inline SVG
+    |   |                    brand marks and UI glyphs)
     |   `-- motion-primitives/   vendored, patched locally, logged in an ADR
     |-- anim/
     |   |-- index.ts         public barrel: the only animation import path
     |   |-- MotionPreferenceProvider.tsx
     |   |-- useMotionPreference.ts
     |   |-- tokens.ts        springs, durations, eases in both libraries' formats
-    |   |-- declarative/     motion-owned wrappers (Reveal, Stagger, Presence,
-    |   |                    TextReveal, ScrollProgress, Morph)
-    |   `-- physics/         react-spring-owned wrappers (PressSpring and other
+    |   |-- MotionFeatures.tsx   LazyMotion provider with the async feature chunk
+    |   |-- declarative/     motion-owned wrappers (ToastPresence,
+    |   |                    NavIndicator, PillMorph, TextReveal)
+    |   `-- physics/         react-spring-owned wrappers (ThemeThumb and other
     |                        pointer-driven, velocity-carrying helpers)
     |-- content/
     |   |-- schema.ts        every type
@@ -96,7 +101,7 @@ repo root
     |   |   education.ts, contacts.ts     one module per section
     |   |-- images.ts        image registry
     |   `-- index.ts         assembles siteContent with satisfies
-    |-- hooks/               useActiveSection, useMediaQuery, useHoverCapable
+    |-- hooks/               useActiveSection, useTheme
     |-- lib/                 cn.ts, date formatting, a11y helpers
     |-- styles/
     |   |-- index.css        tailwind import, dark variant, theme mapping
@@ -190,13 +195,13 @@ Content is visible by default and is never hidden until JavaScript runs. Hidden 
 
 - Images live in src/assets/images/ and are imported as modules (hashed, long-cached). vite-imagetools produces AVIF and WebP variants and srcset with intrinsic width and height to prevent layout shift. Below-the-fold images lazy-load; the hero image is high priority.
 - Fonts are self-hosted through Fontsource (variable, latin subset, font-display swap), at most two families. No third-party font CDN.
-- Brand icons (GitHub, LinkedIn, Instagram, email) are inline SVG, because the UI icon set has no brand glyphs. See the ADR log.
-- The resume PDF served from public/ is a phone-number-free copy of the source resume.
+- Brand icons (GitHub, LinkedIn, Instagram, email) and UI glyphs (close, chevrons, download) are inline SVG components under src/components/ui/icons/. No icon package is installed. See ADR-0005 and ADR-0010 in the ADR log.
+- The resume PDF served from public/ is the owner's phone-number-free export of the resume. The phone-number gate reads its text layer, link annotations and metadata, and rejects a stand-in file.
 - Only images that are actually used migrate from the previous site, with EXIF metadata stripped. Template leftovers are left behind.
 
 ## Build and deploy
 
-GitHub Actions builds the site and publishes it to GitHub Pages. The Vite base comes from the VITE_BASE environment variable: the project URL path (for example /aa-phan-portfolio-v2/) while staging, and / after the cutover to the user-site URL. Assets are module-imported so no absolute asset paths exist; anything under public/ that JavaScript references goes through import.meta.env.BASE_URL. CI also builds with the project-path base so a broken sub-path is caught before launch. Steps, settings, cutover and rollback are in the deploy runbook (deploy-runbook.md).
+GitHub Actions builds the site and publishes it to GitHub Pages. The Vite base comes from the VITE_BASE environment variable: the project URL path (for example /aa-phan-portfolio-v2/) while staging, and / after the cutover to the user-site URL. Assets are module-imported so no absolute asset paths exist; anything under public/ that JavaScript references goes through import.meta.env.BASE_URL. CI also builds with the project-path base so a broken sub-path is caught before launch. The build has a second HTML entry, 404.html, a static not-found page that GitHub Pages serves for unknown paths. Steps, settings, cutover and rollback are in the deploy runbook (deploy-runbook.md).
 
 ## Quality gates
 
@@ -208,16 +213,16 @@ GitHub Actions builds the site and publishes it to GitHub Pages. The Vite base c
 | Unit tests | Vitest: shell parity, theme logic, motion preference, gate negatives | Any test fails |
 | Path-case check | `scripts/check-path-case.mjs`, run locally and on Linux CI | An import differs in case from the file on disk |
 | Raw color check | `scripts/check-colors.mjs` | Source outside the token file and vendored primitives holds a raw hex, rgb, hsl, oklch or oklab value, or a Tailwind default palette utility |
+| Token contrast test | `scripts/check-contrast.mjs` | Any text, UI or focus pair is below AA in any theme |
 | Build | `vite build` | The Vite build errors |
 | Initial JS budget | `scripts/check-js-budget.mjs` | The module script and modulepreloads exceed 150 kB gzipped |
-| Phone-number check | `scripts/check-no-phone.mjs` over the built site | A served file holds a phone-shaped string or a tel: link |
+| Phone-number check | `scripts/check-no-phone.mjs` over the built site | A served file holds a phone-shaped string or a tel: link, or a PDF's text layer, link annotations or metadata does (read with pdfjs-dist), or the PDF cannot be read, or resume.pdf is not a real resume (the owner's name and at least 1500 non-whitespace characters of text) |
 | Image check | `scripts/check-images.mjs` over dist, public and src | A shipped raster is not AVIF or WebP, carries Exif or XMP, or is unreferenced, or a source image is not imported |
-| Token contrast test | Lands with the contrast gate | Any text, UI or focus pair is below AA in either theme |
 | Smoke tests | Playwright in CI | The hero is missing with JavaScript off, the theme flashes, or content is hidden or a transform animation runs with reduced motion emulated |
 | axe | Later gate | Serious or critical violations in light or dark |
 | Mobile Lighthouse | Later gate | Targets set in the scaffold milestone are missed |
 
-`npm run verify` chains the first ten rows in that order, and both CI workflows call it.
+`npm run verify` chains the first eleven rows in that order, and both CI workflows call it.
 
 ## Stack
 
@@ -234,11 +239,12 @@ Verified 2026-10-08; re-verify at scaffold.
 | @react-spring/web | ~10.1.2 | Spring physics |
 | clsx | ^2.1.1 | Class composition |
 | tailwind-merge | ^3.7.0 | Class conflict resolution |
-| lucide-react | ^1.53.0 | UI icons |
 | lenis | 1.3.x | Desktop wheel smoothing |
 | vite-imagetools | ^12.0.1 | Image resize and format variants |
+| pdfjs-dist | 6.3.289 (exact, dev only) | Phone-number gate: reads the served PDF's text, links and metadata |
+| axe-core | 4.13.0 (dev only) | Accessibility pass of the visual QA run |
 
-Not used: the react-spring umbrella package, the react-spring v11 beta, raw framer-motion imports, shadcn init, tailwind.config.js, a client-side router, 3D or WebGL.
+UI glyphs are inline SVG (ADR-0010), so there is no icon package. Not used: the react-spring umbrella package, the react-spring v11 beta, raw framer-motion imports, shadcn init, tailwind.config.js, a client-side router, 3D or WebGL.
 
 ## Decisions
 

@@ -86,14 +86,14 @@ Copied in as owned source under `src/components/motion-primitives/`, not install
 | TextEffect or TextLoop | IX-01 | Role line only |
 | MorphingDialog | IX-05 | Adoption is subject to the overlay accessibility ADR and its spike |
 | AnimatedNumber with InView | IX-12 | Once |
-| InfiniteSlider | IX-13 | Pauses off-screen, on focus and hover, and when the tab is hidden |
+| InfiniteSlider | IX-13 | not vendored (IX-13 dropped) |
 | Tilt, Magnetic, Spotlight | IX-17 | Fine pointer only |
 
 Not vendored: Cursor, Dock and any other mouse-only primitive. Each vendored file is patched for type-only imports and gets a reduced-motion branch.
 
 ## Interaction catalog index
 
-The 17 IDs below are fixed. Wireframes annotate with them and the motion plan fills them in.
+IX-01 to IX-17 are fixed. IX-18 was added by the Phase 3 art direction. Wireframes annotate with them and the motion plan fills them in.
 
 | ID | Interaction | Section | Requirement | Owner |
 |----|-------------|---------|-------------|-------|
@@ -109,11 +109,12 @@ The 17 IDs below are fixed. Wireframes annotate with them and the motion plan fi
 | IX-10 | Theme toggle thumb | global | DSN-03 | react-spring |
 | IX-11 | Experience card expand and collapse | {#experience} | SEC-01 | motion |
 | IX-12 | Experience metric count-up | {#experience} | SEC-01 | motion |
-| IX-13 | Skills slider strip | {#skills} | SEC-02 | motion |
-| IX-14 | Education card expand or flip | {#education} | SEC-03 | motion |
+| IX-13 | Skills slider strip (dropped) | {#skills} | SEC-02 | none |
+| IX-14 | Education card expand or flip (optional) | {#education} | SEC-03 | motion |
 | IX-15 | Section in-view reveal | all sections | MOT-01 | motion |
 | IX-16 | Desktop smooth wheel scroll | global | MOT-05 | Lenis |
 | IX-17 | Desktop pointer polish (Tilt on the About photo, Magnetic on CTA wrappers, Spotlight on experience cards) | {#hero} {#about} {#experience} {#contact} | MOT-04 | motion |
+| IX-18 | Wordmark flip | global | DSN-03 | motion |
 
 ## Interactions
 
@@ -222,7 +223,7 @@ Each interaction is a subsection of bullet lines in the form `- Label: value`, w
 - Keyboard path: the pill is a native button with aria-expanded; Escape and a close button collapse it and return focus to the pill
 - Reduced-motion fallback: instant state switch
 - Requirement: NAV-02
-- Build phase: 3 for structure, 4 for motion
+- Build phase: 3 (structure and motion, m with LazyMotion through the anim barrel)
 
 ### IX-08 Desktop sticky nav scroll-spy indicator
 
@@ -237,7 +238,7 @@ Each interaction is a subsection of bullet lines in the form `- Label: value`, w
 - Keyboard path: nav links are native anchors; Tab and Enter navigate, and the indicator follows the active section
 - Reduced-motion fallback: the indicator jumps to the active link with no slide
 - Requirement: NAV-02
-- Build phase: 3 for structure, 4 for motion
+- Build phase: 3 (structure and motion, m with LazyMotion through the anim barrel)
 
 ### IX-09 Copy-email confirmation toast
 
@@ -252,7 +253,7 @@ Each interaction is a subsection of bullet lines in the form `- Label: value`, w
 - Keyboard path: native button; toast text announced through an aria-live polite region that exists in the DOM before the toast appears
 - Reduced-motion fallback: toast appears and disappears with no transform or fade, announcement unchanged, 4 s auto-dismiss unchanged
 - Requirement: NAV-03
-- Build phase: 3 for copy and toast, 4 for motion
+- Build phase: 3 (copy, toast and motion)
 
 ### IX-10 Theme toggle thumb
 
@@ -302,22 +303,22 @@ Each interaction is a subsection of bullet lines in the form `- Label: value`, w
 ### IX-13 Skills slider strip
 
 - Section: {#skills}
-- Trigger: runs automatically while in view; pauses on hover, on focus, when off-screen and when the tab is hidden
-- Element: the slider track
-- Owner library: motion
-- API: motion-primitives InfiniteSlider
-- Properties: translateX only
-- Token: linear continuous drift, slow
-- Touch equivalent: pauses on touch press, and the full skills list stays readable without interaction
-- Keyboard path: every skill is reachable as static text; focus within the strip pauses it
-- Reduced-motion fallback: no slider; a static wrapped list of every skill is rendered, as it is with no JS
+- Trigger: dropped by owner decision (2026-10-19): the four-sentence skills statement replaces the slider, so nothing triggers
+- Element: none; the skills statement is static text
+- Owner library: none
+- API: none; InfiniteSlider is not vendored
+- Properties: none
+- Token: none
+- Touch equivalent: none needed, nothing moves and nothing is dragged to read a skill
+- Keyboard path: none needed, the statement is static text
+- Reduced-motion fallback: none needed, the statement reads the same with motion off and with JS off
 - Requirement: SEC-02
-- Build phase: 4
+- Build phase: none
 
 ### IX-14 Education card expand or flip
 
 - Section: {#education}
-- Trigger: click, tap, Enter or Space on the card
+- Trigger: optional, because the education facts layout needs no hidden face; if built, click, tap, Enter or Space on the card
 - Element: the education card body
 - Owner library: motion
 - API: layout expand (react-spring stays scoped to four interactions, so no flip physics)
@@ -327,7 +328,7 @@ Each interaction is a subsection of bullet lines in the form `- Label: value`, w
 - Keyboard path: a button with aria-expanded and aria-controls; Enter and Space toggle
 - Reduced-motion fallback: instant expand and collapse
 - Requirement: SEC-03
-- Build phase: 4
+- Build phase: 5, only if wanted
 
 ### IX-15 Section in-view reveal
 
@@ -372,6 +373,21 @@ Each interaction is a subsection of bullet lines in the form `- Label: value`, w
 - Keyboard path: none needed, purely decorative; all content and actions stay reachable by keyboard
 - Reduced-motion fallback: disabled
 - Requirement: MOT-04
+- Build phase: 4
+
+### IX-18 Wordmark flip
+
+- Section: global
+- Trigger: the theme toggle
+- Element: the A or V glyph span in the nav and footer wordmarks
+- Owner library: motion
+- API: rotateX animation on the glyph span
+- Properties: rotateX, with the glyph swapped at 90 degrees
+- Token: duration slow 420 ms, perspective 600 px
+- Touch equivalent: the same on tap
+- Keyboard path: the toggle button
+- Reduced-motion fallback: the glyphs swap instantly
+- Requirement: DSN-03
 - Build phase: 4
 
 ## Element ownership check

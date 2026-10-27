@@ -236,8 +236,8 @@ From wave 2 on, plans run one per wave on purpose: worktrees are off (.planning/
 **Success Criteria** (what must be TRUE):
 
   1. In Experience, each role is a card that expands and collapses to show its details, its logo stays legible in both themes, and its metrics animate when they scroll into view (final numbers appear immediately with reduced motion).
-  2. Skills appear as a slider strip that moves or can be dragged, and a static list shows every skill when reduced motion is on or JavaScript is off.
-  3. Education is a compact card that expands or flips by click, tap or keyboard to reveal the full details including GPA.
+  2. Skills read as a four-sentence statement that needs no motion; nothing moves or must be dragged to read a skill.
+  3. Education is a facts layout led by the graduation date with the full details including GPA visible; an expand or flip treatment is optional.
   4. The hero role line has a text effect that stays readable and accessible (screen readers get the full text, reduced motion shows static text) and does not delay the name, role or CTAs from appearing.
 
 **Plans**: TBD
