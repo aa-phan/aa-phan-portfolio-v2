@@ -11,7 +11,9 @@
 // with nothing, so a number split across text items still reads as one), every link
 // annotation (any telephone-scheme link fails) and the document metadata (the Info
 // dictionary entry by entry, and the XMP packet). A PDF that cannot be read fails the gate:
-// it exits 0 only after every file and every page has been scanned.
+// it exits 0 only after every file and every page has been scanned. dist/resume.pdf must also
+// read as the real resume (the owner's name and at least 1500 non-whitespace characters of
+// text), so the small stand-in file can never be deployed.
 //
 // Flag: --root DIR (default cwd); scans ROOT/dist.
 // Exit: 0 printing "no-phone: OK", 1 on a hit or an unreadable PDF, 2 when dist is missing.
@@ -340,9 +342,16 @@ const PDFJS_INFO_FLAGS = new Set([
 ])
 const TEL_SCHEME = /^\s*tel:/i
 
+// The one file visitors are sent to download. The 594-byte stand-in must never ship, so its
+// text layer has to read as a resume: the owner's name and a body of text.
+const RESUME_FILE = /^dist\/resume\.pdf$/
+const RESUME_NAME = 'Aaron Phan'
+const RESUME_MIN_CHARS = 1500
+
 // Reads one PDF with pdfjs and records hits. Anything that throws is a hit (fail closed).
 async function scanPdfWithPdfjs(rel, bytes) {
   let task
+  const resumeText = []
   try {
     const { getDocument } = await import('pdfjs-dist/legacy/build/pdf.mjs')
     const require = createRequire(import.meta.url)
@@ -369,6 +378,7 @@ async function scanPdfWithPdfjs(rel, bytes) {
       const items = (await page.getTextContent()).items.map((item) =>
         'str' in item ? item.str : '',
       )
+      resumeText.push(items.join(''))
       const labels = new Set([...shapeLabels(items.join(' ')), ...shapeLabels(items.join(''))])
       for (const label of labels) hits.push(`${rel} page ${n} (${label})`)
       const links = (await page.getAnnotations()).flatMap((a) => [a.url, a.unsafeUrl])
@@ -376,6 +386,14 @@ async function scanPdfWithPdfjs(rel, bytes) {
         hits.push(`${rel} (link annotation)`)
       }
       page.cleanup()
+    }
+
+    if (RESUME_FILE.test(rel)) {
+      // Whitespace is ignored, so the count does not depend on how the export spaces its words.
+      const compact = resumeText.join('').replace(/\s+/g, '')
+      if (!compact.includes(RESUME_NAME.replace(/\s+/g, '')) || compact.length < RESUME_MIN_CHARS) {
+        hits.push(`${rel} is not a real resume (text layer too short or missing the name)`)
+      }
     }
 
     const { info = {}, metadata } = await doc.getMetadata()

@@ -424,7 +424,7 @@ Six items. Five are public; one (CON-06) is recorded only to make its exclusion 
 - Value: A downloadable PDF of the resume, linked from the hero Resume CTA and from the Contact Me section.
 - Source: resume (`references/Aaron_Phan_Resume.pdf` is the content source of truth)
 - Legacy-site value: None. The iPod site has no resume download.
-- Resolution: The file the site serves is a phone-stripped derivative of the source resume, produced under CNT-04 in Phase 3. The source file is never copied into the public repo. The served copy must be checked for the phone number in its text layer and its metadata before it ships. D-16 update (2026-10-27): the owner chose to keep the number off the site and will export the phone-free PDF himself later; public/resume.pdf is still the stand-in, so this item stays pending owner action and must be done before the plan 03-17 phone gate. Once exported, the site serves the owner's phone-free export (date to be recorded then); the PDF text-layer gate from plan 03-17 checks its text, link annotations and metadata.
+- Resolution: The file the site serves is a phone-stripped derivative of the source resume, produced under CNT-04 in Phase 3. The source file is never copied into the public repo. The served copy must be checked for the phone number in its text layer and its metadata before it ships. D-16 update (2026-10-27): the owner chose to keep the number off the site and exported the phone-free PDF himself; done 2026-10-27, public/resume.pdf is the owner's export (one page, 108,884 bytes) and no longer the stand-in. The site serves the owner's phone-free export, and `npm run check:no-phone` (plan 03-17) scans its text layer, link annotations and metadata with pdfjs-dist and rejects a stand-in: dist/resume.pdf must contain the owner's name and at least 1500 non-whitespace characters of text. The gate prints metadata key names only, never values.
 
 ### CON-06 Phone
 
@@ -442,7 +442,7 @@ Collected in one stop by plan 03-02 so the content modules are typed once from a
 | D-13 | A public repository URL per project (PRJ-01 to PRJ-07), or none                   | answered (2026-10-27): PRJ-01 RecipeCart https://github.com/aa-phan/RecipeCart; PRJ-02 to PRJ-07 none for now, owner will add more later                                           |
 | D-14 | Approve, edit or reject the three featured write-ups (PRJ-01 to PRJ-03)           | answered (2026-10-27): all three approved as drafted                                                                                                                               |
 | D-15 | One line in the owner's own words about the night side for About Me, or none yet  | answered (2026-10-27): none yet; proverb removed                                                                                                                                   |
-| D-16 | A phone-free PDF exported from the resume source and saved over public/resume.pdf | answered (2026-10-27) as pending owner action: owner chose to keep the number off the site and will export the phone-free PDF himself later; public/resume.pdf is not yet replaced |
+| D-16 | A phone-free PDF exported from the resume source and saved over public/resume.pdf | answered (2026-10-27): owner chose to keep the number off the site, exported the phone-free PDF himself and saved it over public/resume.pdf (done 2026-10-27) |
 
 ## Reconciliation log
 

@@ -73,17 +73,33 @@ interface PdfOptions {
   content?: string
 }
 
+// Page text for a resume.pdf that passes the real-resume rule: the name and at least 1500
+// non-whitespace characters. `extra` is appended (a probe, say); `count` sets the length of the
+// filler so the boundary can be built exactly.
+function realText(extra = '', count = 1500): string {
+  const head = 'Aaron Phan'
+  const fill = 'x'.repeat(Math.max(0, count - head.replace(/\s/g, '').length))
+  return `${head} ${fill} ${extra}`.trim()
+}
+
 const pdfString = (value: string): string => `(${value.replace(/[\\()]/g, '\\$&')})`
+
+// Text-show operators for `text`, wrapped into lines so none runs past the page edge.
+function drawLines(text: string): string {
+  const lines = text.match(/.{1,80}/gs) ?? ['']
+  return lines.map((line) => `${pdfString(line)} Tj 0 -14 Td`).join(' ')
+}
 
 // A well-formed one-page PDF assembled at runtime: catalog, pages, a page with a Helvetica
 // Type1 resource, one content stream, an optional link annotation and Info dictionary, and an
 // xref table whose byte offsets are computed. No committed file holds a phone-shaped literal.
 function makePdf(options: PdfOptions = {}): Buffer {
   const { text = 'Hello', splitAt, compressed = false, annotationUri, info, content } = options
+  // pdfjs drops text that runs past the page edge, so long text is drawn as lines of 80 characters.
   const shown =
-    splitAt === undefined
-      ? `${pdfString(text)} Tj`
-      : `${pdfString(text.slice(0, splitAt))} Tj ${pdfString(text.slice(splitAt))} Tj`
+    splitAt !== undefined
+      ? `${pdfString(text.slice(0, splitAt))} Tj ${pdfString(text.slice(splitAt))} Tj`
+      : drawLines(text)
   const stream = Buffer.from(content ?? `BT /F1 12 Tf 72 700 Td ${shown} ET`, 'latin1')
   const body = compressed ? zlib.deflateSync(stream) : stream
   const filter = compressed ? ' /Filter /FlateDecode' : ''
@@ -593,7 +609,10 @@ describe('check-no-phone', () => {
       write(
         root,
         'dist/resume.pdf',
-        makePdf({ compressed: true, content: `${coords}\nBT /F1 12 Tf (Hello) Tj ET` }),
+        makePdf({
+          compressed: true,
+          content: `${coords}\nBT /F1 12 Tf 72 700 Td ${drawLines(realText())} ET`,
+        }),
       )
       const run = runGate(script, ['--root', root])
       expect(run.status).toBe(0)
@@ -603,7 +622,11 @@ describe('check-no-phone', () => {
     it('does not flag drawing operands in an uncompressed content stream', () => {
       const root = makeRoot()
       const coords = `${['123', '456'].join('.')} ${['12', '34'].join('')} m ${['150', '250'].join('.')} ${['3000'].join('')} l S`
-      write(root, 'dist/resume.pdf', makePdf({ content: `${coords}\nBT /F1 12 Tf (Hello) Tj ET` }))
+      write(
+        root,
+        'dist/resume.pdf',
+        makePdf({ content: `${coords}\nBT /F1 12 Tf 72 700 Td ${drawLines(realText())} ET` }),
+      )
       expect(runGate(script, ['--root', root]).status).toBe(0)
     })
 
@@ -650,7 +673,7 @@ describe('check-no-phone', () => {
 
     it('passes a PDF whose compressed text holds no phone shape', () => {
       const root = makeRoot()
-      write(root, 'dist/resume.pdf', makePdf({ text: 'Aaron Phan 2019 2024', compressed: true }))
+      write(root, 'dist/resume.pdf', makePdf({ text: realText('2019 2024'), compressed: true }))
       const run = runGate(script, ['--root', root])
       expect(run.status).toBe(0)
       expect(run.out).toContain('no-phone: OK')
@@ -659,7 +682,7 @@ describe('check-no-phone', () => {
     it('flags a contiguous ten-digit run in PDF text but not in xref offsets', () => {
       // Every well-formed PDF carries ten-digit xref offsets.
       const clean = makeRoot()
-      write(clean, 'dist/resume.pdf', makePdf({ text: 'Aaron Phan' }))
+      write(clean, 'dist/resume.pdf', makePdf({ text: realText() }))
       expect(runGate(script, ['--root', clean]).status).toBe(0)
 
       const dirty = makeRoot()
@@ -669,7 +692,7 @@ describe('check-no-phone', () => {
 
     it('tolerates a PDF with a stream that is not Flate', () => {
       const root = makeRoot()
-      write(root, 'dist/resume.pdf', makePdf({ text: 'Aaron Phan', compressed: false }))
+      write(root, 'dist/resume.pdf', makePdf({ text: realText(), compressed: false }))
       expect(runGate(script, ['--root', root]).status).toBe(0)
     })
   })
@@ -718,10 +741,14 @@ describe('check-no-phone', () => {
 
     it('does not flag mailto and https link annotations', () => {
       const root = makeRoot()
-      const mail = makePdf({ annotationUri: 'mailto:someone@example.com' })
+      const mail = makePdf({ text: realText(), annotationUri: 'mailto:someone@example.com' })
       write(root, 'dist/resume.pdf', mail)
       expect(runGate(script, ['--root', root]).status).toBe(0)
-      write(root, 'dist/resume.pdf', makePdf({ annotationUri: 'https://example.com/' }))
+      write(
+        root,
+        'dist/resume.pdf',
+        makePdf({ text: realText(), annotationUri: 'https://example.com/' }),
+      )
       expect(runGate(script, ['--root', root]).status).toBe(0)
     })
 
@@ -740,7 +767,7 @@ describe('check-no-phone', () => {
         root,
         'dist/resume.pdf',
         makePdf({
-          text: 'Aaron Phan, design engineer',
+          text: realText('design engineer'),
           info: { Title: 'Resume', Author: 'Aaron' },
         }),
       )
@@ -759,9 +786,60 @@ describe('check-no-phone', () => {
       expect(run.out).toContain('dist/resume.pdf could not be read')
     })
 
+    it.each([
+      ['spaces', groups(' ', '555', '010', '0123')],
+      ['dots', groups('.', '555', '010', '0123')],
+      ['dashes', groups('-', '555', '010', '0123')],
+      ['a parenthesised area code', `(${'555'}) ${groups('-', '010', '0123')}`],
+      ['a +1 prefix', `+1 ${groups(' ', '555', '010', '0123')}`],
+    ])('flags a number written with %s in PDF text', (_name, written) => {
+      const root = makeRoot()
+      write(root, 'dist/resume.pdf', makePdf({ text: realText(written) }))
+      const run = runGate(script, ['--root', root])
+      expect(run.status).toBe(1)
+      expect(run.out).toMatch(/dist\/resume\.pdf page 1 \(/)
+      noDigits(run.out)
+    })
+
+    it('does not flag a 3-3-3 digit group in PDF text', () => {
+      const root = makeRoot()
+      write(root, 'dist/resume.pdf', makePdf({ text: realText(groups(' ', '555', '010', '012')) }))
+      expect(runGate(script, ['--root', root]).status).toBe(0)
+    })
+
+    it('accepts a resume.pdf with the name and exactly 1500 non-whitespace characters', () => {
+      const root = makeRoot()
+      write(root, 'dist/resume.pdf', makePdf({ text: realText('', 1500) }))
+      const run = runGate(script, ['--root', root])
+      expect(run.status).toBe(0)
+      expect(run.out).toContain('no-phone: OK')
+    })
+
+    it('rejects a resume.pdf with 1499 non-whitespace characters', () => {
+      const root = makeRoot()
+      write(root, 'dist/resume.pdf', makePdf({ text: realText('', 1499) }))
+      const run = runGate(script, ['--root', root])
+      expect(run.status).toBe(1)
+      expect(run.out).toContain('dist/resume.pdf is not a real resume')
+    })
+
+    it('rejects a resume.pdf long enough but without the name', () => {
+      const root = makeRoot()
+      write(root, 'dist/resume.pdf', makePdf({ text: 'y'.repeat(2000) }))
+      const run = runGate(script, ['--root', root])
+      expect(run.status).toBe(1)
+      expect(run.out).toContain('dist/resume.pdf is not a real resume')
+    })
+
+    it('applies the real-resume rule to resume.pdf only', () => {
+      const root = makeRoot()
+      write(root, 'dist/docs/extra.pdf', makePdf({ text: 'Hello' }))
+      expect(runGate(script, ['--root', root]).status).toBe(0)
+    })
+
     it('scans every PDF in dist, not only resume.pdf', () => {
       const root = makeRoot()
-      write(root, 'dist/resume.pdf', makePdf({ text: 'Aaron Phan' }))
+      write(root, 'dist/resume.pdf', makePdf({ text: realText() }))
       write(root, 'dist/docs/extra.pdf', makePdf({ text: probe }))
       const run = runGate(script, ['--root', root])
       expect(run.status).toBe(1)
