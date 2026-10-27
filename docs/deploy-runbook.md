@@ -15,7 +15,15 @@ Assets are module-imported, so no absolute asset paths exist. Anything under `pu
 
 ## Prerequisites
 
-1. OD-01 resolved (2026-10-09): the owner's personal contact details were rewritten out of this repo's entire history. Before any push, re-run a pattern search for phone numbers over history (`git log --all -G'[0-9]{3}[-. )]+[0-9]{3}[-.][0-9]{4}' -E --oneline` should print nothing) as a guard.
+1. OD-01 resolved (2026-10-09): the owner's personal contact details were rewritten out of this repo's entire history. Before any push, run both guards; each must print nothing except the known false positive below.
+   - History guard: `git log --all -E -G'[0-9]{3}[-. )]+[0-9]{3}[-. ][0-9]{4}' --oneline`
+   - Tree guard (file names only, never the digits): `git grep -lE '[0-9]{3}[-. )]+[0-9]{3}[-. ][0-9]{4}' HEAD`
+
+   The separator set matches `scripts/check-no-phone.mjs`, which also catches space-separated groups.
+
+   Known false positives (owner decision, 2026-10-27); any other hit stops the push:
+   - Commit `4517011` and the tree hit `.planning/phases/02-deployed-themed-skeleton/02-REVIEW.md`: the review's example number is all nines, not a real number.
+   - Commit `b56e593` and the tree hit `.planning/phases/01-decisions-and-documentation/01-07-PLAN.md`: a shell loop over three viewport widths, which the space separator added to the guard now matches.
 2. Node 22.12 or newer locally, `lts/*` in CI.
 3. A committed lockfile (`npm ci` fails without one).
 4. The Pages source set to GitHub Actions on the deploying repository.
@@ -36,10 +44,13 @@ Every action is pinned by commit SHA with its version in a comment.
 
 **deploy.yml** ("Deploy static content to Pages"), on `push` to `main` and on `workflow_dispatch`, following the Vite static-deploy guide:
 
-- Permissions: `contents: read`, `pages: write`, `id-token: write`.
-- Concurrency group `pages`.
-- Build job: `actions/checkout` v7.0.1, `actions/setup-node` v7.1.0, `npm ci`, `npm run verify` (so a build that fails any gate, including the JavaScript budget, is never deployed), `actions/configure-pages` v6.0.0, then `actions/upload-pages-artifact` v5.0.0 with path `./dist`. `VITE_BASE` is set in the workflow `env`; the cutover changes it to `/`.
+- Permissions: workflow default `contents: read`; the build job adds `pages: read` (for `configure-pages`); only the deploy job gets `pages: write` and `id-token: write`.
+- Concurrency group `pages` with `cancel-in-progress: false`, so a running deploy is never cut off.
+- e2e job: `actions/checkout` v7.0.1, `actions/setup-node` v7.1.0, `npm ci`, `npx playwright install --with-deps chromium`, `npm run test:e2e`. It runs on its own because the browser download is not covered by the lockfile or the SHA pins, and it holds no Pages permissions.
+- Build job (after e2e): `actions/checkout`, `actions/setup-node`, `npm ci`, `npm run verify` (so a build that fails any gate, including the JavaScript budget and the phone check, is never deployed), `actions/configure-pages` v6.0.0, then `actions/upload-pages-artifact` v5.0.0 with path `./dist`. The uploaded `dist` is the one the gates scanned. `VITE_BASE` is set in the workflow `env`; the cutover changes it to `/`.
 - Deploy job: `actions/deploy-pages` v5.0.1, in environment `github-pages`, followed by a `curl` check that the deployed page contains the owner's name.
+
+The phone check reads PDF text drawn from compressed (Flate) content streams. Text in uncompressed streams and text set in CID or custom-encoded fonts is not read, so the real resume PDF also gets a manual look for a phone number before it replaces the stand-in.
 
 ## First staging deploy
 
