@@ -1,4 +1,5 @@
 import { TextReveal } from '@/anim'
+import { useCopyEmail } from '@/components/ui/useCopyEmail'
 import { Container } from '@/layout/Container'
 
 interface HeroProps {
@@ -7,6 +8,7 @@ interface HeroProps {
 }
 
 export function Hero({ profile, email }: HeroProps) {
+  const copyEmail = useCopyEmail(email)
   return (
     <section id="hero" aria-labelledby="hero-heading" className="pt-24 pb-16">
       <Container>
@@ -24,6 +26,7 @@ export function Hero({ profile, email }: HeroProps) {
           </a>
           <a
             href={`mailto:${email}`}
+            onClick={copyEmail}
             className="inline-flex min-h-11 items-center justify-center rounded-pill border border-border-strong px-6 font-medium text-text hover:bg-surface"
           >
             Copy email
