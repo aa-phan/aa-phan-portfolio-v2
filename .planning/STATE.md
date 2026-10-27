@@ -4,16 +4,16 @@ milestone: v2
 current_phase: 03
 current_phase_name: Content-Complete Site
 status: executing
-stopped_at: Completed 03-11-PLAN.md
-last_updated: "2026-10-27T18:50:51.018Z"
+stopped_at: Completed 03-12-PLAN.md
+last_updated: "2026-10-27T19:00:41.302Z"
 last_activity: 2026-10-27
 last_activity_desc: Phase 03 execution started
-state_head: 848e20331e9ad944f3a65ba8a44acd8d0cc013ed
+state_head: 3401415de2eacd6b12a12f2b0eb385ec924c669a
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 35
-  completed_plans: 27
+  completed_plans: 28
   percent: 33
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-10-08)
 ## Current Position
 
 Phase: 03 (Content-Complete Site) — EXECUTING
-Plan: 12 of 19
+Plan: 13 of 19
 Status: Ready to execute
 Last activity: 2026-10-27 — Phase 03 execution started
 
@@ -87,6 +87,7 @@ Progress: [███░░░░░░░] 33%
 | Phase 03 P09 | 35 min | 3 tasks | 11 files |
 | Phase 03 P10 | 25 min | 2 tasks | 10 files |
 | Phase 03 P11 | 12 min | 2 tasks | 18 files |
+| Phase 03 P12 | 25 min | 2 tasks | 15 files |
 
 ## Accumulated Context
 
@@ -142,6 +143,8 @@ Recent decisions affecting current work:
 - [Phase 03]: Content ids stay unique per array, not globally, so later project and experience ids may share a slug
 - [Phase 03]: 03-11: image URL fields (logo/photo src, sources) excluded from the content phone-shape walk; bundler output, dist scanned by check-no-phone
 - [Phase 03]: 03-11: Spectrum 32 px source yields one width, so imagetools ships AVIF source plus WebP img fallback; check-images allows only AVIF/WebP in dist
+- [Phase 03]: 03-12: dialog focus return remembers the opener once on null-to-number and sleeves focus themselves on click, so stepping keeps return to the first-opened sleeve
+- [Phase 03]: 03-12: Section takes an optional aside on the heading baseline (crate index); unchanged markup without it
 
 ### Pending Todos
 
@@ -174,6 +177,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-27T18:50:50.932Z
-Stopped at: Completed 03-11-PLAN.md
+Last session: 2026-10-27T19:00:41.215Z
+Stopped at: Completed 03-12-PLAN.md
 Resume file: None
