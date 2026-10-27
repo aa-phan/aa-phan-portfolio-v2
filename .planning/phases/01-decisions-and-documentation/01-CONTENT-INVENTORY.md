@@ -292,10 +292,10 @@ Interaction notes live in the wireframes. The DJ photo pairs with CON-04.
 
 ### ABT-01 Bio paragraph 1
 
-- Value: Hello there! My name is Aaron Phan, and I'm a software engineer by day, and aspiring artist by night.
+- Value: Hello there! My name is Aaron Phan, and I’m a software engineer by day, and aspiring artist by night.
 - Source: legacy site
 - Legacy-site value: Same (ABOUT.bio[0]).
-- Resolution: Not on the resume, kept verbatim.
+- Resolution: Not on the resume, kept verbatim. Edit recorded (rule 3, plan 03-04): before = ASCII apostrophe in "I'm", after = U+2019 in "I’m". Reason: typographic characters per the Phase 3 UI contract.
 
 ### ABT-02 Bio paragraph 2
 
