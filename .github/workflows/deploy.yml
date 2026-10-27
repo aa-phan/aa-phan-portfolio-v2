@@ -55,4 +55,10 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
-      - run: curl -fsS --retry 6 --retry-delay 5 --retry-all-errors "${{ steps.deployment.outputs.page_url }}" | grep -q "Aaron Phan"
+      # Capture the body first: `curl | grep -q` under pipefail fails with curl exit 23 when grep
+      # exits on its first match while curl is still writing.
+      - env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          body=$(curl -fsS --retry 6 --retry-delay 5 --retry-all-errors "$PAGE_URL")
+          grep -q "Aaron Phan" <<<"$body"
