@@ -1,15 +1,13 @@
-import { useState } from 'react'
 import { ThemeThumb } from '@/anim'
-import { applyTheme, readTheme, type Theme } from '@/lib/theme'
+import { applyTheme, type Theme } from '@/lib/theme'
+import { useTheme } from '@/lib/useTheme'
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>(readTheme)
-  const dark = theme === 'dark'
+  const dark = useTheme() === 'dark'
 
   function toggle() {
     const next: Theme = dark ? 'light' : 'dark'
     applyTheme(next)
-    setTheme(next)
   }
 
   return (

@@ -107,3 +107,27 @@ test('theme: blocked storage falls back to system preference and toggle still wo
   expect(errors).toEqual([])
   await context.close()
 })
+
+test('theme: follows an OS scheme change while no choice is stored, then stops once chosen', async ({
+  browser,
+}) => {
+  const context = await browser.newContext({ colorScheme: 'light' })
+  const page = await context.newPage()
+  await page.goto('./')
+  const toggle = page.getByRole('button', { name: 'Dark theme' })
+  await expect(toggle).toHaveAttribute('aria-pressed', 'false')
+
+  await page.emulateMedia({ colorScheme: 'dark' })
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+  await expect(toggle).toHaveAttribute('aria-pressed', 'true')
+
+  // An explicit choice wins from then on.
+  await toggle.click()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+  await page.emulateMedia({ colorScheme: 'dark' })
+  await page.emulateMedia({ colorScheme: 'light' })
+  await page.emulateMedia({ colorScheme: 'dark' })
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+  await expect(toggle).toHaveAttribute('aria-pressed', 'false')
+  await context.close()
+})
