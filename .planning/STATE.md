@@ -4,16 +4,16 @@ milestone: v2
 current_phase: 03
 current_phase_name: Content-Complete Site
 status: executing
-stopped_at: Completed 03-15-PLAN.md
-last_updated: "2026-10-27T19:41:23.167Z"
+stopped_at: Completed 03-16-PLAN.md
+last_updated: "2026-10-27T19:47:36.720Z"
 last_activity: 2026-10-27
 last_activity_desc: Phase 03 execution started
-state_head: 8c3f8a1dd8083fdf351662176a2de567b35efc0a
+state_head: 15b97541bd416263606df5b08710a6f50a5319ae
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 35
-  completed_plans: 31
+  completed_plans: 32
   percent: 33
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-10-08)
 ## Current Position
 
 Phase: 03 (Content-Complete Site) — EXECUTING
-Plan: 16 of 19
+Plan: 17 of 19
 Status: Ready to execute
 Last activity: 2026-10-27 — Phase 03 execution started
 
@@ -91,6 +91,7 @@ Progress: [███░░░░░░░] 33%
 | Phase 03 P13 | 5 min | 2 tasks | 10 files |
 | Phase 03 P14 | 23 min | 2 tasks | 14 files |
 | Phase 03 P15 | 12 min | 2 tasks | 12 files |
+| Phase 03 P16 | 25 min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -153,6 +154,7 @@ Recent decisions affecting current work:
 - [Phase 03]: 03-14: high school entry sits in the Education details column (7 to 12) under the rule so both schools share one edge
 - [Phase 03]: 03-15: finale wordmark sized with per-string cqi constants (PHAN 32.4cqi, PHVNTM 17.1cqi, -0.07em start margin), no SVG textLength fallback needed
 - [Phase 03]: 03-15: Instagram link keeps exact aria-label 'Instagram, PHVNTM' with the new-tab note as aria-describedby
+- [Phase 03]: 03-16: 404 carries data-theme=light on html as its no-JavaScript default; the inline theme script (byte-identical to index.html's, unit-tested) overrides it; no prefers-color-scheme CSS fallback added
 
 ### Pending Todos
 
@@ -185,6 +187,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-27T19:41:23.069Z
-Stopped at: Completed 03-15-PLAN.md
+Last session: 2026-10-27T19:47:36.629Z
+Stopped at: Completed 03-16-PLAN.md
 Resume file: None
