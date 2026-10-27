@@ -32,7 +32,7 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Navigation and Recruiter Fast Path
 
 - [x] **NAV-01**: Hero shows name, role and CTAs in a static shell that is visible without JavaScript
-- [ ] **NAV-02**: Sticky nav with scroll-spy on desktop, a thumb-reachable morphing pill nav on mobile (reference 445), and a skip link
+- [x] **NAV-02**: Sticky nav with scroll-spy on desktop, a thumb-reachable morphing pill nav on mobile (reference 445), and a skip link
 - [x] **NAV-03**: Visitor can copy the email address with a confirmation toast
 - [ ] **NAV-04**: A visitor can find name, role, experience, projects, resume and contact within 10 seconds on a phone (acceptance test)
 
@@ -129,7 +129,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CNT-04 | Phase 3 | Pending |
 | CNT-05 | Phase 3 | Complete |
 | NAV-01 | Phase 2 | Complete |
-| NAV-02 | Phase 3 | Pending |
+| NAV-02 | Phase 3 | Complete |
 | NAV-03 | Phase 3 | Complete |
 | NAV-04 | Phase 3 | Pending |
 | SIG-01 | Phase 4 | Pending |
