@@ -1,3 +1,34 @@
+/*
+ * Metric fallback for Archivo Variable (D-03, RESEARCH Pitfall 10). While the woff2 loads, the
+ * browser draws the hero in a local sans that is overridden to take Archivo's advance widths and
+ * vertical metrics, so the poster does not move when the real face swaps in. Two faces because
+ * Archivo's widths grow faster with weight than Arial's: the 600 to 900 face maps to the bold cut.
+ * Values measured with a Playwright probe (fallback with woff2 aborted versus Archivo loaded,
+ * unwrapped text widths at 390 and 1280 px): size-adjust sets the width, the ascent and descent
+ * overrides are Archivo's 0.90 and 0.25 em divided by size-adjust, line gap is zero.
+ */
+@font-face {
+  font-family: 'Archivo Fallback';
+  src: local('Arial'), local('Helvetica Neue'), local('Helvetica');
+  font-weight: 100 599;
+  size-adjust: 100.9%;
+  ascent-override: 89.2%;
+  descent-override: 24.8%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Archivo Fallback';
+  src:
+    local('Arial Bold'), local('Arial-BoldMT'), local('Helvetica Neue Bold'),
+    local('Helvetica-Bold');
+  font-weight: 600 900;
+  size-adjust: 103.1%;
+  ascent-override: 87.3%;
+  descent-override: 24.2%;
+  line-gap-override: 0%;
+}
+
 @layer base {
   :root {
     --t-mega: clamp(3.75rem, 0.9rem + 22vw, 6.75rem);
@@ -11,6 +42,11 @@
 
   html {
     -webkit-text-size-adjust: 100%;
+  }
+
+  ::selection {
+    background: var(--primary);
+    color: var(--on-primary);
   }
 
   :focus-visible {

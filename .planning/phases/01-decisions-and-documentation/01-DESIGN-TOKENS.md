@@ -426,33 +426,34 @@ Standard: WCAG 2.2 AA. 1.4.3 text 4.5:1 (large text 3:1); 1.4.11 non-text contra
 
 ## Typography
 
-Pairing: one family. Inter variable for display and body: `@fontsource-variable/inter` 5.3.0 (CSS family name `'Inter Variable'`). Candidate A is Inter only (user reply "A"), so there is no display face and no second family (DSN-04 allows at most 2). Personality is carried by weight, size contrast, tight tracking at display sizes, and motion rather than a second typeface. If a display face is wanted later, candidates B and C record the display faces explored (Fraunces, Bricolage Grotesque) with their Fontsource package names, and the swap is one `--font-display` line plus one package.
+Updated in Phase 3 (plan 03-03, decisions D-03 and D-06): Archivo Variable replaces Inter, and the 1.2 modular scale is replaced by the poster ladder. This section describes what ships.
 
-- Import: `@fontsource-variable/inter/wght.css` in `main.tsx` (declares `font-display: swap`; per-script `unicode-range` so English copy fetches only the 48 kB latin woff2).
-- Axis range used: weight 400 to 700 only (400 body, 500 UI labels and nav, 600 headings, 700 display). The `opsz` axis file is not imported.
-- Fallback stacks: `--font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif`; `--font-display` is the same stack. Monospace for code or the email address if needed: `ui-monospace, SFMono-Regular, Menlo, Consolas, monospace` (system, no package).
-- Type-scale ratio: 1.200 (minor third, from the realtimecolors presets 1.067 to 1.618), base 1rem. `--text-sm` is a half-step (0.9rem) for dense UI copy; the other steps are powers of 1.2.
+Pairing: one family. Archivo Variable for display and body: `@fontsource-variable/archivo` 5.3.0 (CSS family name `'Archivo Variable'`), no JS. Archivo ships a width axis, so the same family covers the compressed day headings and the widened night wordmark. There is no second face (DSN-04 allows at most 2 declared families; the page declares Archivo Variable plus its local metric fallback `'Archivo Fallback'`, which is a rule over a system font, not a download).
 
-Ladder (`--text-xs` through `--text-5xl`). Sizes 3xl to 5xl are fluid: `clamp(min, intercept + slope vw, max)` interpolates linearly from the 375 px viewport (23.4375rem) to the 1280 px viewport (80rem). The rem part of each clamp keeps browser text zoom effective (WCAG 1.4.4).
+- Import: `@fontsource-variable/archivo/wdth.css` in `main.tsx` (declares `font-display: swap`, weight 100 to 900, `font-stretch` 62% to 125%, per-script `unicode-range`). The latin woff2 is 90,104 B, about 42 kB more than Inter's 48 kB latin file; latin-ext and vietnamese are only fetched if the copy uses those scripts.
+- Fallback stacks: `--font-sans` and `--font-display`: `'Archivo Variable', 'Archivo Fallback', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif`. Monospace for code or the email address if needed: `ui-monospace, SFMono-Regular, Menlo, Consolas, monospace` (system, no package).
+- Metric fallback: `'Archivo Fallback'` is declared in `base.css` as two `@font-face` rules over local Arial (weights 100 to 599, `size-adjust` 100.9%) and local Arial Bold (weights 600 to 900, `size-adjust` 103.1%), with ascent and descent overrides of Archivo's 0.90 and 0.25 em divided by `size-adjust` and a zero line gap. The hero h1 box moves 0 px at 390 and 1280 px when Archivo replaces it.
+- Width rule (the night rule): only the wordmarks widen, to `font-stretch: 125%` at night (day stays at 100%). Headings never change width between themes.
+- Selection: `::selection` uses `--primary` with `--on-primary`.
 
-| Token | Size | Line height | Notes |
-|-------|------|-------------|-------|
-| `--text-xs` | 0.833rem | 1.5 | Captions, chip labels (never below this) |
-| `--text-sm` | 0.9rem | 1.5 | Dates, card metadata, nav labels |
-| `--text-base` | 1rem | 1.6 | Body copy |
-| `--text-lg` | 1.2rem | 1.5 | Lead paragraphs, summary line |
-| `--text-xl` | 1.44rem | 1.4 | Card titles |
-| `--text-2xl` | 1.728rem | 1.3 | Section sub-headings |
-| `--text-3xl` | clamp(2.074rem, 1.9025rem + 0.732vw, 2.488rem) | 1.2 | Section headings |
-| `--text-4xl` | clamp(2.488rem, 2.034rem + 1.936vw, 3.583rem) | 1.1 | Large section titles |
-| `--text-5xl` | clamp(2.986rem, 2.085rem + 3.844vw, 5.16rem) | 1.05 | Hero display; tracking -0.02em |
+Ladder (`--text-mega` through `--text-xs`, replacing `--text-xs` through `--text-5xl`). Fluid steps are `clamp(min, intercept + slope vw, max)`; the rem part of each clamp keeps browser text zoom effective (WCAG 1.4.4). Each step carries `--line-height`, `--letter-spacing` and `--font-weight` modifiers, so one utility class (for example `text-xl`) sets all four.
 
-Check points: at 375 px the clamps resolve to 2.074rem, 2.488rem and 2.986rem; at 1280 px to 2.488rem, 3.583rem and 5.16rem. Body copy stays at 1rem on every viewport.
+| Token | Size | Line height | Tracking | Weight | Use |
+|-------|------|-------------|----------|--------|-----|
+| `--text-mega` | `var(--t-mega)`, below 768 px `clamp(3.75rem, 0.9rem + 22vw, 6.75rem)`, at 768 px and up `clamp(3.75rem, 0.9rem + 12.2vw, 12rem)` | 0.86 | -0.045em | 800 | Hero h1 poster name |
+| `--text-xl` | `clamp(2.5rem, 1.4rem + 4.8vw, 5.5rem)` | 0.95 | -0.03em | 750 | Section h2 |
+| `--text-l` | `clamp(1.5rem, 1.2rem + 1.4vw, 2.5rem)` | 1.15 | -0.015em | 500 | Role line, lead paragraphs |
+| `--text-m` | `clamp(1.2rem, 1.1rem + 0.4vw, 1.45rem)` | 1.35 | -0.005em | 600 | Card titles, nav wordmark |
+| `--text-body` | `clamp(1rem, 0.96rem + 0.2vw, 1.0625rem)` | 1.55 | 0 | 400 | Body copy |
+| `--text-s` | 0.875rem | 1.45 | 0.005em | 500 | Dates, card metadata, nav labels |
+| `--text-xs` | 0.8125rem | 1.4 | 0.01em | 500 | Captions, chip labels (never below this) |
+
+`--t-mega` is a custom property set on `:root` in `base.css`, with the 768 px media step there (never in `tokens.css`, which stays flat). Both clamps give 6.75rem at 768 px, so there is no jump at the breakpoint. The phone override (a steeper 22vw slope capped at 6.75rem) is what fits the name, role line and both CTAs into the 375 x 667 first viewport (NAV-04).
 
 ## Spacing, radius, elevation, z-index and breakpoints
 
 - Spacing: Tailwind v4 default base `--spacing: 0.25rem`; all spacing uses the default scale (no custom steps). Minimum touch target 44 by 44 px (`size-11`) for interactive controls.
-- Radius: `--radius-sm: 0.5rem`, `--radius-md: 0.875rem`, `--radius-lg: 1.5rem`, `--radius-pill: 9999px`. Cards use md, the project overlay and large bands use lg, chips and the pill nav use pill.
+- Radius (Phase 3, D-06, hold versus press): held things are 4 px (`--radius-hold`, utility `rounded-hold`); pressed things are 9999 px (`--radius-pill`, `rounded-pill`); the one declared exception is the expanded pill panel at 28 px (`--radius-panel`, `rounded-panel`). `--radius-sm`, `--radius-md` and `--radius-lg` are deleted. `cn()` teaches tailwind-merge the custom size and radius utility names so they merge correctly.
 - Elevation (per theme, set on `:root` and `[data-theme=dark]`; shadows are decorative, so they carry no contrast requirement; edges that matter use `--border` or `--border-strong`):
 
 | Token | Light | Dark |
