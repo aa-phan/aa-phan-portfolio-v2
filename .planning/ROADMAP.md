@@ -130,7 +130,7 @@ Waves 4 to 8 run one plan each: every plan from 02-05 on builds into `dist/` and
   4. Only the images the page uses ship, as optimized AVIF/WebP with EXIF stripped.
   5. On a phone, a first-time visitor can find name, role, experience, projects, resume and contact within 10 seconds (the 10-second acceptance test).
 
-**Plans:** 7/19 plans executed
+**Plans:** 8/19 plans executed
 
 Plans:
 **Wave 1**
@@ -160,7 +160,7 @@ Plans:
 
 **Wave 7** *(blocked on Wave 6 completion)*
 
-- [ ] 03-08-PLAN.md — PHAN/PHVNTM wordmark, one theme store, phone top bar (wave 7)
+- [x] 03-08-PLAN.md — PHAN/PHVNTM wordmark, one theme store, phone top bar (wave 7)
 
 **Wave 8** *(blocked on Wave 7 completion)*
 
@@ -268,7 +268,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Decisions and Documentation | 7/7 | Complete    | 2026-10-09 |
 | 2. Deployed Themed Skeleton | 9/9 | Complete    | 2026-10-26 |
-| 3. Content-Complete Site | 7/19 | In Progress | - |
+| 3. Content-Complete Site | 8/19 | In Progress | - |
 | 4. Motion System and Signature Rail | 0/0 | Not started | - |
 | 5. Section Treatments | 0/0 | Not started | - |
 | 6. Hardening and Cutover | 0/0 | Not started | - |

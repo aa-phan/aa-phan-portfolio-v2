@@ -4,16 +4,16 @@ milestone: v2
 current_phase: 03
 current_phase_name: Content-Complete Site
 status: executing
-stopped_at: Completed 03-07-PLAN.md
-last_updated: "2026-10-27T18:18:35.243Z"
+stopped_at: Completed 03-08-PLAN.md
+last_updated: "2026-10-27T18:24:20.295Z"
 last_activity: 2026-10-27
 last_activity_desc: Phase 03 execution started
-state_head: a48ce0069d9d64ba9ce153a1624068b6c13cfad8
+state_head: 520f372ed5d387c0fe7234dbd885c1f8bf85cb6a
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 35
-  completed_plans: 23
+  completed_plans: 24
   percent: 33
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-10-08)
 ## Current Position
 
 Phase: 03 (Content-Complete Site) — EXECUTING
-Plan: 8 of 19
+Plan: 9 of 19
 Status: Ready to execute
 Last activity: 2026-10-27 — Phase 03 execution started
 
@@ -83,6 +83,7 @@ Progress: [███░░░░░░░] 33%
 | Phase 03 P05 | 8 min | 2 tasks | 13 files |
 | Phase 03 P06 | 30 min | 3 tasks | 13 files |
 | Phase 03 P07 | 10 min | 2 tasks | 16 files |
+| Phase 03 P08 | 15 min | 2 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -130,6 +131,8 @@ Recent decisions affecting current work:
 - [Phase 03]: 03-06: primary CTA ink flood is CSS-owned (clip-path), hover gated by (hover: hover) with focus-visible and :active equivalents
 - [Phase 03]: 03-07: desktop bar (including theme toggle) is display none below 768 px; phones have no toggle or nav until 03-08/03-09
 - [Phase 03]: 03-07: nav link gap is 16 px at 768 and 24 px from 1024 to avoid overflow with six links, toggle and Resume
+- [Phase 03]: 03-08: useTheme moved to src/hooks and returns { theme, toggle }; one store over html[data-theme] drives every ThemeToggle
+- [Phase 03]: 03-08: static shell gets a 64 px aria-hidden spacer before main so the React header (phone bar or desktop bar) does not shift the poster at mount
 
 ### Pending Todos
 
@@ -162,6 +165,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-27T18:18:35.160Z
-Stopped at: Completed 03-07-PLAN.md
+Last session: 2026-10-27T18:24:20.210Z
+Stopped at: Completed 03-08-PLAN.md
 Resume file: None
