@@ -616,3 +616,103 @@ html:has(dialog[open]) {
     flex: 1;
   }
 }
+
+/*
+ * Contact (D-12). The email button reuses the .cta ink flood: its small hint line is a muted
+ * color at rest and follows the label to --background when the flood rises, so every state keeps
+ * the audited --background on --text pair. The four channel links are utility links (D-05):
+ * color plus underline thickness only, a 1 px line at rest so the link is not color-only
+ * (WCAG 1.4.1), 2 px on hover (devices that hover) and on keyboard focus.
+ */
+.contact-copy-hint {
+  color: var(--muted);
+  transition: color 220ms var(--ease-out);
+}
+
+@media (hover: hover) {
+  .cta:hover .contact-copy-hint {
+    color: var(--background);
+  }
+}
+
+.cta:focus-visible .contact-copy-hint,
+.cta:active .contact-copy-hint {
+  color: var(--background);
+}
+
+.contact-address {
+  font-size: clamp(1.25rem, 6.6vw, var(--text-l));
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+
+.contact-link {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition:
+    color 220ms var(--ease-out),
+    text-decoration-thickness 220ms var(--ease-out);
+}
+
+@media (hover: hover) {
+  .contact-link:hover {
+    color: var(--link);
+    text-decoration-thickness: 2px;
+  }
+}
+
+.contact-link:focus-visible {
+  color: var(--link);
+  text-decoration-thickness: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-copy-hint,
+  .contact-link {
+    transition: none;
+  }
+}
+
+/*
+ * Finale (D-01, D-12). Contact and the footer together fill one viewport: the section takes
+ * 100svh minus a floor for the footer height (--footer-floor, a lower bound, so the pair is never
+ * shorter than the screen). The wordmark sits in an inline-size container so its type is sized in
+ * cqi against the width it must fill. Each string has its own size because the night face is
+ * 125% wide; the constants are calibrated to a rendered run of 90 to 100 percent of the
+ * container (wordmark.spec.ts measures it at 375, 768 and 1280 in both themes).
+ */
+:root {
+  /* The night wordmark box is 0.137 of the container width tall; 0.13 plus 3.5rem for the small
+     print and padding stays below the real footer height at every width. */
+  --footer-floor: calc(
+    0.13 * (min(100vw, 1680px) - 2 * clamp(1rem, 2vw, 2rem)) + 3.5rem
+  );
+}
+
+.contact-section {
+  min-height: calc(100svh - var(--footer-floor));
+}
+
+.finale-fit {
+  container-type: inline-size;
+}
+
+.wordmark-finale {
+  display: block;
+  font-size: 0;
+  line-height: 0.8;
+  letter-spacing: -0.03em;
+}
+
+/* The negative start margin trims the capital's side bearing so the ink meets the text edge. */
+.wordmark-finale .wordmark-day {
+  margin-inline-start: -0.07em;
+  font-size: 32.4cqi;
+}
+
+.wordmark-finale .wordmark-night {
+  margin-inline-start: -0.07em;
+  font-size: 17.1cqi;
+}
