@@ -4,16 +4,16 @@ milestone: v2
 current_phase: 03
 current_phase_name: Content-Complete Site
 status: executing
-stopped_at: Completed 03-04-PLAN.md
-last_updated: "2026-10-27T17:48:58.836Z"
+stopped_at: Completed 03-05-PLAN.md
+last_updated: "2026-10-27T17:58:38.876Z"
 last_activity: 2026-10-27
 last_activity_desc: Phase 03 execution started
-state_head: 5141c5ea150b9741bdce6de2063f7fcfdfc2cfb7
+state_head: 7c41eff205e77739ab4b98e255d49f6ac4e2d885
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 35
-  completed_plans: 20
+  completed_plans: 21
   percent: 33
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-10-08)
 ## Current Position
 
 Phase: 03 (Content-Complete Site) — EXECUTING
-Plan: 5 of 19
+Plan: 6 of 19
 Status: Ready to execute
 Last activity: 2026-10-27 — Phase 03 execution started
 
@@ -80,6 +80,7 @@ Progress: [███░░░░░░░] 33%
 | Phase 03 P03-02 | n/a | 3 tasks | 1 files |
 | Phase 03 P03 | 25 min | 2 tasks | 12 files |
 | Phase 03 P04 | 7 min | 2 tasks | 9 files |
+| Phase 03 P05 | 8 min | 2 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -121,6 +122,8 @@ Recent decisions affecting current work:
 - [Phase 03]: D-03/D-06: Archivo Variable with poster ladder and 4/9999/28 px radius rule; Archivo Fallback is two measured faces (Arial 100.9%, Arial Bold 103.1%); cn() registers custom text and radius utilities with tailwind-merge
 - [Phase 03]: 03-04: Hero takes a local structural props type; content stays importable only by Page.tsx (lint boundary)
 - [Phase 03]: 03-04: profile omits quote because ABT-03 is none; parity test asserts undefined while inventory says none
+- [Phase 03]: 03-05: import m from motion/react-m (not the motion/react barrel) to keep the motion feature bundle out of the initial chunk; initial JS 113,348 B gz
+- [Phase 03]: 03-05: reduced-motion visitors never load the motion features chunk; toast is static until the chunk loads
 
 ### Pending Todos
 
@@ -153,6 +156,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-27T17:48:58.752Z
-Stopped at: Completed 03-04-PLAN.md
+Last session: 2026-10-27T17:58:38.794Z
+Stopped at: Completed 03-05-PLAN.md
 Resume file: None
