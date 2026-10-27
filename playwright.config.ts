@@ -1,7 +1,10 @@
 import { defineConfig } from '@playwright/test'
 
 const BASE = process.env.VITE_BASE || '/'
-const live = process.env.E2E_BASE_URL
+// Tests navigate with page.goto('./'), which resolves against the base URL. Without a trailing
+// slash a base such as https://user.github.io/repo would resolve to the origin root.
+const liveRaw = process.env.E2E_BASE_URL?.trim()
+const live = liveRaw ? liveRaw.replace(/\/?$/, '/') : undefined
 
 export default defineConfig({
   testDir: 'tests/e2e',
