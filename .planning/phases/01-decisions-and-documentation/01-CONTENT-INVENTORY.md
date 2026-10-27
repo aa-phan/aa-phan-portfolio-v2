@@ -153,6 +153,11 @@ Seven projects. PRJ-01 to PRJ-03 come from the resume; PRJ-04 to PRJ-07 are lega
   1. Built a TypeScript pipeline converting TikTok recipes into Kroger cart items using OCR and Claude.
   2. Developed a deterministic matching engine ranking grocery products by availability, package fit, and unit price.
   3. Implemented an OAuth2-secured cart workflow with explicit user approval, encrypted tokens, and automated secret redaction.
+- Write-up (D-14, proposed):
+  Problem: A recipe in a TikTok video had no direct path into a Kroger cart.
+  Approach: A TypeScript pipeline converts the recipe using OCR and Claude, then a deterministic engine ranks products by availability, package fit, and unit price.
+  Outcome: Items reach the cart through an OAuth2-secured workflow with explicit user approval, encrypted tokens, and automated secret redaction.
+- Edit record (rule 3): before = the bullets above are shown in the project detail; after (if approved) = the three lines replace the bullets in the project detail and the bullets stay recorded here.
 - Related experience: none
 - Links: none yet, deferred to Phase 3 (G-01)
 - Image: none yet, deferred to Phase 3 (G-02)
@@ -171,6 +176,11 @@ Seven projects. PRJ-01 to PRJ-03 come from the resume; PRJ-04 to PRJ-07 are lega
   1. Built a Python/Flask web app standardizing post-installation logging, improving team efficiency by 30%.
   2. Conducted user testing with off-net installation teams to iteratively refine features based on direct feedback.
   3. Documented technical architecture, reducing developer onboarding time by 12%.
+- Write-up (D-14, proposed):
+  Problem: Post-installation logging at Spectrum needed standardizing.
+  Approach: I built a Python/Flask web app and refined its features through user testing with off-net installation teams.
+  Outcome: Team efficiency improved by 30%, and documenting the technical architecture reduced developer onboarding time by 12%.
+- Edit record (rule 3): before = the bullets above are shown in the project detail; after (if approved) = the three lines replace the bullets in the project detail and the bullets stay recorded here.
 - Related experience: EXP-02
 - Links: none yet, deferred to Phase 3 (G-01)
 - Image: none yet, deferred to Phase 3 (G-02)
@@ -190,6 +200,11 @@ Seven projects. PRJ-01 to PRJ-03 come from the resume; PRJ-04 to PRJ-07 are lega
   2. Developed a data preprocessing pipeline with NumPy, Pandas, and Scikit-learn to clean freight records and prepare features for model training.
   3. Trained and evaluated classification models with TensorFlow and Keras to identify patterns associated with unusable freight.
   4. Built a PyQt interface enabling non-technical teams to upload CSV files and review SKU-level predictions for targeted investigation.
+- Write-up (D-14, proposed):
+  Problem: Symbotic needed a way to judge whether shipping freight was viable from case dimensions and weight.
+  Approach: A neural network classifier trained with TensorFlow and Keras, on features prepared by a NumPy, Pandas, and Scikit-learn pipeline.
+  Outcome: A PyQt interface lets non-technical teams upload CSV files and review SKU-level predictions for targeted investigation.
+- Edit record (rule 3): before = the bullets above are shown in the project detail; after (if approved) = the three lines replace the bullets in the project detail and the bullets stay recorded here.
 - Related experience: EXP-03
 - Links: none yet, deferred to Phase 3 (G-01)
 - Image: none yet, deferred to Phase 3 (G-02)
@@ -408,6 +423,17 @@ Six items. Five are public; one (CON-06) is recorded only to make its exclusion 
 - Source: resume (header, excluded)
 - Legacy-site value: Not on the legacy site.
 - Resolution: EXCLUDED. Never published on the site, the web resume, meta tags, JSON-LD or OG data (D-11, and the saved content rule). The digits are deliberately not written in this file or any other planning doc. No `tel:` link and no copy-to-clipboard for it. Contact by phone is not offered; email is the primary channel.
+
+## Owner inputs (Phase 3)
+
+Collected in one stop by plan 03-02 so the content modules are typed once from a final inventory.
+
+| ID | Input | Status |
+|----|-------|--------|
+| D-13 | A public repository URL per project (PRJ-01 to PRJ-07), or none | requested |
+| D-14 | Approve, edit or reject the three featured write-ups (PRJ-01 to PRJ-03) | requested |
+| D-15 | One line in the owner's own words about the night side for About Me, or none yet | requested |
+| D-16 | A phone-free PDF exported from the resume source and saved over public/resume.pdf | requested |
 
 ## Reconciliation log
 
