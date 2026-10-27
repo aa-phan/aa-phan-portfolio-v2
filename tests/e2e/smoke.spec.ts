@@ -148,10 +148,10 @@ test('fonts: only same-origin requests and at most 2 font families', async ({ pa
   )
   const unique = [...new Set(families)]
   expect(unique.length).toBeLessThanOrEqual(2)
-  expect(unique).toContain('Inter Variable')
+  expect(unique).toContain('Archivo Variable')
 
   const h1Family = await page.evaluate(
     () => getComputedStyle(document.querySelector('h1')!).fontFamily,
   )
-  expect(h1Family.replace(/["']/g, '')).toMatch(/^Inter Variable/)
+  expect(h1Family.replace(/["']/g, '')).toMatch(/^Archivo Variable/)
 })

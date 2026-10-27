@@ -5,10 +5,10 @@ export function Hero() {
   return (
     <section id="hero" aria-labelledby="hero-heading" className="pt-24 pb-16">
       <Container>
-        <h1 id="hero-heading" className="text-5xl font-bold tracking-display">
+        <h1 id="hero-heading" className="text-mega">
           Aaron Phan
         </h1>
-        <TextReveal className="mt-4 max-w-2xl text-lg text-muted md:text-xl">
+        <TextReveal className="mt-4 max-w-2xl text-l text-muted">
           Software engineer building cloud-native backends in Go.
         </TextReveal>
         <div className="mt-8 flex flex-col gap-3 md:flex-row md:items-center">

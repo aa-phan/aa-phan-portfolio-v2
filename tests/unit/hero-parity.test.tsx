@@ -71,7 +71,7 @@ describe('static shell parity', () => {
     const h1 = shell.querySelector('h1')
     if (!h1) throw new Error('shell has no h1')
     const tokens = (h1.getAttribute('class') ?? '').split(/\s+/).filter(Boolean)
-    expect(tokens.length).toBeGreaterThan(1)
+    expect(tokens.length).toBeGreaterThan(0)
     h1.setAttribute('class', tokens.slice(1).join(' '))
     expect(canonical(shell)).not.toEqual(canonical(reactMain()))
   })

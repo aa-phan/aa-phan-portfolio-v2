@@ -1,4 +1,4 @@
-import '@fontsource-variable/inter/wght.css'
+import '@fontsource-variable/archivo/wdth.css'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './styles/index.css'

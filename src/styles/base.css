@@ -1,4 +1,14 @@
 @layer base {
+  :root {
+    --t-mega: clamp(3.75rem, 0.9rem + 22vw, 6.75rem);
+  }
+
+  @media (min-width: 768px) {
+    :root {
+      --t-mega: clamp(3.75rem, 0.9rem + 12.2vw, 12rem);
+    }
+  }
+
   html {
     -webkit-text-size-adjust: 100%;
   }

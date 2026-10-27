@@ -20,7 +20,7 @@ export function Section({
       className={cn('scroll-mt-6 py-16', className)}
     >
       <Container>
-        <h2 id={`${id}-heading`} className="text-3xl font-semibold">
+        <h2 id={`${id}-heading`} className="text-xl">
           {title}
         </h2>
         {children}
